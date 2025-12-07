@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
 import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
 import { User } from './users.entity';
@@ -29,6 +30,17 @@ import { User } from './users.entity';
     }),
     // Register User entity for dependency injection
     TypeOrmModule.forFeature([User]),
+    // Configure JWT Module
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: configService.get('JWT_EXPIRES_IN') || '7d',
+        },
+      }),
+    }),
   ],
   controllers: [AccountsController],
   providers: [AccountsService],

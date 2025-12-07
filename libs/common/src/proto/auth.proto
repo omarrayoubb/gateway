@@ -5,7 +5,9 @@ package auth;
 service AuthService {
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc Register (RegisterRequest) returns (RegisterResponse) {}
-    rpc Validate (ValidateRequest) returns (ValidateResponse) {} 
+    rpc Validate (ValidateRequest) returns (ValidateResponse) {}
+    rpc GetProfile (GetProfileRequest) returns (GetProfileResponse) {}
+    rpc UpdateProfile (UpdateProfileRequest) returns (UpdateProfileResponse) {}
 }
 
 message LoginRequest {
@@ -22,12 +24,9 @@ message LoginResponse {
 }
 
 message UserData {
-    string sub = 1;
+    string id = 1;
     string email = 2;
-    string roleId = 3;
-    string roleName = 4;
-    string profileId = 5;
-    string profileName = 6;
+    string name = 3;
 }
 
 message RegisterRequest {
@@ -35,13 +34,12 @@ message RegisterRequest {
   string name = 2;          // e.g., "John Doe"
   string email = 3;
   string workLocation = 4;  // e.g., "New York"
-  string roleId = 5;        // UUID
+  string role = 5;          // User role
   string password = 6;
-  string profileId = 7;     // UUID
-  string timezone = 8;      // e.g., "America/New_York"
-  string department = 9;    // e.g., "Sales"
-  string deptManager = 10;  // e.g., "Manager Name"
-  string birthday = 11;     // e.g., "1990-01-15" (Keep as string for simplicity)
+  string timezone = 7;      // e.g., "America/New_York"
+  string department = 8;    // e.g., "Sales"
+  string deptManager = 9;   // e.g., "Manager Name"
+  string birthday = 10;     // e.g., "1990-01-15" (Keep as string for simplicity)
 }
 
 message RegisterResponse {
@@ -55,4 +53,47 @@ message ValidateRequest {
 message ValidateResponse { 
     bool valid = 1;
     UserData user = 2;
+}
+
+message GetProfileRequest {
+    string userId = 1;
+}
+
+message GetProfileResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    UserProfile profile = 3;
+}
+
+message UserProfile {
+    string id = 1;
+    string workId = 2;
+    string name = 3;
+    string email = 4;
+    string workLocation = 5;
+    string role = 6;
+    string timezone = 7;
+    string department = 8;
+    string deptManager = 9;
+    string birthday = 10;
+    string dateJoined = 11;
+}
+
+message UpdateProfileRequest {
+    string userId = 1;
+    optional string name = 2;
+    optional string email = 3;
+    optional string workLocation = 4;
+    optional string role = 5;
+    optional string timezone = 6;
+    optional string department = 7;
+    optional string deptManager = 8;
+    optional string birthday = 9;
+    optional string password = 10;
+}
+
+message UpdateProfileResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    UserProfile profile = 3;
 }
