@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Register (RegisterRequest) returns (RegisterResponse) {}
+    rpc Validate (ValidateRequest) returns (ValidateResponse) {} 
+}
+
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginResponse {
+    int32 status = 1;
+    repeated string error = 2;
+    string accessToken = 3;
+    UserData userData = 4;
+   
+}
+
+message UserData {
+    string sub = 1;
+    string email = 2;
+    string roleId = 3;
+    string roleName = 4;
+    string profileId = 5;
+    string profileName = 6;
+}
+
+message RegisterRequest {
+  string workId = 1;        // e.g., "EMP001"
+  string name = 2;          // e.g., "John Doe"
+  string email = 3;
+  string workLocation = 4;  // e.g., "New York"
+  string roleId = 5;        // UUID
+  string password = 6;
+  string profileId = 7;     // UUID
+  string timezone = 8;      // e.g., "America/New_York"
+  string department = 9;    // e.g., "Sales"
+  string deptManager = 10;  // e.g., "Manager Name"
+  string birthday = 11;     // e.g., "1990-01-15" (Keep as string for simplicity)
+}
+
+message RegisterResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string email = 3;         // Returned to pre-fill the Login page
+}
+message ValidateRequest {
+    string token = 1;
+}
+message ValidateResponse { 
+    bool valid = 1;
+    UserData user = 2;
+}
