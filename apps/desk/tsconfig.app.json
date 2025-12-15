@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "declaration": false,
+    "outDir": "../../dist/apps/desk",
+    "types": ["node"]
+  },
+  "include": ["src/**/*", "src/types/global.d.ts"],
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}
+

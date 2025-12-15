@@ -27,4 +27,17 @@ export interface RegisterRequest {
     password: string;
   }
   
-  // ... add the rest later
+  // 4. The Login Response (Matches 'LoginResponse' in proto)
+  export interface LoginResponse {
+    status: number;
+    error: string[];
+    accessToken: string;
+    userData: {
+      sub: string;
+      email: string;
+      roleId: string;
+      roleName: string;
+      profileId: string;
+      profileName: string;
+    };
+  }

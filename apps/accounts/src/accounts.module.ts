@@ -4,6 +4,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
 import { User } from './users.entity';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ import { User } from './users.entity';
         host: configService.get('ACCOUNTS_DB_HOST'),
         port: configService.get('ACCOUNTS_DB_PORT'),
         username: configService.get('ACCOUNTS_DB_USERNAME'),
-        password: configService.get('ACCOUNTS_DB_PASSWORD'),
+        password: configService.get('ACCOUNTS_DB_PASSWORD') || '',
         database: configService.get('ACCOUNTS_DB_DATABASE'),
         entities: [User],
         synchronize: configService.get('ACCOUNTS_DB_SYNCHRONIZE') === 'true',
@@ -29,6 +32,9 @@ import { User } from './users.entity';
     }),
     // Register User entity for dependency injection
     TypeOrmModule.forFeature([User]),
+    AuthModule,
+    UsersModule,
+    RabbitMQModule,
   ],
   controllers: [AccountsController],
   providers: [AccountsService],

@@ -1,0 +1,301 @@
+syntax = "proto3";
+
+package desk;
+
+// ============================================
+// TICKETS SERVICE
+// ============================================
+service TicketsService {
+  rpc GetTicket (GetTicketRequest) returns (TicketResponse) {}
+  rpc GetTickets (GetTicketsRequest) returns (TicketsResponse) {}
+  rpc CreateTicket (CreateTicketRequest) returns (TicketResponse) {}
+  rpc UpdateTicket (UpdateTicketRequest) returns (TicketResponse) {}
+}
+
+message GetTicketRequest {
+  string id = 1;
+}
+
+message GetTicketsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message CreateTicketRequest {
+  string accountId = 1;
+  string contactId = 2;
+  string contactName = 3;
+  string accountName = 4;
+  string email = 5;
+  string phone = 6;
+  string subject = 7;
+  string description = 8;
+  string status = 9;
+  string priority = 10;
+  string classification = 11;
+}
+
+message UpdateTicketRequest {
+  string id = 1;
+  string accountId = 2;
+  string contactId = 3;
+  string contactName = 4;
+  string accountName = 5;
+  string email = 6;
+  string phone = 7;
+  string subject = 8;
+  string description = 9;
+  string status = 10;
+  string priority = 11;
+  string classification = 12;
+}
+
+message TicketResponse {
+  string id = 1;
+  string accountId = 2;
+  string contactId = 3;
+  string contactName = 4;
+  string accountName = 5;
+  string email = 6;
+  string phone = 7;
+  string subject = 8;
+  string description = 9;
+  string status = 10;
+  string priority = 11;
+  string classification = 12;
+  string created_at = 13;
+  string updated_at = 14;
+}
+
+message TicketsResponse {
+  repeated TicketResponse tickets = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+// ============================================
+// WORK ORDERS SERVICE
+// ============================================
+service WorkOrdersService {
+  rpc GetWorkOrder (GetWorkOrderRequest) returns (WorkOrderResponse) {}
+  rpc GetWorkOrders (GetWorkOrdersRequest) returns (WorkOrdersResponse) {}
+  rpc CreateWorkOrder (CreateWorkOrderRequest) returns (WorkOrderResponse) {}
+  rpc UpdateWorkOrder (UpdateWorkOrderRequest) returns (WorkOrderResponse) {}
+}
+
+message GetWorkOrderRequest {
+  string id = 1;
+}
+
+message GetWorkOrdersRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message CreateWorkOrderRequest {
+  string contact = 1;
+  string summary = 2;
+  string description = 3;
+  string status = 4;
+  string priority = 5;
+}
+
+message UpdateWorkOrderRequest {
+  string id = 1;
+  string contact = 2;
+  string summary = 3;
+  string description = 4;
+  string status = 5;
+  string priority = 6;
+}
+
+message WorkOrderResponse {
+  string id = 1;
+  string contact = 2;
+  string summary = 3;
+  string description = 4;
+  string status = 5;
+  string priority = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message WorkOrdersResponse {
+  repeated WorkOrderResponse work_orders = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+// ============================================
+// SERVICES SERVICE
+// ============================================
+service ServicesService {
+  rpc GetService (GetServiceRequest) returns (ServiceResponse) {}
+  rpc GetServices (GetServicesRequest) returns (ServicesResponse) {}
+  rpc CreateService (CreateServiceRequest) returns (ServiceResponse) {}
+  rpc UpdateService (UpdateServiceRequest) returns (ServiceResponse) {}
+  rpc DeleteService (DeleteServiceRequest) returns (DeleteServiceResponse) {}
+}
+
+message GetServiceRequest {
+  string id = 1;
+}
+
+message GetServicesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+}
+
+message CreateServiceRequest {
+  string name = 1;
+  double net_price = 2;
+}
+
+message UpdateServiceRequest {
+  string id = 1;
+  string name = 2;
+  double net_price = 3;
+}
+
+message DeleteServiceRequest {
+  string id = 1;
+}
+
+message ServiceResponse {
+  string id = 1;
+  string name = 2;
+  double net_price = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message ServicesResponse {
+  repeated ServiceResponse services = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteServiceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PARTS SERVICE
+// ============================================
+service PartsService {
+  rpc GetPart (GetPartRequest) returns (PartResponse) {}
+  rpc GetParts (GetPartsRequest) returns (PartsResponse) {}
+  rpc CreatePart (CreatePartRequest) returns (PartResponse) {}
+  rpc UpdatePart (UpdatePartRequest) returns (PartResponse) {}
+  rpc DeletePart (DeletePartRequest) returns (DeletePartResponse) {}
+}
+
+message GetPartRequest {
+  string id = 1;
+}
+
+message GetPartsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+}
+
+message CreatePartRequest {
+  string name = 1;
+  double price = 2;
+}
+
+message UpdatePartRequest {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+}
+
+message DeletePartRequest {
+  string id = 1;
+}
+
+message PartResponse {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message PartsResponse {
+  repeated PartResponse parts = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeletePartResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// KNOWLEDGE BASE SERVICE
+// ============================================
+service KnowledgeBaseService {
+  rpc GetKnowledgeBase (GetKnowledgeBaseRequest) returns (KnowledgeBaseResponse) {}
+  rpc GetKnowledgeBases (GetKnowledgeBasesRequest) returns (KnowledgeBasesResponse) {}
+  rpc CreateKnowledgeBase (CreateKnowledgeBaseRequest) returns (KnowledgeBaseResponse) {}
+  rpc UpdateKnowledgeBase (UpdateKnowledgeBaseRequest) returns (KnowledgeBaseResponse) {}
+  rpc DeleteKnowledgeBase (DeleteKnowledgeBaseRequest) returns (DeleteKnowledgeBaseResponse) {}
+}
+
+message GetKnowledgeBaseRequest {
+  string id = 1;
+}
+
+message GetKnowledgeBasesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+}
+
+message CreateKnowledgeBaseRequest {
+  string title = 1;
+  string content = 2;
+  string category = 3;
+}
+
+message UpdateKnowledgeBaseRequest {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string category = 4;
+}
+
+message DeleteKnowledgeBaseRequest {
+  string id = 1;
+}
+
+message KnowledgeBaseResponse {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string category = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message KnowledgeBasesResponse {
+  repeated KnowledgeBaseResponse knowledge_bases = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteKnowledgeBaseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
