@@ -1,0 +1,1147 @@
+syntax = "proto3";
+
+package supplychain;
+
+// ============================================
+// PRODUCTS SERVICE
+// ============================================
+service ProductsService {
+  rpc GetProduct (GetProductRequest) returns (ProductResponse) {}
+  rpc GetProducts (GetProductsRequest) returns (ProductsResponse) {}
+  rpc CreateProduct (CreateProductRequest) returns (ProductResponse) {}
+  rpc UpdateProduct (UpdateProductRequest) returns (ProductResponse) {}
+  rpc DeleteProduct (DeleteProductRequest) returns (DeleteProductResponse) {}
+}
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message GetProductsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+}
+
+message CreateProductRequest {
+  string sku = 1;
+  string name = 2;
+  string description = 3;
+  string type = 4;
+  string categoryId = 5;
+  string costPrice = 6;
+  string sellingPrice = 7;
+  string reorderPoint = 8;
+  string status = 9;
+  string barcode = 10;
+  string gtin = 11;
+  string unitOfMeasure = 12;
+  string defaultWarehouseId = 13;
+  string temperature = 14;
+}
+
+message UpdateProductRequest {
+  string id = 1;
+  string sku = 2;
+  string name = 3;
+  string description = 4;
+  string type = 5;
+  string categoryId = 6;
+  string costPrice = 7;
+  string sellingPrice = 8;
+  string reorderPoint = 9;
+  string status = 10;
+  string barcode = 11;
+  string gtin = 12;
+  string unitOfMeasure = 13;
+  string defaultWarehouseId = 14;
+  string temperature = 15;
+}
+
+message DeleteProductRequest {
+  string id = 1;
+}
+
+message ProductResponse {
+  string id = 1;
+  string sku = 2;
+  string name = 3;
+  string description = 4;
+  string type = 5;
+  string categoryId = 6;
+  string categoryName = 7;
+  string costPrice = 8;
+  string sellingPrice = 9;
+  string reorderPoint = 10;
+  string status = 11;
+  string barcode = 12;
+  string gtin = 13;
+  string unitOfMeasure = 14;
+  string defaultWarehouseId = 15;
+  string temperature = 18;
+  string createdAt = 16;
+  string updatedAt = 17;
+}
+
+message ProductsResponse {
+  repeated ProductResponse products = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteProductResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PRODUCT CATEGORIES SERVICE
+// ============================================
+service ProductCategoriesService {
+  rpc GetProductCategory (GetProductCategoryRequest) returns (ProductCategoryResponse) {}
+  rpc GetProductCategories (GetProductCategoriesRequest) returns (ProductCategoriesResponse) {}
+  rpc CreateProductCategory (CreateProductCategoryRequest) returns (ProductCategoryResponse) {}
+  rpc UpdateProductCategory (UpdateProductCategoryRequest) returns (ProductCategoryResponse) {}
+  rpc DeleteProductCategory (DeleteProductCategoryRequest) returns (DeleteProductCategoryResponse) {}
+}
+
+message GetProductCategoryRequest {
+  string id = 1;
+}
+
+message GetProductCategoriesRequest {
+}
+
+message CreateProductCategoryRequest {
+  string name = 1;
+  string description = 2;
+  string parentId = 3;
+}
+
+message UpdateProductCategoryRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string parentId = 4;
+}
+
+message DeleteProductCategoryRequest {
+  string id = 1;
+}
+
+message ProductCategoryResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string parentId = 4;
+  string parentName = 5;
+  string createdAt = 6;
+  string updatedAt = 7;
+}
+
+message ProductCategoriesResponse {
+  repeated ProductCategoryResponse categories = 1;
+}
+
+message DeleteProductCategoryResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// WAREHOUSES SERVICE
+// ============================================
+service WarehousesService {
+  rpc GetWarehouse (GetWarehouseRequest) returns (WarehouseResponse) {}
+  rpc GetWarehouses (GetWarehousesRequest) returns (WarehousesResponse) {}
+  rpc CreateWarehouse (CreateWarehouseRequest) returns (WarehouseResponse) {}
+  rpc UpdateWarehouse (UpdateWarehouseRequest) returns (WarehouseResponse) {}
+  rpc DeleteWarehouse (DeleteWarehouseRequest) returns (DeleteWarehouseResponse) {}
+}
+
+message GetWarehouseRequest {
+  string id = 1;
+}
+
+message GetWarehousesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string status = 4;
+  string temperatureControlled = 5;
+}
+
+message CreateWarehouseRequest {
+  string name = 1;
+  string code = 2;
+  string address = 3;
+  string city = 4;
+  string country = 5;
+  string capacity = 6;
+  string status = 7;
+  string temperatureControlled = 8;
+  string minTemperature = 9;
+  string maxTemperature = 10;
+  string contactPhone = 11;
+  string contactEmail = 12;
+}
+
+message UpdateWarehouseRequest {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string address = 4;
+  string city = 5;
+  string country = 6;
+  string capacity = 7;
+  string status = 8;
+  string temperatureControlled = 9;
+  string minTemperature = 10;
+  string maxTemperature = 11;
+  string contactPhone = 12;
+  string contactEmail = 13;
+}
+
+message DeleteWarehouseRequest {
+  string id = 1;
+}
+
+message WarehouseResponse {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string address = 4;
+  string city = 5;
+  string country = 6;
+  string capacity = 7;
+  string status = 8;
+  string temperatureControlled = 9;
+  string minTemperature = 10;
+  string maxTemperature = 11;
+  string contactPhone = 12;
+  string contactEmail = 13;
+  string createdAt = 14;
+  string updatedAt = 15;
+}
+
+message WarehousesResponse {
+  repeated WarehouseResponse warehouses = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteWarehouseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PRODUCT ALERTS SERVICE
+// ============================================
+service ProductAlertsService {
+  rpc GetProductAlert (GetProductAlertRequest) returns (ProductAlertResponse) {}
+  rpc GetProductAlerts (GetProductAlertsRequest) returns (ProductAlertsResponse) {}
+  rpc UpdateProductAlert (UpdateProductAlertRequest) returns (ProductAlertResponse) {}
+  rpc DeleteProductAlert (DeleteProductAlertRequest) returns (DeleteProductAlertResponse) {}
+}
+
+message GetProductAlertRequest {
+  string id = 1;
+}
+
+message GetProductAlertsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string productId = 3;
+  string warehouseId = 4;
+  string status = 5;
+  string severity = 6;
+}
+
+message UpdateProductAlertRequest {
+  string id = 1;
+  string status = 2;
+  string acknowledgedAt = 3;
+  string resolvedAt = 4;
+}
+
+message DeleteProductAlertRequest {
+  string id = 1;
+}
+
+message ProductAlertResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string warehouseId = 4;
+  string status = 5;
+  string severity = 6;
+  string message = 7;
+  string description = 8;
+  string acknowledgedAt = 9;
+  string resolvedAt = 10;
+  string createdAt = 11;
+  string updatedAt = 12;
+}
+
+message ProductAlertsResponse {
+  repeated ProductAlertResponse alerts = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteProductAlertResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// INVENTORY BATCHES SERVICE
+// ============================================
+service InventoryBatchesService {
+  rpc GetInventoryBatch (GetInventoryBatchRequest) returns (InventoryBatchResponse) {}
+  rpc GetInventoryBatches (GetInventoryBatchesRequest) returns (InventoryBatchesResponse) {}
+  rpc CreateInventoryBatch (CreateInventoryBatchRequest) returns (InventoryBatchResponse) {}
+  rpc UpdateInventoryBatch (UpdateInventoryBatchRequest) returns (InventoryBatchResponse) {}
+  rpc DeleteInventoryBatch (DeleteInventoryBatchRequest) returns (DeleteInventoryBatchResponse) {}
+}
+
+message GetInventoryBatchRequest {
+  string id = 1;
+}
+
+message GetInventoryBatchesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string productId = 4;
+  string warehouseId = 5;
+  string status = 6;
+  string batchNumber = 7;
+  string search = 8;
+}
+
+message CreateInventoryBatchRequest {
+  string productId = 1;
+  string warehouseId = 2;
+  string batchNumber = 3;
+  string barcode = 4;
+  string quantityAvailable = 5;
+  string unitCost = 6;
+  string manufacturingDate = 7;
+  string expiryDate = 8;
+  string receivedDate = 9;
+  string location = 10;
+  string status = 11;
+}
+
+message UpdateInventoryBatchRequest {
+  string id = 1;
+  string productId = 2;
+  string warehouseId = 3;
+  string batchNumber = 4;
+  string barcode = 5;
+  string quantityAvailable = 6;
+  string unitCost = 7;
+  string manufacturingDate = 8;
+  string expiryDate = 9;
+  string receivedDate = 10;
+  string location = 11;
+  string status = 12;
+}
+
+message DeleteInventoryBatchRequest {
+  string id = 1;
+}
+
+message InventoryBatchResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string productSku = 4;
+  string warehouseId = 5;
+  string warehouseName = 6;
+  string warehouseCode = 7;
+  string batchNumber = 8;
+  string barcode = 9;
+  string quantityAvailable = 10;
+  string unitCost = 11;
+  string manufacturingDate = 12;
+  string expiryDate = 13;
+  string receivedDate = 14;
+  string location = 15;
+  string status = 16;
+  string createdAt = 17;
+  string updatedAt = 18;
+}
+
+message InventoryBatchesResponse {
+  repeated InventoryBatchResponse batches = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteInventoryBatchResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// STOCK MOVEMENTS SERVICE
+// ============================================
+service StockMovementsService {
+  rpc GetStockMovement (GetStockMovementRequest) returns (StockMovementResponse) {}
+  rpc GetStockMovements (GetStockMovementsRequest) returns (StockMovementsResponse) {}
+  rpc CreateStockMovement (CreateStockMovementRequest) returns (StockMovementResponse) {}
+  rpc UpdateStockMovement (UpdateStockMovementRequest) returns (StockMovementResponse) {}
+  rpc DeleteStockMovement (DeleteStockMovementRequest) returns (DeleteStockMovementResponse) {}
+}
+
+message GetStockMovementRequest {
+  string id = 1;
+}
+
+message GetStockMovementsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string productId = 4;
+  string batchId = 5;
+  string warehouseId = 6;
+  string movementType = 7;
+  string movementDate = 8;
+}
+
+message CreateStockMovementRequest {
+  string productId = 1;
+  string batchId = 2;
+  string warehouseId = 3;
+  string movementType = 4;
+  string quantity = 5;
+  string referenceType = 6;
+  string referenceId = 7;
+  string movementDate = 8;
+  string notes = 9;
+  string userId = 10;
+}
+
+message UpdateStockMovementRequest {
+  string id = 1;
+  string productId = 2;
+  string batchId = 3;
+  string warehouseId = 4;
+  string movementType = 5;
+  string quantity = 6;
+  string referenceType = 7;
+  string referenceId = 8;
+  string movementDate = 9;
+  string notes = 10;
+  string userId = 11;
+}
+
+message DeleteStockMovementRequest {
+  string id = 1;
+}
+
+message StockMovementResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string productSku = 4;
+  string batchId = 5;
+  string batchNumber = 6;
+  string warehouseId = 7;
+  string warehouseName = 8;
+  string warehouseCode = 9;
+  string movementType = 10;
+  string quantity = 11;
+  string referenceType = 12;
+  string referenceId = 13;
+  string movementDate = 14;
+  string notes = 15;
+  string userId = 16;
+  string createdAt = 17;
+  string updatedAt = 18;
+}
+
+message StockMovementsResponse {
+  repeated StockMovementResponse movements = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteStockMovementResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// VENDORS SERVICE
+// ============================================
+service VendorsService {
+  rpc GetVendor (GetVendorRequest) returns (VendorResponse) {}
+  rpc GetVendors (GetVendorsRequest) returns (VendorsResponse) {}
+  rpc CreateVendor (CreateVendorRequest) returns (VendorResponse) {}
+  rpc UpdateVendor (UpdateVendorRequest) returns (VendorResponse) {}
+  rpc DeleteVendor (DeleteVendorRequest) returns (DeleteVendorResponse) {}
+}
+
+message GetVendorRequest {
+  string id = 1;
+}
+
+message GetVendorsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string status = 4;
+  string search = 5;
+}
+
+message CreateVendorRequest {
+  string name = 1;
+  string code = 2;
+  string contactPerson = 3;
+  string email = 4;
+  string phone = 5;
+  string address = 6;
+  string city = 7;
+  string country = 8;
+  string taxId = 9;
+  string paymentTerms = 10;
+  string currency = 11;
+  string status = 12;
+  string rating = 13;
+  string notes = 14;
+}
+
+message UpdateVendorRequest {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string contactPerson = 4;
+  string email = 5;
+  string phone = 6;
+  string address = 7;
+  string city = 8;
+  string country = 9;
+  string taxId = 10;
+  string paymentTerms = 11;
+  string currency = 12;
+  string status = 13;
+  string rating = 14;
+  string notes = 15;
+}
+
+message VendorResponse {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string contactPerson = 4;
+  string email = 5;
+  string phone = 6;
+  string address = 7;
+  string city = 8;
+  string country = 9;
+  string taxId = 10;
+  string paymentTerms = 11;
+  string currency = 12;
+  string status = 13;
+  string rating = 14;
+  string notes = 15;
+  string createdAt = 16;
+  string updatedAt = 17;
+}
+
+message VendorsResponse {
+  repeated VendorResponse vendors = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteVendorRequest {
+  string id = 1;
+}
+
+message DeleteVendorResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// VENDOR PRODUCTS SERVICE
+// ============================================
+service VendorProductsService {
+  rpc GetVendorProduct (GetVendorProductRequest) returns (VendorProductResponse) {}
+  rpc GetVendorProducts (GetVendorProductsRequest) returns (VendorProductsResponse) {}
+  rpc CreateVendorProduct (CreateVendorProductRequest) returns (VendorProductResponse) {}
+  rpc UpdateVendorProduct (UpdateVendorProductRequest) returns (VendorProductResponse) {}
+  rpc DeleteVendorProduct (DeleteVendorProductRequest) returns (DeleteVendorProductResponse) {}
+}
+
+message GetVendorProductRequest {
+  string id = 1;
+}
+
+message GetVendorProductsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string vendorId = 3;
+  string productId = 4;
+  string status = 5;
+  string sort = 6;
+}
+
+message CreateVendorProductRequest {
+  string vendorId = 1;
+  string productId = 2;
+  string vendorSku = 3;
+  string unitPrice = 4;
+  string minimumOrderQuantity = 5;
+  string leadTimeDays = 6;
+  string status = 7;
+  string priceTiers = 8;
+}
+
+message UpdateVendorProductRequest {
+  string id = 1;
+  string vendorId = 2;
+  string productId = 3;
+  string vendorSku = 4;
+  string unitPrice = 5;
+  string minimumOrderQuantity = 6;
+  string leadTimeDays = 7;
+  string status = 8;
+  string priceTiers = 9;
+}
+
+message VendorProductResponse {
+  string id = 1;
+  string vendorId = 2;
+  string vendorName = 3;
+  string productId = 4;
+  string productName = 5;
+  string productSku = 6;
+  string vendorSku = 7;
+  string unitPrice = 8;
+  string minimumOrderQuantity = 9;
+  string leadTimeDays = 10;
+  string status = 11;
+  string priceTiers = 12;
+  string createdAt = 13;
+  string updatedAt = 14;
+}
+
+message VendorProductsResponse {
+  repeated VendorProductResponse vendorProducts = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteVendorProductRequest {
+  string id = 1;
+}
+
+message DeleteVendorProductResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// VENDOR PERFORMANCE SERVICE
+// ============================================
+service VendorPerformanceService {
+  rpc GetVendorPerformance (GetVendorPerformanceRequest) returns (VendorPerformanceResponse) {}
+  rpc GetVendorPerformances (GetVendorPerformancesRequest) returns (VendorPerformancesResponse) {}
+  rpc CreateVendorPerformance (CreateVendorPerformanceRequest) returns (VendorPerformanceResponse) {}
+  rpc UpdateVendorPerformance (UpdateVendorPerformanceRequest) returns (VendorPerformanceResponse) {}
+  rpc DeleteVendorPerformance (DeleteVendorPerformanceRequest) returns (DeleteVendorPerformanceResponse) {}
+}
+
+message GetVendorPerformanceRequest {
+  string id = 1;
+}
+
+message GetVendorPerformancesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string vendorId = 3;
+  string sort = 4;
+}
+
+message CreateVendorPerformanceRequest {
+  string vendorId = 1;
+  string periodStart = 2;
+  string periodEnd = 3;
+  string onTimeDeliveryRate = 4;
+  string qualityScore = 5;
+  string totalOrders = 6;
+  string totalAmount = 7;
+}
+
+message UpdateVendorPerformanceRequest {
+  string id = 1;
+  string vendorId = 2;
+  string periodStart = 3;
+  string periodEnd = 4;
+  string onTimeDeliveryRate = 5;
+  string qualityScore = 6;
+  string totalOrders = 7;
+  string totalAmount = 8;
+}
+
+message VendorPerformanceResponse {
+  string id = 1;
+  string vendorId = 2;
+  string vendorName = 3;
+  string periodStart = 4;
+  string periodEnd = 5;
+  string onTimeDeliveryRate = 6;
+  string qualityScore = 7;
+  string totalOrders = 8;
+  string totalAmount = 9;
+  string createdAt = 10;
+  string updatedAt = 11;
+}
+
+message VendorPerformancesResponse {
+  repeated VendorPerformanceResponse performances = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteVendorPerformanceRequest {
+  string id = 1;
+}
+
+message DeleteVendorPerformanceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// SHIPMENTS SERVICE
+// ============================================
+service ShipmentsService {
+  rpc GetShipment (GetShipmentRequest) returns (ShipmentResponse) {}
+  rpc GetShipments (GetShipmentsRequest) returns (ShipmentsResponse) {}
+  rpc CreateShipment (CreateShipmentRequest) returns (ShipmentResponse) {}
+  rpc UpdateShipment (UpdateShipmentRequest) returns (ShipmentResponse) {}
+  rpc DeleteShipment (DeleteShipmentRequest) returns (DeleteShipmentResponse) {}
+}
+
+message GetShipmentRequest {
+  string id = 1;
+}
+
+message GetShipmentsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string status = 4;
+  string type = 5;
+  string warehouseId = 6;
+  string shipmentDate = 7;
+}
+
+message ShipmentItemRequest {
+  string productId = 1;
+  string batchId = 2;
+  string quantity = 3;
+}
+
+message CreateShipmentRequest {
+  string shipmentNumber = 1;
+  string type = 2;
+  string warehouseId = 3;
+  string toWarehouseId = 4;
+  string vendorId = 5;
+  string customerName = 6;
+  string trackingNumber = 7;
+  string carrier = 8;
+  string shipmentDate = 9;
+  string expectedDelivery = 10;
+  string status = 11;
+  repeated ShipmentItemRequest items = 12;
+  string notes = 13;
+}
+
+message UpdateShipmentRequest {
+  string id = 1;
+  string shipmentNumber = 2;
+  string type = 3;
+  string warehouseId = 4;
+  string toWarehouseId = 5;
+  string vendorId = 6;
+  string customerName = 7;
+  string trackingNumber = 8;
+  string carrier = 9;
+  string shipmentDate = 10;
+  string expectedDelivery = 11;
+  string status = 12;
+  repeated ShipmentItemRequest items = 13;
+  string notes = 14;
+}
+
+message ShipmentItemResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string productSku = 4;
+  string batchId = 5;
+  string batchNumber = 6;
+  string quantity = 7;
+}
+
+message ShipmentResponse {
+  string id = 1;
+  string shipmentNumber = 2;
+  string type = 3;
+  string warehouseId = 4;
+  string warehouseName = 5;
+  string toWarehouseId = 6;
+  string toWarehouseName = 7;
+  string vendorId = 8;
+  string vendorName = 9;
+  string customerName = 10;
+  string trackingNumber = 11;
+  string carrier = 12;
+  string shipmentDate = 13;
+  string expectedDelivery = 14;
+  string status = 15;
+  string notes = 16;
+  repeated ShipmentItemResponse items = 17;
+  string createdAt = 18;
+  string updatedAt = 19;
+}
+
+message ShipmentsResponse {
+  repeated ShipmentResponse shipments = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteShipmentRequest {
+  string id = 1;
+}
+
+message DeleteShipmentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// SHIPMENT TRACKING SERVICE
+// ============================================
+service ShipmentTrackingService {
+  rpc GetShipmentTracking (GetShipmentTrackingRequest) returns (ShipmentTrackingResponse) {}
+  rpc GetShipmentTrackings (GetShipmentTrackingsRequest) returns (ShipmentTrackingsResponse) {}
+  rpc CreateShipmentTracking (CreateShipmentTrackingRequest) returns (ShipmentTrackingResponse) {}
+  rpc UpdateShipmentTracking (UpdateShipmentTrackingRequest) returns (ShipmentTrackingResponse) {}
+  rpc DeleteShipmentTracking (DeleteShipmentTrackingRequest) returns (DeleteShipmentTrackingResponse) {}
+}
+
+message GetShipmentTrackingRequest {
+  string id = 1;
+}
+
+message GetShipmentTrackingsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string shipmentId = 3;
+  string sort = 4;
+}
+
+message CreateShipmentTrackingRequest {
+  string shipmentId = 1;
+  string status = 2;
+  string location = 3;
+  string description = 4;
+  string timestamp = 5;
+  string updatedBy = 6;
+  string isAutomated = 7;
+}
+
+message UpdateShipmentTrackingRequest {
+  string id = 1;
+  string shipmentId = 2;
+  string status = 3;
+  string location = 4;
+  string description = 5;
+  string timestamp = 6;
+  string updatedBy = 7;
+  string isAutomated = 8;
+}
+
+message ShipmentTrackingResponse {
+  string id = 1;
+  string shipmentId = 2;
+  string shipmentNumber = 3;
+  string status = 4;
+  string location = 5;
+  string description = 6;
+  string timestamp = 7;
+  string updatedBy = 8;
+  string isAutomated = 9;
+  string createdAt = 10;
+  string updatedAt = 11;
+}
+
+message ShipmentTrackingsResponse {
+  repeated ShipmentTrackingResponse trackings = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteShipmentTrackingRequest {
+  string id = 1;
+}
+
+message DeleteShipmentTrackingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PURCHASE ORDERS SERVICE
+// ============================================
+service PurchaseOrdersService {
+  rpc GetPurchaseOrder (GetPurchaseOrderRequest) returns (PurchaseOrderResponse) {}
+  rpc GetPurchaseOrders (GetPurchaseOrdersRequest) returns (PurchaseOrdersResponse) {}
+  rpc CreatePurchaseOrder (CreatePurchaseOrderRequest) returns (PurchaseOrderResponse) {}
+  rpc UpdatePurchaseOrder (UpdatePurchaseOrderRequest) returns (PurchaseOrderResponse) {}
+  rpc DeletePurchaseOrder (DeletePurchaseOrderRequest) returns (DeletePurchaseOrderResponse) {}
+}
+
+message GetPurchaseOrderRequest {
+  string id = 1;
+}
+
+message GetPurchaseOrdersRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string status = 4;
+  string vendorId = 5;
+  string warehouseId = 6;
+  string orderDate = 7;
+}
+
+message PurchaseOrderItemRequest {
+  string productId = 1;
+  string quantity = 2;
+  string unitPrice = 3;
+  string total = 4;
+}
+
+message CreatePurchaseOrderRequest {
+  string poNumber = 1;
+  string vendorId = 2;
+  string warehouseId = 3;
+  string orderDate = 4;
+  string expectedDeliveryDate = 5;
+  repeated PurchaseOrderItemRequest items = 6;
+  string subtotal = 7;
+  string tax = 8;
+  string totalAmount = 9;
+  string status = 10;
+  string notes = 11;
+}
+
+message UpdatePurchaseOrderRequest {
+  string id = 1;
+  string poNumber = 2;
+  string vendorId = 3;
+  string warehouseId = 4;
+  string orderDate = 5;
+  string expectedDeliveryDate = 6;
+  repeated PurchaseOrderItemRequest items = 7;
+  string subtotal = 8;
+  string tax = 9;
+  string totalAmount = 10;
+  string status = 11;
+  string notes = 12;
+  string approvalStatus = 13;
+  string requiresApproval = 14;
+  string submittedForApprovalBy = 15;
+  string submittedForApprovalAt = 16;
+  string approvedBy = 17;
+  string approvedAt = 18;
+}
+
+message PurchaseOrderItemResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string productSku = 4;
+  string quantity = 5;
+  string unitPrice = 6;
+  string total = 7;
+}
+
+message PurchaseOrderResponse {
+  string id = 1;
+  string poNumber = 2;
+  string vendorId = 3;
+  string vendorName = 4;
+  string warehouseId = 5;
+  string warehouseName = 6;
+  string orderDate = 7;
+  string expectedDeliveryDate = 8;
+  string subtotal = 9;
+  string tax = 10;
+  string totalAmount = 11;
+  string status = 12;
+  string notes = 13;
+  string approvalStatus = 14;
+  string requiresApproval = 15;
+  string submittedForApprovalBy = 16;
+  string submittedForApprovalAt = 17;
+  string approvedBy = 18;
+  string approvedAt = 19;
+  repeated PurchaseOrderItemResponse items = 20;
+  string createdAt = 21;
+  string updatedAt = 22;
+}
+
+message PurchaseOrdersResponse {
+  repeated PurchaseOrderResponse purchaseOrders = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeletePurchaseOrderRequest {
+  string id = 1;
+}
+
+message DeletePurchaseOrderResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// DELIVERY NOTES SERVICE
+// ============================================
+service DeliveryNotesService {
+  rpc GetDeliveryNote (GetDeliveryNoteRequest) returns (DeliveryNoteResponse) {}
+  rpc GetDeliveryNotes (GetDeliveryNotesRequest) returns (DeliveryNotesResponse) {}
+  rpc CreateDeliveryNote (CreateDeliveryNoteRequest) returns (DeliveryNoteResponse) {}
+  rpc UpdateDeliveryNote (UpdateDeliveryNoteRequest) returns (DeliveryNoteResponse) {}
+  rpc DeleteDeliveryNote (DeleteDeliveryNoteRequest) returns (DeleteDeliveryNoteResponse) {}
+  rpc GetProductsWithInventory (GetProductsWithInventoryRequest) returns (ProductsWithInventoryResponse) {}
+}
+
+message GetDeliveryNoteRequest {
+  string id = 1;
+}
+
+message GetDeliveryNotesRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  string status = 4;
+  string deliveredTo = 5;
+  string date = 6;
+}
+
+message DeliveryNoteItemRequest {
+  string productId = 1;
+  string batchId = 2;
+  string quantity = 3;
+}
+
+message CreateDeliveryNoteRequest {
+  string dnNumber = 1;
+  string deliveredTo = 2;
+  string date = 3;
+  string taxCard = 4;
+  string cr = 5;
+  repeated DeliveryNoteItemRequest items = 6;
+}
+
+message UpdateDeliveryNoteRequest {
+  string id = 1;
+  string dnNumber = 2;
+  string deliveredTo = 3;
+  string date = 4;
+  string taxCard = 5;
+  string cr = 6;
+  repeated DeliveryNoteItemRequest items = 7;
+}
+
+message DeliveryNoteItemResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string productSku = 4;
+  string batchId = 5;
+  string batchNumber = 6;
+  string quantity = 7;
+}
+
+message DeliveryNoteResponse {
+  string id = 1;
+  string dnNumber = 2;
+  string deliveredTo = 3;
+  string date = 4;
+  string taxCard = 5;
+  string cr = 6;
+  repeated DeliveryNoteItemResponse items = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message DeliveryNotesResponse {
+  repeated DeliveryNoteResponse deliveryNotes = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeleteDeliveryNoteRequest {
+  string id = 1;
+}
+
+message DeleteDeliveryNoteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetProductsWithInventoryRequest {
+  string warehouseId = 1;
+}
+
+message ProductBatchInfo {
+  string id = 1;
+  string batchNumber = 2;
+  string warehouseId = 3;
+  string warehouseName = 4;
+  string quantityAvailable = 5;
+  string expiryDate = 6;
+  string unitCost = 7;
+}
+
+message ProductWithInventory {
+  string id = 1;
+  string name = 2;
+  string sku = 3;
+  string description = 4;
+  repeated ProductBatchInfo batches = 5;
+  string totalAvailable = 6;
+}
+
+message ProductsWithInventoryResponse {
+  repeated ProductWithInventory products = 1;
+}
+
