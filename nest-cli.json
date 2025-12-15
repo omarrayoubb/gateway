@@ -21,7 +21,9 @@
       "sourceRoot": "apps/accounts/src",
       "compilerOptions": {
         "tsConfigPath": "apps/accounts/tsconfig.app.json",
-        "assets": ["**/*.proto"],
+        "assets": [
+          "**/*.proto"
+        ],
         "watchAssets": true
       }
     },
@@ -32,7 +34,9 @@
       "sourceRoot": "apps/api-gateway/src",
       "compilerOptions": {
         "tsConfigPath": "apps/api-gateway/tsconfig.app.json",
-        "assets": ["**/*.proto"],
+        "assets": [
+          "**/*.proto"
+        ],
         "watchAssets": true
       }
     },
@@ -43,6 +47,24 @@
       "sourceRoot": "libs/common/src",
       "compilerOptions": {
         "tsConfigPath": "libs/common/tsconfig.lib.json"
+      }
+    },
+    "crm": {
+      "type": "application",
+      "root": "apps/crm",
+      "entryFile": "main",
+      "sourceRoot": "apps/crm/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/crm/tsconfig.app.json"
+      }
+    },
+    "desk": {
+      "type": "application",
+      "root": "apps/desk",
+      "entryFile": "main",
+      "sourceRoot": "apps/desk/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/desk/tsconfig.app.json"
       }
     },
     "gateway": {

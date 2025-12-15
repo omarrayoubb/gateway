@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package scheduleMaintenance;
+
+service ScheduleMaintenanceService {
+  rpc CreateScheduleMaintenance (CreateScheduleMaintenanceRequest) returns (ScheduleMaintenanceResponse) {}
+  rpc FindAllScheduleMaintenances (PaginationRequest) returns (PaginatedScheduleMaintenancesResponse) {}
+  rpc FindOneScheduleMaintenance (FindOneScheduleMaintenanceRequest) returns (ScheduleMaintenanceResponse) {}
+  rpc UpdateScheduleMaintenance (UpdateScheduleMaintenanceRequest) returns (ScheduleMaintenanceResponse) {}
+  rpc DeleteScheduleMaintenance (DeleteScheduleMaintenanceRequest) returns (DeleteScheduleMaintenanceResponse) {}
+  rpc BulkDeleteScheduleMaintenances (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateScheduleMaintenances (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateScheduleMaintenanceRequest {
+  string schedule = 1; // daily, weekly, monthly, quarterly, yearly
+  string startDate = 2; // ISO date string
+  string endDate = 3; // ISO date string
+  string relatedEntityType = 4;
+  string relatedId = 5;
+}
+
+message UpdateScheduleMaintenanceRequest {
+  string id = 1;
+  optional string schedule = 2;
+  optional string startDate = 3;
+  optional string endDate = 4;
+  optional string relatedEntityType = 5;
+  optional string relatedId = 6;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneScheduleMaintenanceRequest {
+  string id = 1;
+}
+
+message DeleteScheduleMaintenanceRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateScheduleMaintenanceFields update_fields = 2;
+}
+
+message UpdateScheduleMaintenanceFields {
+  optional string schedule = 1;
+  optional string startDate = 2;
+  optional string endDate = 3;
+  optional string relatedEntityType = 4;
+  optional string relatedId = 5;
+}
+
+// Response Messages
+message ScheduleMaintenanceResponse {
+  string id = 1;
+  string schedule = 2;
+  string startDate = 3;
+  string endDate = 4;
+  string relatedEntityType = 5;
+  string relatedId = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message PaginatedScheduleMaintenancesResponse {
+  repeated ScheduleMaintenanceResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteScheduleMaintenanceResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

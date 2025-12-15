@@ -1,0 +1,215 @@
+syntax = "proto3";
+
+package leads;
+
+service LeadsService {
+  rpc CreateLead (CreateLeadRequest) returns (LeadResponse) {}
+  rpc FindAllLeads (PaginationRequest) returns (PaginatedLeadsResponse) {}
+  rpc FindOneLead (FindOneLeadRequest) returns (LeadResponse) {}
+  rpc UpdateLead (UpdateLeadRequest) returns (LeadResponse) {}
+  rpc DeleteLead (DeleteLeadRequest) returns (DeleteLeadResponse) {}
+  rpc BulkDeleteLeads (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateLeads (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateLeadRequest {
+  // Required fields
+  string firstName = 1;
+  string lastName = 2;
+  string phone = 3;
+  string email = 4;
+  string shippingStreet = 5;
+  string billingCity = 6;
+  
+  // Optional fields
+  optional string ownerId = 7;
+  optional string salutation = 8;
+  optional string accountId = 9;
+  optional string productName = 10;
+  optional string currencyCode = 11;
+  optional int32 employeeCount = 12;
+  optional string hqCode = 13;
+  optional double billingAmount = 14;
+  optional double exchangeRate = 15;
+  optional string shippingStreet2 = 16;
+  optional string shippingCity = 17;
+  optional string shippingState = 18;
+  optional string shippingCountry = 19;
+  optional string shippingZipCode = 20;
+  optional string billingStreet = 21;
+  optional string billingStreet2 = 22;
+  optional string billingState = 23;
+  optional string billingCountry = 24;
+  optional string billingZipCode = 25;
+}
+
+message UpdateLeadRequest {
+  string id = 1;
+  optional string salutation = 2;
+  optional string firstName = 3;
+  optional string lastName = 4;
+  optional string phone = 5;
+  optional string email = 6; // Note: Email is forbidden in UpdateLeadDto but included in proto for consistency
+  optional string shippingStreet = 7;
+  optional string billingCity = 8;
+  optional string accountId = 9;
+  optional string productName = 10;
+  optional string currencyCode = 11;
+  optional int32 employeeCount = 12;
+  optional string hqCode = 13;
+  optional double billingAmount = 14;
+  optional double exchangeRate = 15;
+  optional string shippingStreet2 = 16;
+  optional string shippingCity = 17;
+  optional string shippingState = 18;
+  optional string shippingCountry = 19;
+  optional string shippingZipCode = 20;
+  optional string billingStreet = 21;
+  optional string billingStreet2 = 22;
+  optional string billingState = 23;
+  optional string billingCountry = 24;
+  optional string billingZipCode = 25;
+  optional string ownerId = 26;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneLeadRequest {
+  string id = 1;
+}
+
+message DeleteLeadRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateLeadFields updateFields = 2;
+}
+
+message UpdateLeadFields {
+  optional string salutation = 1;
+  optional string firstName = 2;
+  optional string lastName = 3;
+  optional string phone = 4;
+  optional string shippingStreet = 5;
+  optional string billingCity = 6;
+  optional string accountId = 7;
+  optional string productName = 8;
+  optional string currencyCode = 9;
+  optional int32 employeeCount = 10;
+  optional string hqCode = 11;
+  optional double billingAmount = 12;
+  optional double exchangeRate = 13;
+  optional string shippingStreet2 = 14;
+  optional string shippingCity = 15;
+  optional string shippingState = 16;
+  optional string shippingCountry = 17;
+  optional string shippingZipCode = 18;
+  optional string billingStreet = 19;
+  optional string billingStreet2 = 20;
+  optional string billingState = 21;
+  optional string billingCountry = 22;
+  optional string billingZipCode = 23;
+  optional string ownerId = 24;
+}
+
+// Response Messages
+message LeadResponse {
+  string id = 1;
+  optional string salutation = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string phone = 5;
+  string email = 6;
+  string shippingStreet = 7;
+  string billingCity = 8;
+  optional string productName = 9;
+  optional string currencyCode = 10;
+  optional int32 employeeCount = 11;
+  optional string hqCode = 12;
+  optional double billingAmount = 13;
+  optional double exchangeRate = 14;
+  optional string shippingStreet2 = 15;
+  optional string shippingCity = 16;
+  optional string shippingState = 17;
+  optional string shippingCountry = 18;
+  optional string shippingZipCode = 19;
+  optional string billingStreet = 20;
+  optional string billingStreet2 = 21;
+  optional string billingState = 22;
+  optional string billingCountry = 23;
+  optional string billingZipCode = 24;
+  string createdAt = 25;
+  string updatedAt = 26;
+  optional SimpleUserData ownerData = 27;
+  string createdBy = 28;
+  string modifiedBy = 29;
+  optional SimpleAccount accountDetails = 30;
+  repeated SimpleDeal deals = 31;
+  repeated SimpleActivity activities = 32;
+}
+
+message PaginatedLeadsResponse {
+  repeated LeadResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteLeadResponse {
+  bool success = 1;
+}
+
+message BulkDeleteResponse {
+  int32 deletedCount = 1;
+  repeated FailedId failedIds = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updatedCount = 1;
+  repeated FailedItem failedItems = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+
+// Nested Messages
+message SimpleUserData {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message SimpleAccount {
+  string id = 1;
+  string name = 2;
+  string accountNumber = 3;
+}
+
+message SimpleDeal {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleActivity {
+  string id = 1;
+  string activityType = 2;
+  string subject = 3;
+}
+

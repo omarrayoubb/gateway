@@ -1,0 +1,164 @@
+syntax = "proto3";
+
+package requests;
+
+service RequestService {
+  rpc CreateRequest (CreateRequestRequest) returns (RequestResponse) {}
+  rpc FindAllRequests (PaginationRequest) returns (PaginatedRequestsResponse) {}
+  rpc FindOneRequest (FindOneRequestRequest) returns (RequestResponse) {}
+  rpc UpdateRequest (UpdateRequestRequest) returns (RequestResponse) {}
+  rpc DeleteRequest (DeleteRequestRequest) returns (DeleteRequestResponse) {}
+  rpc BulkDeleteRequests (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateRequests (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateRequestRequest {
+  string summary = 1;
+  optional string status = 2;
+  optional string priority = 3; // low, medium, high
+  optional string dueDate = 4; // ISO date string
+  string currency = 5;
+  optional double exchangeRate = 6;
+  string company = 7;
+  string contact = 8;
+  string email = 9;
+  optional string phone = 10;
+  optional string mobile = 11;
+  optional string serviceAddress = 12; // JSON string
+  optional string billingAddress = 13; // JSON string
+  optional string preferredDate1 = 14; // ISO date string
+  optional string preferredDate2 = 15; // ISO date string
+  optional string preferredTime = 16; // time string
+  optional string preferredNotes = 17;
+  optional string territory = 18;
+  optional string ticketId = 19;
+  string createdBy = 20;
+}
+
+message UpdateRequestRequest {
+  string id = 1;
+  optional string summary = 2;
+  optional string status = 3;
+  optional string priority = 4;
+  optional string dueDate = 5;
+  optional string currency = 6;
+  optional double exchangeRate = 7;
+  optional string company = 8;
+  optional string contact = 9;
+  optional string email = 10;
+  optional string phone = 11;
+  optional string mobile = 12;
+  optional string serviceAddress = 13;
+  optional string billingAddress = 14;
+  optional string preferredDate1 = 15;
+  optional string preferredDate2 = 16;
+  optional string preferredTime = 17;
+  optional string preferredNotes = 18;
+  optional string territory = 19;
+  optional string ticketId = 20;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneRequestRequest {
+  string id = 1;
+}
+
+message DeleteRequestRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateRequestFields update_fields = 2;
+}
+
+message UpdateRequestFields {
+  optional string summary = 1;
+  optional string status = 2;
+  optional string priority = 3;
+  optional string dueDate = 4;
+  optional string currency = 5;
+  optional double exchangeRate = 6;
+  optional string company = 7;
+  optional string contact = 8;
+  optional string email = 9;
+  optional string phone = 10;
+  optional string mobile = 11;
+  optional string serviceAddress = 12;
+  optional string billingAddress = 13;
+  optional string preferredDate1 = 14;
+  optional string preferredDate2 = 15;
+  optional string preferredTime = 16;
+  optional string preferredNotes = 17;
+  optional string territory = 18;
+  optional string ticketId = 19;
+}
+
+// Response Messages
+message RequestResponse {
+  string id = 1;
+  string summary = 2;
+  string status = 3;
+  string priority = 4;
+  optional string dueDate = 5;
+  string currency = 6;
+  optional double exchangeRate = 7;
+  string company = 8;
+  string contact = 9;
+  string email = 10;
+  optional string phone = 11;
+  optional string mobile = 12;
+  optional string serviceAddress = 13;
+  optional string billingAddress = 14;
+  optional string preferredDate1 = 15;
+  optional string preferredDate2 = 16;
+  optional string preferredTime = 17;
+  optional string preferredNotes = 18;
+  optional string territory = 19;
+  optional string ticketId = 20;
+  string createdBy = 21;
+  string created_at = 22;
+  string updated_at = 23;
+}
+
+message PaginatedRequestsResponse {
+  repeated RequestResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteRequestResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

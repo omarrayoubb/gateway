@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package timeSheets;
+
+service TimeSheetService {
+  rpc CreateTimeSheet (CreateTimeSheetRequest) returns (TimeSheetResponse) {}
+  rpc FindAllTimeSheets (PaginationRequest) returns (PaginatedTimeSheetsResponse) {}
+  rpc FindOneTimeSheet (FindOneTimeSheetRequest) returns (TimeSheetResponse) {}
+  rpc UpdateTimeSheet (UpdateTimeSheetRequest) returns (TimeSheetResponse) {}
+  rpc DeleteTimeSheet (DeleteTimeSheetRequest) returns (DeleteTimeSheetResponse) {}
+  rpc BulkDeleteTimeSheets (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateTimeSheets (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateTimeSheetRequest {
+  string serviceResource = 1;
+  string description = 2;
+  string startDate = 3; // ISO date string
+  string endDate = 4; // ISO date string
+  int32 duration = 5; // in minutes
+  string serviceId = 6;
+}
+
+message UpdateTimeSheetRequest {
+  string id = 1;
+  optional string serviceResource = 2;
+  optional string description = 3;
+  optional string startDate = 4;
+  optional string endDate = 5;
+  optional int32 duration = 6;
+  optional string serviceId = 7;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneTimeSheetRequest {
+  string id = 1;
+}
+
+message DeleteTimeSheetRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateTimeSheetFields update_fields = 2;
+}
+
+message UpdateTimeSheetFields {
+  optional string serviceResource = 1;
+  optional string description = 2;
+  optional string startDate = 3;
+  optional string endDate = 4;
+  optional int32 duration = 5;
+  optional string serviceId = 6;
+}
+
+// Response Messages
+message TimeSheetResponse {
+  string id = 1;
+  string serviceResource = 2;
+  string description = 3;
+  string startDate = 4;
+  string endDate = 5;
+  int32 duration = 6;
+  string serviceId = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message PaginatedTimeSheetsResponse {
+  repeated TimeSheetResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteTimeSheetResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

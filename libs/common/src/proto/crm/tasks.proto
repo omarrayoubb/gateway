@@ -1,0 +1,142 @@
+syntax = "proto3";
+
+package tasks;
+
+service TaskService {
+  rpc CreateTask (CreateTaskRequest) returns (TaskResponse) {}
+  rpc FindAllTasks (PaginationRequest) returns (PaginatedTasksResponse) {}
+  rpc FindOneTask (FindOneTaskRequest) returns (TaskResponse) {}
+  rpc UpdateTask (UpdateTaskRequest) returns (TaskResponse) {}
+  rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse) {}
+  rpc BulkDeleteTasks (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateTasks (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateTaskRequest {
+  string ownerId = 1;
+  string subject = 2;
+  optional string dueDate = 3;
+  optional string description = 4;
+  optional string notes = 5;
+  repeated string links = 6;
+  optional string priority = 7;
+  optional string status = 8;
+  optional string rfqId = 9;
+  optional string currency = 10;
+  optional double exchangeRate = 11;
+  optional string closedTime = 12;
+}
+
+message UpdateTaskRequest {
+  string id = 1;
+  optional string ownerId = 2;
+  optional string subject = 3;
+  optional string dueDate = 4;
+  optional string description = 5;
+  optional string notes = 6;
+  repeated string links = 7;
+  optional string priority = 8;
+  optional string status = 9;
+  optional string rfqId = 10;
+  optional string currency = 11;
+  optional double exchangeRate = 12;
+  optional string closedTime = 13;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneTaskRequest {
+  string id = 1;
+}
+
+message DeleteTaskRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateTaskFields update_fields = 2;
+}
+
+message UpdateTaskFields {
+  optional string ownerId = 1;
+  optional string subject = 2;
+  optional string dueDate = 3;
+  optional string description = 4;
+  optional string notes = 5;
+  repeated string links = 6;
+  optional string priority = 7;
+  optional string status = 8;
+  optional string rfqId = 9;
+  optional string currency = 10;
+  optional double exchangeRate = 11;
+  optional string closedTime = 12;
+}
+
+// Response Messages
+message SimpleUser {
+  string id = 1;
+  string name = 2;
+}
+
+message TaskResponse {
+  string id = 1;
+  optional string taskNumber = 2;
+  optional string ownerId = 3;
+  string subject = 4;
+  optional string dueDate = 5;
+  optional string description = 6;
+  optional string notes = 7;
+  repeated string links = 8;
+  optional string priority = 9;
+  optional string status = 10;
+  optional string currency = 11;
+  optional double exchangeRate = 12;
+  optional string closedTime = 13;
+  string createdBy = 14;
+  string modifiedBy = 15;
+  string createdAt = 16;
+  string updatedAt = 17;
+  optional SimpleUser owner = 18;
+}
+
+message PaginatedTasksResponse {
+  repeated TaskResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteTaskResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deletedCount = 1;
+  repeated FailedId failedIds = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updatedCount = 1;
+  repeated FailedItem failedItems = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

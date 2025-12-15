@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package knowledgeBase;
+
+service KnowledgeBaseService {
+  rpc CreateKnowledgeBase (CreateKnowledgeBaseRequest) returns (KnowledgeBaseResponse) {}
+  rpc FindAllKnowledgeBases (PaginationRequest) returns (PaginatedKnowledgeBasesResponse) {}
+  rpc FindOneKnowledgeBase (FindOneKnowledgeBaseRequest) returns (KnowledgeBaseResponse) {}
+  rpc UpdateKnowledgeBase (UpdateKnowledgeBaseRequest) returns (KnowledgeBaseResponse) {}
+  rpc DeleteKnowledgeBase (DeleteKnowledgeBaseRequest) returns (DeleteKnowledgeBaseResponse) {}
+  rpc BulkDeleteKnowledgeBases (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateKnowledgeBases (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateKnowledgeBaseRequest {
+  string articleTitle = 1;
+  string category = 2;
+  optional string status = 3;
+  string content = 4;
+  string author = 5;
+}
+
+message UpdateKnowledgeBaseRequest {
+  string id = 1;
+  optional string articleTitle = 2;
+  optional string category = 3;
+  optional string status = 4;
+  optional string content = 5;
+  optional string author = 6;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneKnowledgeBaseRequest {
+  string id = 1;
+}
+
+message DeleteKnowledgeBaseRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateKnowledgeBaseFields update_fields = 2;
+}
+
+message UpdateKnowledgeBaseFields {
+  optional string articleTitle = 1;
+  optional string category = 2;
+  optional string status = 3;
+  optional string content = 4;
+  optional string author = 5;
+}
+
+// Response Messages
+message KnowledgeBaseResponse {
+  string id = 1;
+  string articleTitle = 2;
+  string category = 3;
+  string status = 4;
+  string content = 5;
+  string author = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message PaginatedKnowledgeBasesResponse {
+  repeated KnowledgeBaseResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteKnowledgeBaseResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

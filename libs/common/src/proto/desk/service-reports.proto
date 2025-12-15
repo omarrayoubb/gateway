@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package serviceReports;
+
+service ServiceReportService {
+  rpc CreateServiceReport (CreateServiceReportRequest) returns (ServiceReportResponse) {}
+  rpc FindAllServiceReports (PaginationRequest) returns (PaginatedServiceReportsResponse) {}
+  rpc FindOneServiceReport (FindOneServiceReportRequest) returns (ServiceReportResponse) {}
+  rpc UpdateServiceReport (UpdateServiceReportRequest) returns (ServiceReportResponse) {}
+  rpc DeleteServiceReport (DeleteServiceReportRequest) returns (DeleteServiceReportResponse) {}
+  rpc BulkDeleteServiceReports (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateServiceReports (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateServiceReportRequest {
+  string serviceAppointmentId = 1;
+  string reportDate = 2; // ISO date string
+  string description = 3;
+}
+
+message UpdateServiceReportRequest {
+  string id = 1;
+  optional string serviceAppointmentId = 2;
+  optional string reportDate = 3;
+  optional string description = 4;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneServiceReportRequest {
+  string id = 1;
+}
+
+message DeleteServiceReportRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateServiceReportFields update_fields = 2;
+}
+
+message UpdateServiceReportFields {
+  optional string serviceAppointmentId = 1;
+  optional string reportDate = 2;
+  optional string description = 3;
+}
+
+// Response Messages
+message ServiceReportResponse {
+  string id = 1;
+  string serviceAppointmentId = 2;
+  string reportDate = 3;
+  string description = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message PaginatedServiceReportsResponse {
+  repeated ServiceReportResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteServiceReportResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

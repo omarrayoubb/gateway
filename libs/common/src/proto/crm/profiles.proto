@@ -1,0 +1,105 @@
+syntax = "proto3";
+
+package profiles;
+
+service ProfileService {
+  rpc CreateProfile (CreateProfileRequest) returns (ProfileResponse) {}
+  rpc FindAllProfiles (PaginationRequest) returns (PaginatedProfilesResponse) {}
+  rpc FindOneProfile (FindOneProfileRequest) returns (ProfileResponse) {}
+  rpc UpdateProfile (UpdateProfileRequest) returns (ProfileResponse) {}
+  rpc DeleteProfile (DeleteProfileRequest) returns (DeleteProfileResponse) {}
+  rpc BulkDeleteProfiles (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateProfiles (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateProfileRequest {
+  string name = 1;
+  optional string description = 2;
+  map<string, ModulePermissions> permissions = 3;
+}
+
+message UpdateProfileRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  map<string, ModulePermissions> permissions = 4;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneProfileRequest {
+  string id = 1;
+}
+
+message DeleteProfileRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateProfileFields update_fields = 2;
+}
+
+message UpdateProfileFields {
+  optional string name = 1;
+  optional string description = 2;
+  map<string, ModulePermissions> permissions = 3;
+}
+
+// Response Messages
+message ProfileResponse {
+  string id = 1;
+  string name = 2;
+  optional string description = 3;
+  map<string, ModulePermissions> permissions = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message PaginatedProfilesResponse {
+  repeated ProfileResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteProfileResponse {
+  bool success = 1;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+
+// Nested Messages for Permissions
+message ModulePermissions {
+  bool create = 1;
+  bool read = 2;
+  bool update = 3;
+  bool delete = 4;
+}
+

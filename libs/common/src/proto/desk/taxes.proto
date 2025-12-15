@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package taxes;
+
+service TaxService {
+  rpc CreateTax (CreateTaxRequest) returns (TaxResponse) {}
+  rpc FindAllTaxes (PaginationRequest) returns (PaginatedTaxesResponse) {}
+  rpc FindOneTax (FindOneTaxRequest) returns (TaxResponse) {}
+  rpc UpdateTax (UpdateTaxRequest) returns (TaxResponse) {}
+  rpc DeleteTax (DeleteTaxRequest) returns (DeleteTaxResponse) {}
+  rpc BulkDeleteTaxes (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateTaxes (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateTaxRequest {
+  string name = 1;
+  double percentage = 2;
+}
+
+message UpdateTaxRequest {
+  string id = 1;
+  optional string name = 2;
+  optional double percentage = 3;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneTaxRequest {
+  string id = 1;
+}
+
+message DeleteTaxRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateTaxFields update_fields = 2;
+}
+
+message UpdateTaxFields {
+  optional string name = 1;
+  optional double percentage = 2;
+}
+
+// Response Messages
+message TaxResponse {
+  string id = 1;
+  string name = 2;
+  double percentage = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message PaginatedTaxesResponse {
+  repeated TaxResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteTaxResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

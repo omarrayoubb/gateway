@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package roles;
+
+service RoleService {
+  rpc CreateRole (CreateRoleRequest) returns (RoleResponse) {}
+  rpc FindAllRoles (Empty) returns (RolesListResponse) {}
+  rpc FindOneRole (FindOneRoleRequest) returns (RoleResponse) {}
+  rpc UpdateRole (UpdateRoleRequest) returns (RoleResponse) {}
+  rpc DeleteRole (DeleteRoleRequest) returns (DeleteRoleResponse) {}
+  rpc BulkDeleteRoles (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateRoles (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message Empty {}
+
+message CreateRoleRequest {
+  string name = 1;
+  optional string description = 2;
+  optional string parentId = 3;
+  optional bool shareDataWithPeers = 4;
+}
+
+message UpdateRoleRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  optional string parentId = 4;
+  optional bool shareDataWithPeers = 5;
+}
+
+message FindOneRoleRequest {
+  string id = 1;
+}
+
+message DeleteRoleRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateRoleFields update_fields = 2;
+}
+
+message UpdateRoleFields {
+  optional string name = 1;
+  optional string description = 2;
+  optional string parentId = 3;
+  optional bool shareDataWithPeers = 4;
+}
+
+// Response Messages
+message SimpleUser {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleRole {
+  string id = 1;
+  string name = 2;
+}
+
+message RoleResponse {
+  string id = 1;
+  string name = 2;
+  optional string description = 3;
+  optional string parentId = 4;
+  optional SimpleRole parent = 5;
+  bool shareDataWithPeers = 6;
+  optional string createdById = 7;
+  optional SimpleUser createdBy = 8;
+  string createdAt = 9;
+  repeated SimpleRole children = 10;
+}
+
+message RolesListResponse {
+  repeated RoleResponse roles = 1;
+}
+
+message DeleteRoleResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deletedCount = 1;
+  repeated FailedId failedIds = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updatedCount = 1;
+  repeated FailedItem failedItems = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

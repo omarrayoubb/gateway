@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package serviceAppointments;
+
+service ServiceAppointmentService {
+  rpc CreateServiceAppointment (CreateServiceAppointmentRequest) returns (ServiceAppointmentResponse) {}
+  rpc FindAllServiceAppointments (PaginationRequest) returns (PaginatedServiceAppointmentsResponse) {}
+  rpc FindOneServiceAppointment (FindOneServiceAppointmentRequest) returns (ServiceAppointmentResponse) {}
+  rpc UpdateServiceAppointment (UpdateServiceAppointmentRequest) returns (ServiceAppointmentResponse) {}
+  rpc DeleteServiceAppointment (DeleteServiceAppointmentRequest) returns (DeleteServiceAppointmentResponse) {}
+  rpc BulkDeleteServiceAppointments (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateServiceAppointments (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateServiceAppointmentRequest {
+  string workOrderId = 1;
+  string scheduledDate = 2; // ISO date string
+  string scheduledTime = 3; // time string
+  optional string status = 4;
+  optional string assignedAgent = 5;
+}
+
+message UpdateServiceAppointmentRequest {
+  string id = 1;
+  optional string workOrderId = 2;
+  optional string scheduledDate = 3;
+  optional string scheduledTime = 4;
+  optional string status = 5;
+  optional string assignedAgent = 6;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneServiceAppointmentRequest {
+  string id = 1;
+}
+
+message DeleteServiceAppointmentRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateServiceAppointmentFields update_fields = 2;
+}
+
+message UpdateServiceAppointmentFields {
+  optional string workOrderId = 1;
+  optional string scheduledDate = 2;
+  optional string scheduledTime = 3;
+  optional string status = 4;
+  optional string assignedAgent = 5;
+}
+
+// Response Messages
+message ServiceAppointmentResponse {
+  string id = 1;
+  string workOrderId = 2;
+  string scheduledDate = 3;
+  string scheduledTime = 4;
+  optional string status = 5;
+  optional string assignedAgent = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message PaginatedServiceAppointmentsResponse {
+  repeated ServiceAppointmentResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteServiceAppointmentResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

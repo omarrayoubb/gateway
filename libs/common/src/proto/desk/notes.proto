@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+package notes;
+
+service NoteService {
+  rpc CreateNote (CreateNoteRequest) returns (NoteResponse) {}
+  rpc FindAllNotes (PaginationRequest) returns (PaginatedNotesResponse) {}
+  rpc FindOneNote (FindOneNoteRequest) returns (NoteResponse) {}
+  rpc UpdateNote (UpdateNoteRequest) returns (NoteResponse) {}
+  rpc DeleteNote (DeleteNoteRequest) returns (DeleteNoteResponse) {}
+  rpc BulkDeleteNotes (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateNotes (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateNoteRequest {
+  string title = 1;
+  string note = 2;
+  string noteOwner = 3;
+  string relatedType = 4; // ticket, request, estimate, work_order
+  string relatedId = 5;
+}
+
+message UpdateNoteRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string note = 3;
+  optional string noteOwner = 4;
+  optional string relatedType = 5;
+  optional string relatedId = 6;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneNoteRequest {
+  string id = 1;
+}
+
+message DeleteNoteRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateNoteFields update_fields = 2;
+}
+
+message UpdateNoteFields {
+  optional string title = 1;
+  optional string note = 2;
+  optional string noteOwner = 3;
+  optional string relatedType = 4;
+  optional string relatedId = 5;
+}
+
+// Response Messages
+message NoteResponse {
+  string id = 1;
+  string title = 2;
+  string note = 3;
+  string noteOwner = 4;
+  string relatedType = 5;
+  string relatedId = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message PaginatedNotesResponse {
+  repeated NoteResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteNoteResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

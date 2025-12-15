@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package tickets;
+
+service TicketService {
+  rpc CreateTicket (CreateTicketRequest) returns (TicketResponse) {}
+  rpc FindAllTickets (PaginationRequest) returns (PaginatedTicketsResponse) {}
+  rpc FindOneTicket (FindOneTicketRequest) returns (TicketResponse) {}
+  rpc UpdateTicket (UpdateTicketRequest) returns (TicketResponse) {}
+  rpc DeleteTicket (DeleteTicketRequest) returns (DeleteTicketResponse) {}
+  rpc BulkDeleteTickets (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateTickets (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateTicketRequest {
+  optional string contactName = 1;
+  optional string accountName = 2;
+  string email = 3;
+  optional string phone = 4;
+  string subject = 5;
+  string description = 6;
+  optional string status = 7; // open, onHold, escalated, closed
+  optional string priority = 8; // low, medium, high
+  optional string classification = 9; // question, problem, request, none, feature, others
+  optional string ticketOwner = 10;
+  optional string productName = 11;
+  string vendor = 12;
+  string serialNumber = 13;
+  optional string dateTime1 = 14; // ISO date string
+  optional string channel = 15;
+  optional string language = 16;
+  optional string category = 17;
+  optional string subcategory = 18;
+  optional string dueDate = 19; // ISO date string
+}
+
+message UpdateTicketRequest {
+  string id = 1;
+  optional string contactName = 2;
+  optional string accountName = 3;
+  optional string email = 4;
+  optional string phone = 5;
+  optional string subject = 6;
+  optional string description = 7;
+  optional string status = 8;
+  optional string priority = 9;
+  optional string classification = 10;
+  optional string ticketOwner = 11;
+  optional string productName = 12;
+  optional string vendor = 13;
+  optional string serialNumber = 14;
+  optional string dateTime1 = 15;
+  optional string channel = 16;
+  optional string language = 17;
+  optional string category = 18;
+  optional string subcategory = 19;
+  optional string dueDate = 20;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneTicketRequest {
+  string id = 1;
+}
+
+message DeleteTicketRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateTicketFields update_fields = 2;
+}
+
+message UpdateTicketFields {
+  optional string contactName = 1;
+  optional string accountName = 2;
+  optional string email = 3;
+  optional string phone = 4;
+  optional string subject = 5;
+  optional string description = 6;
+  optional string status = 7;
+  optional string priority = 8;
+  optional string classification = 9;
+  optional string ticketOwner = 10;
+  optional string productName = 11;
+  optional string vendor = 12;
+  optional string serialNumber = 13;
+  optional string dateTime1 = 14;
+  optional string channel = 15;
+  optional string language = 16;
+  optional string category = 17;
+  optional string subcategory = 18;
+  optional string dueDate = 19;
+}
+
+// Response Messages
+message TicketResponse {
+  string id = 1;
+  optional string contactName = 2;
+  optional string accountName = 3;
+  string email = 4;
+  optional string phone = 5;
+  string subject = 6;
+  string description = 7;
+  string status = 8;
+  string priority = 9;
+  optional string classification = 10;
+  optional string ticketOwner = 11;
+  optional string productName = 12;
+  string vendor = 13;
+  string serialNumber = 14;
+  optional string dateTime1 = 15;
+  optional string channel = 16;
+  optional string language = 17;
+  optional string category = 18;
+  optional string subcategory = 19;
+  optional string dueDate = 20;
+  string created_at = 21;
+  string updated_at = 22;
+  repeated TicketCommentResponse comments = 23;
+  repeated WorkOrderReference workOrders = 24;
+  repeated ActivityReference activities = 25;
+}
+
+message TicketCommentResponse {
+  string id = 1;
+  string comment = 2;
+  string author = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message WorkOrderReference {
+  string id = 1;
+  string name = 2; // summary
+}
+
+message ActivityReference {
+  string id = 1;
+  string action = 2;
+  string performedBy = 3;
+  string created_at = 4;
+}
+
+message PaginatedTicketsResponse {
+  repeated TicketResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteTicketResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

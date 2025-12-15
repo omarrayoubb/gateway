@@ -1,0 +1,210 @@
+syntax = "proto3";
+
+package contacts;
+
+service ContactsService {
+  rpc CreateContact (CreateContactRequest) returns (ContactResponse) {}
+  rpc FindAllContacts (PaginationRequest) returns (PaginatedContactsResponse) {}
+  rpc FindOneContact (FindOneContactRequest) returns (ContactResponse) {}
+  rpc UpdateContact (UpdateContactRequest) returns (ContactResponse) {}
+  rpc DeleteContact (DeleteContactRequest) returns (DeleteContactResponse) {}
+  rpc BulkDeleteContacts (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateContacts (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateContactRequest {
+  // Required fields
+  string firstName = 1;
+  string lastName = 2;
+  string email = 3;
+  
+  // Optional fields
+  optional string salutation = 4;
+  optional string phone = 5;
+  optional string mobilePhone = 6;
+  optional string ownerId = 7;
+  optional string accountId = 8;
+  optional string department = 9;
+  optional string governmentCode = 10;
+  optional string territory = 11;
+  optional string secondaryPhone = 12;
+  optional string assistantName = 13;
+  optional string currencyCode = 14;
+  optional string username = 15;
+  optional string wpNumber = 16;
+  optional string boxFolderId = 17;
+  optional string assignedProfile = 18;
+  optional string userPermissions = 19;
+  optional string mailingStreet = 20;
+  optional string mailingCity = 21;
+  optional string mailingState = 22;
+  optional string mailingZip = 23;
+  optional string mailingCountry = 24;
+}
+
+message UpdateContactRequest {
+  string id = 1;
+  optional string salutation = 2;
+  optional string firstName = 3;
+  optional string lastName = 4;
+  optional string phone = 5;
+  optional string mobilePhone = 6;
+  optional string accountId = 7;
+  optional string department = 8;
+  optional string governmentCode = 9;
+  optional string territory = 10;
+  optional string secondaryPhone = 11;
+  optional string assistantName = 12;
+  optional string currencyCode = 13;
+  optional string username = 14;
+  optional string wpNumber = 15;
+  optional string boxFolderId = 16;
+  optional string assignedProfile = 17;
+  optional string userPermissions = 18;
+  optional string mailingStreet = 19;
+  optional string mailingCity = 20;
+  optional string mailingState = 21;
+  optional string mailingZip = 22;
+  optional string mailingCountry = 23;
+  optional string ownerId = 24;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneContactRequest {
+  string id = 1;
+}
+
+message DeleteContactRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateContactFields updateFields = 2;
+}
+
+message UpdateContactFields {
+  optional string salutation = 1;
+  optional string firstName = 2;
+  optional string lastName = 3;
+  optional string phone = 4;
+  optional string mobilePhone = 5;
+  optional string accountId = 6;
+  optional string department = 7;
+  optional string governmentCode = 8;
+  optional string territory = 9;
+  optional string secondaryPhone = 10;
+  optional string assistantName = 11;
+  optional string currencyCode = 12;
+  optional string username = 13;
+  optional string wpNumber = 14;
+  optional string boxFolderId = 15;
+  optional string assignedProfile = 16;
+  optional string userPermissions = 17;
+  optional string mailingStreet = 18;
+  optional string mailingCity = 19;
+  optional string mailingState = 20;
+  optional string mailingZip = 21;
+  optional string mailingCountry = 22;
+  optional string ownerId = 23;
+}
+
+// Response Messages
+message ContactResponse {
+  string id = 1;
+  optional string salutation = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string email = 5;
+  optional string phone = 6;
+  optional string mobilePhone = 7;
+  optional string department = 8;
+  optional string governmentCode = 9;
+  optional string territory = 10;
+  optional string secondaryPhone = 11;
+  optional string assistantName = 12;
+  optional string currencyCode = 13;
+  optional string username = 14;
+  optional string wpNumber = 15;
+  optional string boxFolderId = 16;
+  optional string assignedProfile = 17;
+  optional string userPermissions = 18;
+  optional string mailingStreet = 19;
+  optional string mailingCity = 20;
+  optional string mailingState = 21;
+  optional string mailingZip = 22;
+  optional string mailingCountry = 23;
+  string createdAt = 24;
+  string updatedAt = 25;
+  optional SimpleUserData ownerData = 26;
+  string createdBy = 27;
+  string modifiedBy = 28;
+  optional SimpleAccount accountDetails = 29;
+  repeated SimpleDeal deals = 30;
+  repeated SimpleActivity activities = 31;
+}
+
+message PaginatedContactsResponse {
+  repeated ContactResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteContactResponse {
+  bool success = 1;
+}
+
+message BulkDeleteResponse {
+  int32 deletedCount = 1;
+  repeated FailedId failedIds = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updatedCount = 1;
+  repeated FailedItem failedItems = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+
+// Nested Messages (reused from leads.proto)
+message SimpleUserData {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message SimpleAccount {
+  string id = 1;
+  string name = 2;
+  string accountNumber = 3;
+}
+
+message SimpleDeal {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleActivity {
+  string id = 1;
+  string activityType = 2;
+  string subject = 3;
+}
+

@@ -1,0 +1,110 @@
+syntax = "proto3";
+
+package activities;
+
+service ActivityService {
+  rpc CreateActivity (CreateActivityRequest) returns (ActivityResponse) {}
+  rpc FindAllActivities (PaginationRequest) returns (PaginatedActivitiesResponse) {}
+  rpc FindOneActivity (FindOneActivityRequest) returns (ActivityResponse) {}
+  rpc UpdateActivity (UpdateActivityRequest) returns (ActivityResponse) {}
+  rpc DeleteActivity (DeleteActivityRequest) returns (DeleteActivityResponse) {}
+  rpc BulkDeleteActivities (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateActivities (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateActivityRequest {
+  string entityType = 1;
+  string entityId = 2;
+  string action = 3; // created, updated, deleted, status_changed
+  string performedBy = 4;
+  optional string changes = 5; // JSON string
+  optional string ticketId = 6;
+}
+
+message UpdateActivityRequest {
+  string id = 1;
+  optional string entityType = 2;
+  optional string entityId = 3;
+  optional string action = 4;
+  optional string performedBy = 5;
+  optional string changes = 6;
+  optional string ticketId = 7;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneActivityRequest {
+  string id = 1;
+}
+
+message DeleteActivityRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateActivityFields update_fields = 2;
+}
+
+message UpdateActivityFields {
+  optional string entityType = 1;
+  optional string entityId = 2;
+  optional string action = 3;
+  optional string performedBy = 4;
+  optional string changes = 5;
+  optional string ticketId = 6;
+}
+
+// Response Messages
+message ActivityResponse {
+  string id = 1;
+  string entityType = 2;
+  string entityId = 3;
+  string action = 4;
+  string performedBy = 5;
+  optional string changes = 6;
+  optional string ticketId = 7;
+  string created_at = 8;
+  string updated_at = 9;
+}
+
+message PaginatedActivitiesResponse {
+  repeated ActivityResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteActivityResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

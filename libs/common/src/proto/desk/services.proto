@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package services;
+
+service ServiceService {
+  rpc CreateService (CreateServiceRequest) returns (ServiceResponse) {}
+  rpc FindAllServices (PaginationRequest) returns (PaginatedServicesResponse) {}
+  rpc FindOneService (FindOneServiceRequest) returns (ServiceResponse) {}
+  rpc UpdateService (UpdateServiceRequest) returns (ServiceResponse) {}
+  rpc DeleteService (DeleteServiceRequest) returns (DeleteServiceResponse) {}
+  rpc BulkDeleteServices (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateServices (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateServiceRequest {
+  string name = 1;
+  double netPrice = 2;
+}
+
+message UpdateServiceRequest {
+  string id = 1;
+  optional string name = 2;
+  optional double netPrice = 3;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneServiceRequest {
+  string id = 1;
+}
+
+message DeleteServiceRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateServiceFields update_fields = 2;
+}
+
+message UpdateServiceFields {
+  optional string name = 1;
+  optional double netPrice = 2;
+}
+
+// Response Messages
+message ServiceResponse {
+  string id = 1;
+  string name = 2;
+  double netPrice = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message PaginatedServicesResponse {
+  repeated ServiceResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteServiceResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

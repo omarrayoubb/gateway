@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package parts;
+
+service PartService {
+  rpc CreatePart (CreatePartRequest) returns (PartResponse) {}
+  rpc FindAllParts (PaginationRequest) returns (PaginatedPartsResponse) {}
+  rpc FindOnePart (FindOnePartRequest) returns (PartResponse) {}
+  rpc UpdatePart (UpdatePartRequest) returns (PartResponse) {}
+  rpc DeletePart (DeletePartRequest) returns (DeletePartResponse) {}
+  rpc BulkDeleteParts (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateParts (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreatePartRequest {
+  string name = 1;
+  double price = 2;
+}
+
+message UpdatePartRequest {
+  string id = 1;
+  optional string name = 2;
+  optional double price = 3;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOnePartRequest {
+  string id = 1;
+}
+
+message DeletePartRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdatePartFields update_fields = 2;
+}
+
+message UpdatePartFields {
+  optional string name = 1;
+  optional double price = 2;
+}
+
+// Response Messages
+message PartResponse {
+  string id = 1;
+  string name = 2;
+  double price = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+message PaginatedPartsResponse {
+  repeated PartResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeletePartResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

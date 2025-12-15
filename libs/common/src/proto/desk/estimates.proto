@@ -1,0 +1,148 @@
+syntax = "proto3";
+
+package estimates;
+
+service EstimateService {
+  rpc CreateEstimate (CreateEstimateRequest) returns (EstimateResponse) {}
+  rpc FindAllEstimates (PaginationRequest) returns (PaginatedEstimatesResponse) {}
+  rpc FindOneEstimate (FindOneEstimateRequest) returns (EstimateResponse) {}
+  rpc UpdateEstimate (UpdateEstimateRequest) returns (EstimateResponse) {}
+  rpc DeleteEstimate (DeleteEstimateRequest) returns (DeleteEstimateResponse) {}
+  rpc BulkDeleteEstimates (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateEstimates (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateEstimateRequest {
+  string summary = 1;
+  optional string priority = 2; // low, medium, high
+  optional string dueDate = 3; // ISO date string
+  string currency = 4;
+  optional double exchangeRate = 5;
+  string company = 6;
+  string contact = 7;
+  string email = 8;
+  optional string phone = 9;
+  optional string mobile = 10;
+  optional string serviceAddress = 11; // JSON string
+  optional string billingAddress = 12; // JSON string
+  optional string termsAndConditions = 13;
+  optional string parentWorkOrderId = 14;
+  optional string requestId = 15;
+  string createdBy = 16;
+}
+
+message UpdateEstimateRequest {
+  string id = 1;
+  optional string summary = 2;
+  optional string priority = 3;
+  optional string dueDate = 4;
+  optional string currency = 5;
+  optional double exchangeRate = 6;
+  optional string company = 7;
+  optional string contact = 8;
+  optional string email = 9;
+  optional string phone = 10;
+  optional string mobile = 11;
+  optional string serviceAddress = 12;
+  optional string billingAddress = 13;
+  optional string termsAndConditions = 14;
+  optional string parentWorkOrderId = 15;
+  optional string requestId = 16;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneEstimateRequest {
+  string id = 1;
+}
+
+message DeleteEstimateRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateEstimateFields update_fields = 2;
+}
+
+message UpdateEstimateFields {
+  optional string summary = 1;
+  optional string priority = 2;
+  optional string dueDate = 3;
+  optional string currency = 4;
+  optional double exchangeRate = 5;
+  optional string company = 6;
+  optional string contact = 7;
+  optional string email = 8;
+  optional string phone = 9;
+  optional string mobile = 10;
+  optional string serviceAddress = 11;
+  optional string billingAddress = 12;
+  optional string termsAndConditions = 13;
+  optional string parentWorkOrderId = 14;
+  optional string requestId = 15;
+}
+
+// Response Messages
+message EstimateResponse {
+  string id = 1;
+  string summary = 2;
+  string priority = 3;
+  optional string dueDate = 4;
+  string currency = 5;
+  optional double exchangeRate = 6;
+  string company = 7;
+  string contact = 8;
+  string email = 9;
+  optional string phone = 10;
+  optional string mobile = 11;
+  optional string serviceAddress = 12;
+  optional string billingAddress = 13;
+  optional string termsAndConditions = 14;
+  optional string parentWorkOrderId = 15;
+  optional string requestId = 16;
+  string createdBy = 17;
+  string created_at = 18;
+  string updated_at = 19;
+}
+
+message PaginatedEstimatesResponse {
+  repeated EstimateResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteEstimateResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

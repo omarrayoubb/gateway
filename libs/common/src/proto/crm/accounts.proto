@@ -1,0 +1,202 @@
+syntax = "proto3";
+
+package accounts;
+
+service AccountsService {
+  rpc CreateAccount (CreateAccountRequest) returns (AccountResponse) {}
+  rpc FindAllAccounts (PaginationRequest) returns (PaginatedAccountsResponse) {}
+  rpc FindOneAccount (FindOneAccountRequest) returns (AccountResponse) {}
+  rpc UpdateAccount (UpdateAccountRequest) returns (AccountResponse) {}
+  rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse) {}
+  rpc BulkDeleteAccounts (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateAccounts (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateAccountRequest {
+  // Required fields
+  string name = 1;
+  string phone = 2;
+  repeated string userIds = 3; // Required - at least one user
+  
+  // Optional fields
+  optional string accountNumber = 4;
+  optional string website = 5;
+  optional string billingStreet = 6;
+  optional string billingCity = 7;
+  optional string billingState = 8;
+  optional string billingZip = 9;
+  optional string billingCountry = 10;
+  optional string shippingStreet = 11;
+  optional string shippingCity = 12;
+  optional string shippingState = 13;
+  optional string shippingZip = 14;
+  optional string shippingCountry = 15;
+  optional string territory = 16;
+  optional string industry = 17;
+  optional string accountType = 18;
+  optional string ownership = 19;
+  optional string parentAccountId = 20;
+}
+
+message UpdateAccountRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string phone = 3;
+  optional string website = 4;
+  optional string billingStreet = 5;
+  optional string billingCity = 6;
+  optional string billingState = 7;
+  optional string billingZip = 8;
+  optional string billingCountry = 9;
+  optional string shippingStreet = 10;
+  optional string shippingCity = 11;
+  optional string shippingState = 12;
+  optional string shippingZip = 13;
+  optional string shippingCountry = 14;
+  optional string territory = 15;
+  optional string industry = 16;
+  optional string accountType = 17;
+  optional string ownership = 18;
+  repeated string userIds = 19;
+  optional string parentAccountId = 20;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneAccountRequest {
+  string id = 1;
+}
+
+message DeleteAccountRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateAccountFields updateFields = 2;
+}
+
+message UpdateAccountFields {
+  optional string name = 1;
+  optional string phone = 2;
+  optional string website = 3;
+  optional string billingStreet = 4;
+  optional string billingCity = 5;
+  optional string billingState = 6;
+  optional string billingZip = 7;
+  optional string billingCountry = 8;
+  optional string shippingStreet = 9;
+  optional string shippingCity = 10;
+  optional string shippingState = 11;
+  optional string shippingZip = 12;
+  optional string shippingCountry = 13;
+  optional string territory = 14;
+  optional string industry = 15;
+  optional string accountType = 16;
+  optional string ownership = 17;
+  repeated string userIds = 18;
+  optional string parentAccountId = 19;
+}
+
+// Response Messages
+message AccountResponse {
+  string id = 1;
+  string name = 2;
+  string accountNumber = 3;
+  optional string phone = 4;
+  optional string website = 5;
+  string billingStreet = 6;
+  string billingCity = 7;
+  optional string billingState = 8;
+  optional string billingZip = 9;
+  optional string billingCountry = 10;
+  optional string shippingStreet = 11;
+  optional string shippingCity = 12;
+  optional string shippingState = 13;
+  optional string shippingZip = 14;
+  optional string shippingCountry = 15;
+  optional string territory = 16;
+  optional string industry = 17;
+  optional string accountType = 18;
+  optional string ownership = 19;
+  optional string parentAccountId = 20;
+  string createdAt = 21;
+  string updatedAt = 22;
+  string createdBy = 23;
+  string modifiedBy = 24;
+  repeated UserInfo users = 25;
+  repeated ContactInfo contacts = 26;
+  repeated LeadInfo leads = 27;
+  repeated DealInfo deals = 28;
+  optional ParentAccountInfo parentAccount = 29;
+}
+
+message PaginatedAccountsResponse {
+  repeated AccountResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteAccountResponse {
+  bool success = 1;
+}
+
+message BulkDeleteResponse {
+  int32 deletedCount = 1;
+  repeated FailedId failedIds = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updatedCount = 1;
+  repeated FailedItem failedItems = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+
+// Nested Messages
+message UserInfo {
+  string id = 1;
+  string name = 2;
+  optional string email = 3;
+}
+
+message ContactInfo {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message LeadInfo {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
+message DealInfo {
+  string id = 1;
+  string name = 2;
+}
+
+message ParentAccountInfo {
+  string id = 1;
+  string name = 2;
+  string accountNumber = 3;
+}
+

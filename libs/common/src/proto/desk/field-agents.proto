@@ -1,0 +1,90 @@
+syntax = "proto3";
+
+package fieldAgents;
+
+service FieldAgentService {
+  rpc CreateFieldAgent (CreateFieldAgentRequest) returns (FieldAgentResponse) {}
+  rpc FindAllFieldAgents (PaginationRequest) returns (PaginatedFieldAgentsResponse) {}
+  rpc FindOneFieldAgent (FindOneFieldAgentRequest) returns (FieldAgentResponse) {}
+  rpc UpdateFieldAgent (UpdateFieldAgentRequest) returns (FieldAgentResponse) {}
+  rpc DeleteFieldAgent (DeleteFieldAgentRequest) returns (DeleteFieldAgentResponse) {}
+  rpc BulkDeleteFieldAgents (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateFieldAgents (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateFieldAgentRequest {
+  string name = 1;
+}
+
+message UpdateFieldAgentRequest {
+  string id = 1;
+  optional string name = 2;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneFieldAgentRequest {
+  string id = 1;
+}
+
+message DeleteFieldAgentRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateFieldAgentFields update_fields = 2;
+}
+
+message UpdateFieldAgentFields {
+  optional string name = 1;
+}
+
+// Response Messages
+message FieldAgentResponse {
+  string id = 1;
+  string name = 2;
+  string created_at = 3;
+  string updated_at = 4;
+}
+
+message PaginatedFieldAgentsResponse {
+  repeated FieldAgentResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteFieldAgentResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

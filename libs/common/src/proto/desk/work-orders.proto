@@ -1,0 +1,211 @@
+syntax = "proto3";
+
+package workOrders;
+
+service WorkOrderService {
+  rpc CreateWorkOrder (CreateWorkOrderRequest) returns (WorkOrderResponse) {}
+  rpc FindAllWorkOrders (PaginationRequest) returns (PaginatedWorkOrdersResponse) {}
+  rpc FindOneWorkOrder (FindOneWorkOrderRequest) returns (WorkOrderResponse) {}
+  rpc UpdateWorkOrder (UpdateWorkOrderRequest) returns (WorkOrderResponse) {}
+  rpc DeleteWorkOrder (DeleteWorkOrderRequest) returns (DeleteWorkOrderResponse) {}
+  rpc BulkDeleteWorkOrders (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateWorkOrders (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateWorkOrderRequest {
+  string title = 1;
+  string ticketId = 2;
+  optional string summary = 3;
+  optional string agent = 4;
+  optional string priority = 5; // low, medium, high
+  optional string dueDate = 6; // ISO date string
+  optional string currency = 7;
+  optional double exchangeRate = 8;
+  optional string company = 9;
+  optional string contact = 10;
+  optional string email = 11;
+  optional string phone = 12;
+  optional string mobile = 13;
+  optional string serviceAddress = 14; // JSON string
+  optional string billingAddress = 15; // JSON string
+  optional string termsAndConditions = 16;
+  optional string billingStatus = 17; // pending, paid, overdue, cancelled
+  optional string installationBaseId = 18;
+  optional string parentWorkOrderId = 19;
+  optional string requestId = 20;
+  optional string createdBy = 21;
+}
+
+message UpdateWorkOrderRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string ticketId = 3;
+  optional string summary = 4;
+  optional string agent = 5;
+  optional string priority = 6;
+  optional string dueDate = 7;
+  optional string currency = 8;
+  optional double exchangeRate = 9;
+  optional string company = 10;
+  optional string contact = 11;
+  optional string email = 12;
+  optional string phone = 13;
+  optional string mobile = 14;
+  optional string serviceAddress = 15;
+  optional string billingAddress = 16;
+  optional string termsAndConditions = 17;
+  optional string billingStatus = 18;
+  optional string installationBaseId = 19;
+  optional string parentWorkOrderId = 20;
+  optional string requestId = 21;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneWorkOrderRequest {
+  string id = 1;
+}
+
+message DeleteWorkOrderRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateWorkOrderFields update_fields = 2;
+}
+
+message UpdateWorkOrderFields {
+  optional string title = 1;
+  optional string ticketId = 2;
+  optional string summary = 3;
+  optional string agent = 4;
+  optional string priority = 5;
+  optional string dueDate = 6;
+  optional string currency = 7;
+  optional double exchangeRate = 8;
+  optional string company = 9;
+  optional string contact = 10;
+  optional string email = 11;
+  optional string phone = 12;
+  optional string mobile = 13;
+  optional string serviceAddress = 14;
+  optional string billingAddress = 15;
+  optional string termsAndConditions = 16;
+  optional string billingStatus = 17;
+  optional string installationBaseId = 18;
+  optional string parentWorkOrderId = 19;
+  optional string requestId = 20;
+}
+
+// Response Messages
+message WorkOrderResponse {
+  string id = 1;
+  string title = 2;
+  optional string summary = 3;
+  optional string agent = 4;
+  string priority = 5;
+  optional string dueDate = 6;
+  optional string currency = 7;
+  optional double exchangeRate = 8;
+  optional string company = 9;
+  optional string contact = 10;
+  optional string email = 11;
+  optional string phone = 12;
+  optional string mobile = 13;
+  optional string serviceAddress = 14; // JSON string
+  optional string billingAddress = 15; // JSON string
+  optional string termsAndConditions = 16;
+  string billingStatus = 17;
+  string ticketId = 18;
+  optional string installationBaseId = 19;
+  optional string parentWorkOrderId = 20;
+  optional string requestId = 21;
+  optional string createdBy = 22;
+  string created_at = 23;
+  string updated_at = 24;
+  // Calculated fields
+  optional double servicesSubtotal = 25;
+  optional double partsSubtotal = 26;
+  optional double totalTax = 27;
+  optional double totalDiscount = 28;
+  optional double grandTotal = 29;
+  // Related entities (simplified)
+  repeated WorkOrderServiceResponse workOrderServices = 30;
+  repeated WorkOrderPartResponse workOrderParts = 31;
+  optional TicketReference ticket = 32;
+  optional PartReference installationBase = 33;
+}
+
+message WorkOrderServiceResponse {
+  string workOrderId = 1;
+  string serviceId = 2;
+  string serviceName = 3;
+  int32 quantity = 4;
+  double discount = 5;
+  optional string taxId = 6;
+  optional double taxPercentage = 7;
+  double amount = 8;
+}
+
+message WorkOrderPartResponse {
+  string workOrderId = 1;
+  string partId = 2;
+  string partName = 3;
+  int32 quantity = 4;
+  double discount = 5;
+  optional string taxId = 6;
+  optional double taxPercentage = 7;
+  double amount = 8;
+}
+
+message TicketReference {
+  string id = 1;
+  string subject = 2;
+}
+
+message PartReference {
+  string id = 1;
+  string name = 2;
+}
+
+message PaginatedWorkOrdersResponse {
+  repeated WorkOrderResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteWorkOrderResponse {
+  bool success = 1;
+  optional string message = 2;
+}
+
+message BulkDeleteResponse {
+  int32 deleted_count = 1;
+  repeated FailedId failed_ids = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updated_count = 1;
+  repeated FailedItem failed_items = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+

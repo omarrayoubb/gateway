@@ -1,0 +1,125 @@
+syntax = "proto3";
+
+package orchestrator;
+
+service OrchestratorService {
+  rpc GetAccountFormOptions (Empty) returns (AccountFormOptionsResponse) {}
+  rpc GetContactLeadFormOptions (Empty) returns (ContactLeadFormOptionsResponse) {}
+  rpc GetRegisterFormOptions (Empty) returns (RegisterFormOptionsResponse) {}
+  rpc GetDealFormOptions (Empty) returns (DealFormOptionsResponse) {}
+  rpc GetActivityFormOptions (Empty) returns (ActivityFormOptionsResponse) {}
+  rpc ConvertLeadToContact (ConvertLeadToContactRequest) returns (ContactResponse) {}
+}
+
+// Request Messages
+message Empty {}
+
+message ConvertLeadToContactRequest {
+  string leadId = 1;
+}
+
+// Response Messages
+message SimpleUser {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+}
+
+message SimpleAccount {
+  string id = 1;
+  string name = 2;
+  string accountNumber = 3;
+}
+
+message SimpleProfile {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleRole {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleLead {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleContact {
+  string id = 1;
+  string name = 2;
+}
+
+message AccountFormOptionsResponse {
+  repeated SimpleUser owners = 1;
+}
+
+message ContactLeadFormOptionsResponse {
+  repeated SimpleUser owners = 1;
+  repeated SimpleAccount accounts = 2;
+}
+
+message RegisterFormOptionsResponse {
+  repeated SimpleProfile profiles = 1;
+  repeated SimpleRole roles = 2;
+}
+
+message DealFormOptionsResponse {
+  repeated SimpleLead leads = 1;
+  repeated SimpleContact contacts = 2;
+  repeated SimpleAccount accounts = 3;
+  repeated SimpleUser users = 4;
+}
+
+message ActivityFormOptionsResponse {
+  repeated SimpleLead leads = 1;
+  repeated SimpleContact contacts = 2;
+}
+
+// Reuse ContactResponse from contacts.proto
+message ContactResponse {
+  string id = 1;
+  optional string salutation = 2;
+  string firstName = 3;
+  string lastName = 4;
+  string email = 5;
+  optional string phone = 6;
+  optional string mobilePhone = 7;
+  optional string department = 8;
+  optional string governmentCode = 9;
+  optional string territory = 10;
+  optional string secondaryPhone = 11;
+  optional string assistantName = 12;
+  optional string currencyCode = 13;
+  optional string username = 14;
+  optional string wpNumber = 15;
+  optional string boxFolderId = 16;
+  optional string assignedProfile = 17;
+  optional string userPermissions = 18;
+  optional string mailingStreet = 19;
+  optional string mailingCity = 20;
+  optional string mailingState = 21;
+  optional string mailingZip = 22;
+  optional string mailingCountry = 23;
+  optional SimpleUser ownerData = 24;
+  optional string createdBy = 25;
+  optional string modifiedBy = 26;
+  optional SimpleAccount accountDetails = 27;
+  repeated SimpleDeal deals = 28;
+  repeated SimpleActivity activities = 29;
+  string createdAt = 30;
+  string updatedAt = 31;
+}
+
+message SimpleDeal {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleActivity {
+  string id = 1;
+  string activityType = 2;
+  string subject = 3;
+}
+

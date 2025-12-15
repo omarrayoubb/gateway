@@ -13,7 +13,7 @@ import { join } from 'path';
         options: {
           package: 'auth',
           url: '0.0.0.0:50051',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/auth.proto'),
+          protoPath: join(__dirname, '../../../libs/common/src/proto/accounts/auth.proto'),
         },
       },
     ]),

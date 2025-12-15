@@ -1,0 +1,180 @@
+syntax = "proto3";
+
+package deals;
+
+service DealsService {
+  rpc CreateDeal (CreateDealRequest) returns (DealResponse) {}
+  rpc FindAllDeals (PaginationRequest) returns (PaginatedDealsResponse) {}
+  rpc FindOneDeal (FindOneDealRequest) returns (DealResponse) {}
+  rpc UpdateDeal (UpdateDealRequest) returns (DealResponse) {}
+  rpc DeleteDeal (DeleteDealRequest) returns (DeleteDealResponse) {}
+  rpc BulkDeleteDeals (BulkDeleteRequest) returns (BulkDeleteResponse) {}
+  rpc BulkUpdateDeals (BulkUpdateRequest) returns (BulkUpdateResponse) {}
+}
+
+// Request Messages
+message CreateDealRequest {
+  // Required fields
+  string name = 1;
+  string accountId = 2;
+  string ownerId = 3;
+  
+  // Optional fields - either leadId OR contactId (mutually exclusive)
+  optional string leadId = 4;
+  optional string contactId = 5;
+  optional double amount = 6;
+  optional string closingDate = 7; // ISO date string
+  optional string currency = 8;
+  optional string type = 9;
+  optional string stage = 10;
+  optional double probability = 11;
+  optional string leadSource = 12;
+  optional string description = 13;
+  optional string boxFolderId = 14;
+  optional string campaignSource = 15;
+  optional string quote = 16;
+}
+
+message UpdateDealRequest {
+  string id = 1;
+  optional string name = 2;
+  optional string accountId = 3;
+  optional string ownerId = 4;
+  optional string leadId = 5;
+  optional string contactId = 6;
+  optional double amount = 7;
+  optional string closingDate = 8; // ISO date string
+  optional string currency = 9;
+  optional string type = 10;
+  optional string stage = 11;
+  optional double probability = 12;
+  optional string leadSource = 13;
+  optional string description = 14;
+  optional string boxFolderId = 15;
+  optional string campaignSource = 16;
+  optional string quote = 17;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneDealRequest {
+  string id = 1;
+}
+
+message DeleteDealRequest {
+  string id = 1;
+}
+
+message BulkDeleteRequest {
+  repeated string ids = 1;
+}
+
+message BulkUpdateRequest {
+  repeated string ids = 1;
+  UpdateDealFields updateFields = 2;
+}
+
+message UpdateDealFields {
+  optional string name = 1;
+  optional string accountId = 2;
+  optional string ownerId = 3;
+  optional string leadId = 4;
+  optional string contactId = 5;
+  optional double amount = 6;
+  optional string closingDate = 7;
+  optional string currency = 8;
+  optional string type = 9;
+  optional string stage = 10;
+  optional double probability = 11;
+  optional string leadSource = 12;
+  optional string description = 13;
+  optional string boxFolderId = 14;
+  optional string campaignSource = 15;
+  optional string quote = 16;
+}
+
+// Response Messages
+message DealResponse {
+  string id = 1;
+  string name = 2;
+  optional double amount = 3;
+  optional string closingDate = 4;
+  optional string currency = 5;
+  optional string type = 6;
+  optional string stage = 7;
+  optional double probability = 8;
+  optional string leadSource = 9;
+  optional string description = 10;
+  optional string boxFolderId = 11;
+  optional string campaignSource = 12;
+  optional string quote = 13;
+  string ownerId = 14;
+  string accountId = 15;
+  optional string leadId = 16;
+  optional string contactId = 17;
+  string createdAt = 18;
+  string updatedAt = 19;
+  string createdBy = 20;
+  string modifiedBy = 21;
+  AccountInfo accountInfo = 22;
+  optional LeadInfo leadInfo = 23;
+  optional ContactInfo contactInfo = 24;
+  optional SimpleUserData ownerData = 25;
+}
+
+message PaginatedDealsResponse {
+  repeated DealResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteDealResponse {
+  bool success = 1;
+}
+
+message BulkDeleteResponse {
+  int32 deletedCount = 1;
+  repeated FailedId failedIds = 2;
+}
+
+message FailedId {
+  string id = 1;
+  string error = 2;
+}
+
+message BulkUpdateResponse {
+  int32 updatedCount = 1;
+  repeated FailedItem failedItems = 2;
+}
+
+message FailedItem {
+  string id = 1;
+  string error = 2;
+}
+
+// Nested Messages
+message AccountInfo {
+  string id = 1;
+  string name = 2;
+}
+
+message LeadInfo {
+  string id = 1;
+  string name = 2;
+}
+
+message ContactInfo {
+  string id = 1;
+  string name = 2;
+}
+
+message SimpleUserData {
+  string id = 1;
+  string firstName = 2;
+  string lastName = 3;
+}
+
