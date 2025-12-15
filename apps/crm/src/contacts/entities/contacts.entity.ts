@@ -78,7 +78,7 @@ export class Contact {
   @Column({ nullable: true })
   assistant_name: string; // "Assistant"
 
-  // --- DENORMALIZED ERP / INTERNAL INFO ---
+
   @Column({ nullable: true })
   currency_code: string; // "Currency"
 
