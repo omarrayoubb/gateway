@@ -52,7 +52,6 @@ export class LeadsController {
     @Request() req: any,
   ): Observable<LeadResponseDto> {
     const currentUser: { id: string; name: string; email: string } = req.user;
-    console.log("----------------------------\n" + createLeadDto.first_name + "\n" + createLeadDto.last_name + "\n" + createLeadDto.phone + "\n" + createLeadDto.email + "\n" + createLeadDto.shipping_street + "\n" + createLeadDto.billing_city + "\n" + createLeadDto.ownerId + "\n" + createLeadDto.salutation)
     return this.leadsService.createLead(createLeadDto, currentUser);
   }
 
