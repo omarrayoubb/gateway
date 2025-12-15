@@ -45,6 +45,7 @@ import { UpdateDeliveryNoteDto } from './dto/delivery-notes/update-delivery-note
 import { UpdateStockMovementDto } from './dto/stock-movements/update-stock-movement.dto';
 
 @Controller('supplychain')
+@UseGuards(JwtAuthGuard)
 // @UseGuards(JwtAuthGuard) // Temporarily disabled for development
 export class SupplyChainController {
   constructor(private readonly supplyChainService: SupplyChainService) {}
@@ -1550,8 +1551,8 @@ export class SupplyChainController {
 
   @Get('delivery-notes/products/with-inventory')
   async getProductsWithInventory(
-    @Query('warehouse_id') warehouse_id?: string,
     @Request() req: any,
+    @Query('warehouse_id') warehouse_id?: string,
   ) {
     try {
       const token = req.headers.authorization?.replace('Bearer ', '') || '';

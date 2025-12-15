@@ -21,6 +21,7 @@ import { WorkOrdersModule } from './desk/work-orders/work-orders.module';
 import { KnowledgeBaseModule } from './desk/knowledge-base/knowledge-base.module';
 import { ContactsModule as DeskContactsModule } from './desk/contacts/contacts.module';
 import { AccountsModule as DeskAccountsModule } from './desk/accounts/accounts.module';
+import { SupplyChainModule } from './supplychain/supplychain.module';
 
 
 @Module({
@@ -49,6 +50,7 @@ import { AccountsModule as DeskAccountsModule } from './desk/accounts/accounts.m
     KnowledgeBaseModule,
     DeskContactsModule,
     DeskAccountsModule,
+    SupplyChainModule
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],

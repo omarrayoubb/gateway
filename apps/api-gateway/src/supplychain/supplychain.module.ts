@@ -13,7 +13,7 @@ import { join } from 'path';
         options: {
           package: 'supplychain',
           url: '0.0.0.0:50054',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/supplychain.proto'),
+          protoPath: join(__dirname, '../../../libs/common/src/proto/supplychain/supplychain.proto'),
         },
       },
     ]),

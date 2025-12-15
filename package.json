@@ -8,16 +8,19 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"apps/**/*.ts\" \"libs/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/apps/gateway/main",
+    "start": "nest start api-gateway",
+    "start:dev": "nest start api-gateway --watch",
+    "start:debug": "nest start api-gateway --debug --watch",
+    "start:prod": "node dist/apps/api-gateway/main",
+    "start:supplychain": "nest start supplychain",
+    "start:supplychain:dev": "nest start supplychain --watch",
+    "start:supplychain:debug": "nest start supplychain --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./apps/gateway/test/jest-e2e.json"
+    "test:e2e": "jest --config ./apps/api-gateway/test/jest-e2e.json"
   },
   "dependencies": {
     "@grpc/grpc-js": "^1.14.2",
