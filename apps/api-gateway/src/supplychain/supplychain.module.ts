@@ -16,6 +16,18 @@ import { join } from 'path';
           protoPath: join(__dirname, '../../../libs/common/src/proto/supplychain/supplychain.proto'),
         },
       },
+      {
+        name: 'CRM_PACKAGE',
+        transport: Transport.GRPC,
+        options: {
+          package: ['contacts', 'accounts'],
+          url: '0.0.0.0:50052',
+          protoPath: [
+            join(__dirname, '../../../libs/common/src/proto/crm/contacts.proto'),
+            join(__dirname, '../../../libs/common/src/proto/crm/accounts.proto'),
+          ],
+        },
+      },
     ]),
   ],
   controllers: [SupplyChainController],

@@ -106,6 +106,16 @@ interface DeliveryNotesService {
   GetProductsWithInventory(data: { warehouseId?: string }, metadata?: Metadata): Observable<any>;
 }
 
+interface ContactsGrpcService {
+  findAllContacts(data: { page: number; limit: number }, metadata?: Metadata): Observable<any>;
+  findOneContact(data: { id: string }, metadata?: Metadata): Observable<any>;
+}
+
+interface AccountsGrpcService {
+  findAllAccounts(data: { page: number; limit: number }, metadata?: Metadata): Observable<any>;
+  findOneAccount(data: { id: string }, metadata?: Metadata): Observable<any>;
+}
+
 @Injectable()
 export class SupplyChainService implements OnModuleInit {
   private productsService: ProductsService;
@@ -121,8 +131,13 @@ export class SupplyChainService implements OnModuleInit {
   private shipmentTrackingService: ShipmentTrackingService;
   private purchaseOrdersService: PurchaseOrdersService;
   private deliveryNotesService: DeliveryNotesService;
+  private contactsService: ContactsGrpcService;
+  private accountsService: AccountsGrpcService;
 
-  constructor(@Inject('SUPPLYCHAIN_PACKAGE') private readonly client: ClientGrpc) {}
+  constructor(
+    @Inject('SUPPLYCHAIN_PACKAGE') private readonly client: ClientGrpc,
+    @Inject('CRM_PACKAGE') private readonly crmClient: ClientGrpc,
+  ) {}
 
   onModuleInit() {
     this.productsService = this.client.getService<ProductsService>('ProductsService');
@@ -138,6 +153,8 @@ export class SupplyChainService implements OnModuleInit {
     this.shipmentTrackingService = this.client.getService<ShipmentTrackingService>('ShipmentTrackingService');
     this.purchaseOrdersService = this.client.getService<PurchaseOrdersService>('PurchaseOrdersService');
     this.deliveryNotesService = this.client.getService<DeliveryNotesService>('DeliveryNotesService');
+    this.contactsService = this.crmClient.getService<ContactsGrpcService>('ContactsService');
+    this.accountsService = this.crmClient.getService<AccountsGrpcService>('AccountsService');
   }
 
   private createMetadata(token?: string): Metadata {
@@ -874,6 +891,58 @@ export class SupplyChainService implements OnModuleInit {
       );
     } catch (error) {
       console.error('gRPC Error getting products with inventory:', error);
+      throw error;
+    }
+  }
+
+  // ============================================
+  // CRM CONTACTS ENDPOINTS
+  // ============================================
+
+  async getContacts(page = 1, limit = 10, token?: string) {
+    try {
+      return await firstValueFrom(
+        this.contactsService.findAllContacts({ page, limit }, this.createMetadata(token))
+      );
+    } catch (error) {
+      console.error('gRPC Error getting contacts:', error);
+      throw error;
+    }
+  }
+
+  async getContact(id: string, token?: string) {
+    try {
+      return await firstValueFrom(
+        this.contactsService.findOneContact({ id }, this.createMetadata(token))
+      );
+    } catch (error) {
+      console.error('gRPC Error getting contact:', error);
+      throw error;
+    }
+  }
+
+  // ============================================
+  // CRM ACCOUNTS ENDPOINTS
+  // ============================================
+
+  async getAccounts(page = 1, limit = 10, token?: string) {
+    try {
+      return await firstValueFrom(
+        this.accountsService.findAllAccounts({ page, limit }, this.createMetadata(token))
+      );
+    } catch (error) {
+      console.error('gRPC Error getting accounts:', error);
+      throw error;
+    }
+  }
+
+  async getAccount(id: string, token?: string) {
+    try {
+      return await firstValueFrom(
+        this.accountsService.findOneAccount({ id }, this.createMetadata(token))
+      );
+    } catch (error) {
+      console.error('gRPC Error getting account:', error);
       throw error;
     }
   }

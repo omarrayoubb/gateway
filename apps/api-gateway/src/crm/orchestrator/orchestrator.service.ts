@@ -11,6 +11,7 @@ import type {
   RegisterFormOptionsResponse,
   DealFormOptionsResponse,
   ActivityFormOptionsResponse,
+  DeliveryNoteFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -20,6 +21,7 @@ interface OrchestratorGrpcService {
   getRegisterFormOptions(data: Empty): Observable<RegisterFormOptionsResponse>;
   getDealFormOptions(data: Empty): Observable<DealFormOptionsResponse>;
   getActivityFormOptions(data: Empty): Observable<ActivityFormOptionsResponse>;
+  getDeliveryNoteFormOptions(data: Empty): Observable<DeliveryNoteFormOptionsResponse>;
   convertLeadToContact(data: ConvertLeadToContactRequest, metadata?: Metadata): Observable<ContactResponse>;
 }
 
@@ -83,6 +85,17 @@ export class OrchestratorService implements OnModuleInit {
       map(response => response),
       catchError(error => {
         console.error('Error in getActivityFormOptions gRPC call:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  getDeliveryNoteFormOptions(): Observable<DeliveryNoteFormOptionsResponse> {
+    const request: Empty = {};
+    return this.orchestratorGrpcService.getDeliveryNoteFormOptions(request).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error in getDeliveryNoteFormOptions gRPC call:', error);
         return throwError(() => error);
       })
     );

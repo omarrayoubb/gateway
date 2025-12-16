@@ -1567,5 +1567,89 @@ export class SupplyChainController {
       throw error;
     }
   }
+
+  // ============================================
+  // CRM CONTACTS ENDPOINTS
+  // ============================================
+
+  @Get('contacts')
+  async getContacts(
+    @Request() req: any,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    try {
+      const pageNum = page ? parseInt(page) : 1;
+      const limitNum = limit ? parseInt(limit) : 10;
+      const token = req.headers.authorization?.replace('Bearer ', '') || '';
+      return await this.supplyChainService.getContacts(pageNum, limitNum, token);
+    } catch (error) {
+      console.error('Error getting contacts:', error);
+      if (error.code === 5) {
+        throw new NotFoundException(error.details || error.message || 'Resource not found');
+      } else if (error.code) {
+        throw new BadRequestException(error.details || error.message || 'Request failed');
+      }
+      throw error;
+    }
+  }
+
+  @Get('contacts/:id')
+  async getContact(@Param('id', ParseUUIDPipe) id: string, @Request() req: any) {
+    try {
+      const token = req.headers.authorization?.replace('Bearer ', '') || '';
+      return await this.supplyChainService.getContact(id, token);
+    } catch (error) {
+      console.error('Error getting contact:', error);
+      if (error.code === 5) {
+        throw new NotFoundException(error.details || error.message || 'Resource not found');
+      } else if (error.code) {
+        throw new BadRequestException(error.details || error.message || 'Request failed');
+      }
+      throw error;
+    }
+  }
+
+  // ============================================
+  // CRM ACCOUNTS ENDPOINTS
+  // ============================================
+
+  @Get('accounts')
+  async getAccounts(
+    @Request() req: any,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string,
+  ) {
+    try {
+      const pageNum = page ? parseInt(page) : 1;
+      const limitNum = limit ? parseInt(limit) : 10;
+      const token = req.headers.authorization?.replace('Bearer ', '') || '';
+      return await this.supplyChainService.getAccounts(pageNum, limitNum, token);
+    } catch (error) {
+      console.error('Error getting accounts:', error);
+      if (error.code === 5) {
+        throw new NotFoundException(error.details || error.message || 'Resource not found');
+      } else if (error.code) {
+        throw new BadRequestException(error.details || error.message || 'Request failed');
+      }
+      throw error;
+    }
+  }
+
+  @Get('accounts/:id')
+  async getAccount(@Param('id', ParseUUIDPipe) id: string, @Request() req: any) {
+    try {
+      const token = req.headers.authorization?.replace('Bearer ', '') || '';
+      return await this.supplyChainService.getAccount(id, token);
+    } catch (error) {
+      console.error('Error getting account:', error);
+      if (error.code === 5) {
+        throw new NotFoundException(error.details || error.message || 'Resource not found');
+      } else if (error.code) {
+        throw new BadRequestException(error.details || error.message || 'Request failed');
+      }
+      throw error;
+    }
+  }
 }
 

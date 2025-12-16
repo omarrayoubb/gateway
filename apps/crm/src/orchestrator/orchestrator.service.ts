@@ -10,7 +10,8 @@ import {
   ContactLeadOrchestratorResponse,
   RegisterFormOrchestratorResponse,
   DealFormOrchestratorResponse,
-  ActivityFormOrchestratorResponse 
+  ActivityFormOrchestratorResponse,
+  DeliveryNoteFormOrchestratorResponse
 } from './dto/orchestrator-response.dto';
 import { ContactResponseDto } from '../contacts/dto/contact-response.dto';
 import { CreateContactDto } from '../contacts/dto/create-contact.dto';
@@ -237,6 +238,17 @@ export class OrchestratorService {
     return {
       leads: leadsList,
       contacts: contactsList,
+    };
+  }
+
+  /**
+   * Returns options needed for the Delivery Note form.
+   * Needs: List of Accounts (id and name)
+   */
+  async getDeliveryNoteFormOptions(): Promise<DeliveryNoteFormOrchestratorResponse> {
+    const accounts = await this.accountsService.findAllForDropdown();
+    return {
+      accounts: accounts.map(a => ({ id: a.id, name: a.name, accountNumber: a.accountNumber })),
     };
   }
 }

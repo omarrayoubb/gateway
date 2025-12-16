@@ -10,6 +10,7 @@ import type {
   RegisterFormOptionsResponse,
   DealFormOptionsResponse,
   ActivityFormOptionsResponse,
+  DeliveryNoteFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -80,6 +81,20 @@ export class OrchestratorController {
       return this.mapActivityFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getActivityFormOptions:', error);
+      throw new RpcException({
+        code: error.code || 2,
+        message: error.message || 'An unknown error occurred',
+      });
+    }
+  }
+
+  @GrpcMethod('OrchestratorService', 'GetDeliveryNoteFormOptions')
+  async getDeliveryNoteFormOptions(data: Empty): Promise<DeliveryNoteFormOptionsResponse> {
+    try {
+      const result = await this.orchestratorService.getDeliveryNoteFormOptions();
+      return this.mapDeliveryNoteFormOptionsToProto(result);
+    } catch (error) {
+      console.error('Error in getDeliveryNoteFormOptions:', error);
       throw new RpcException({
         code: error.code || 2,
         message: error.message || 'An unknown error occurred',
@@ -194,6 +209,16 @@ export class OrchestratorController {
       contacts: dto.contacts.map((contact: any) => ({
         id: contact.id,
         name: contact.name,
+      })),
+    };
+  }
+
+  private mapDeliveryNoteFormOptionsToProto(dto: any): DeliveryNoteFormOptionsResponse {
+    return {
+      accounts: dto.accounts.map((account: any) => ({
+        id: account.id,
+        name: account.name,
+        accountNumber: account.accountNumber,
       })),
     };
   }

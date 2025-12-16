@@ -61,3 +61,8 @@ interface SimpleUser {
     leads: SimpleLead[];
     contacts: SimpleContact[];
   }
+
+  // Response for the Delivery Note Form
+  export class DeliveryNoteFormOrchestratorResponse {
+    accounts: SimpleAccount[];
+  }
