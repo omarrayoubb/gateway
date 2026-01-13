@@ -11,6 +11,7 @@ import type {
   DealFormOptionsResponse,
   ActivityFormOptionsResponse,
   DeliveryNoteFormOptionsResponse,
+  RfqFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -95,6 +96,20 @@ export class OrchestratorController {
       return this.mapDeliveryNoteFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getDeliveryNoteFormOptions:', error);
+      throw new RpcException({
+        code: error.code || 2,
+        message: error.message || 'An unknown error occurred',
+      });
+    }
+  }
+
+  @GrpcMethod('OrchestratorService', 'GetRfqFormOptions')
+  async getRfqFormOptions(data: Empty): Promise<RfqFormOptionsResponse> {
+    try {
+      const result = await this.orchestratorService.getRfqFormOptions();
+      return this.mapRfqFormOptionsToProto(result);
+    } catch (error) {
+      console.error('Error in getRfqFormOptions:', error);
       throw new RpcException({
         code: error.code || 2,
         message: error.message || 'An unknown error occurred',
@@ -219,6 +234,33 @@ export class OrchestratorController {
         id: account.id,
         name: account.name,
         accountNumber: account.accountNumber,
+      })),
+    };
+  }
+
+  private mapRfqFormOptionsToProto(dto: any): RfqFormOptionsResponse {
+    return {
+      products: dto.products.map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        sku: product.sku,
+      })),
+      vendors: dto.vendors.map((vendor: any) => ({
+        id: vendor.id,
+        name: vendor.name,
+      })),
+      accounts: dto.accounts.map((account: any) => ({
+        id: account.id,
+        name: account.name,
+        accountNumber: account.accountNumber,
+      })),
+      contacts: dto.contacts.map((contact: any) => ({
+        id: contact.id,
+        name: contact.name,
+      })),
+      leads: dto.leads.map((lead: any) => ({
+        id: lead.id,
+        name: lead.name,
       })),
     };
   }

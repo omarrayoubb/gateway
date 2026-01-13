@@ -1,0 +1,124 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: gateway_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d gateway_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  accounts:
+    build:
+      context: .
+      args:
+        APP_NAME: accounts
+    ports:
+      - "50051:50051"
+    environment:
+      - ACCOUNTS_DB_HOST=postgres
+      - ACCOUNTS_DB_PORT=5432
+      - ACCOUNTS_DB_USERNAME=user
+      - ACCOUNTS_DB_PASSWORD=password
+      - ACCOUNTS_DB_DATABASE=accounts_db
+      - ACCOUNTS_DB_SYNCHRONIZE=true
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
+      - JWT_SECRET=your-jwt-secret-key-change-in-production
+      - JWT_EXPIRES_IN=7d
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  crm:
+    build:
+      context: .
+      args:
+        APP_NAME: crm
+    ports:
+      - "50052:50052"
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgres://user:password@postgres:5432/crm_db
+      - CRM_DB_HOST=postgres
+      - CRM_DB_PORT=5432
+      - CRM_DB_USERNAME=user
+      - CRM_DB_PASSWORD=password
+      - CRM_DB_DATABASE=crm_db
+      - CRM_DB_SYNCHRONIZE=true
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      accounts:
+        condition: service_started
+
+  supplychain:
+    build:
+      context: .
+      args:
+        APP_NAME: supplychain
+    ports:
+      - "50054:50054"
+    environment:
+      - SUPPLYCHAIN_DB_HOST=postgres
+      - SUPPLYCHAIN_DB_PORT=5432
+      - SUPPLYCHAIN_DB_USERNAME=user
+      - SUPPLYCHAIN_DB_PASSWORD=password
+      - SUPPLYCHAIN_DB_DATABASE=supplychain_db
+      - SUPPLYCHAIN_DB_SYNCHRONIZE=true
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api-gateway:
+    build:
+      context: .
+      args:
+        APP_NAME: api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - JWT_SECRET=your-jwt-secret-key-change-in-production
+      - JWT_EXPIRES_IN=7d
+      - ACCOUNTS_GRPC_URL=accounts:50051
+      - CRM_GRPC_URL=crm:50052
+      - SUPPLYCHAIN_GRPC_URL=supplychain:50054
+    depends_on:
+      accounts:
+        condition: service_started
+      crm:
+        condition: service_started
+      supplychain:
+        condition: service_started
+
+volumes:
+  postgres_data:

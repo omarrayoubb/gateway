@@ -12,8 +12,8 @@ import { join } from 'path';
         transport: Transport.GRPC,
         options: {
           package: 'auth',
-          url: '0.0.0.0:50051',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/accounts/auth.proto'),
+          url: process.env.ACCOUNTS_GRPC_URL || '0.0.0.0:50051',
+          protoPath: join(process.cwd(), 'proto/accounts/auth.proto'),
         },
       },
     ]),
@@ -21,4 +21,4 @@ import { join } from 'path';
   controllers: [AccountsController],
   providers: [AccountsService],
 })
-export class AccountsModule {}
+export class AccountsModule { }

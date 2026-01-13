@@ -56,7 +56,11 @@
       "sourceRoot": "apps/crm/src",
       "compilerOptions": {
         "tsConfigPath": "apps/crm/tsconfig.app.json"
-      }
+      },
+      "assets": [
+        "**/*.proto"
+      ],
+      "watchAssets": true
     },
     "desk": {
       "type": "application",

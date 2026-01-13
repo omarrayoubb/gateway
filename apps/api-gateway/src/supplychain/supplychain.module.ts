@@ -12,8 +12,8 @@ import { join } from 'path';
         transport: Transport.GRPC,
         options: {
           package: 'supplychain',
-          url: '0.0.0.0:50054',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/supplychain/supplychain.proto'),
+          url: process.env.SUPPLYCHAIN_GRPC_URL || 'supplychain:50054',
+          protoPath: join(process.cwd(), 'proto/supplychain/supplychain.proto'),
         },
       },
       {
@@ -21,10 +21,10 @@ import { join } from 'path';
         transport: Transport.GRPC,
         options: {
           package: ['contacts', 'accounts'],
-          url: '0.0.0.0:50052',
+          url: process.env.CRM_GRPC_URL || 'crm:50052',
           protoPath: [
-            join(__dirname, '../../../libs/common/src/proto/crm/contacts.proto'),
-            join(__dirname, '../../../libs/common/src/proto/crm/accounts.proto'),
+            join(process.cwd(), 'proto/crm/contacts.proto'),
+            join(process.cwd(), 'proto/crm/accounts.proto'),
           ],
         },
       },

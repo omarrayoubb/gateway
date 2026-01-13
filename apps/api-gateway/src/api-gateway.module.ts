@@ -22,8 +22,7 @@ import { KnowledgeBaseModule } from './desk/knowledge-base/knowledge-base.module
 import { ContactsModule as DeskContactsModule } from './desk/contacts/contacts.module';
 import { AccountsModule as DeskAccountsModule } from './desk/accounts/accounts.module';
 import { SupplyChainModule } from './supplychain/supplychain.module';
-
-
+import { RFQsModule } from './crm/rfqs/rfqs.module';
 @Module({
   imports: [
     // Load environment variables FIRST - must be before other modules
@@ -50,7 +49,8 @@ import { SupplyChainModule } from './supplychain/supplychain.module';
     KnowledgeBaseModule,
     DeskContactsModule,
     DeskAccountsModule,
-    SupplyChainModule
+    SupplyChainModule,
+    RFQsModule
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],

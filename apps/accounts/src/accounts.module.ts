@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtModule } from '@nestjs/jwt';
+import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
 import { User } from './users.entity';
@@ -41,6 +42,29 @@ import { User } from './users.entity';
         },
       }),
     }),
+    // Configure RabbitMQ client for publishing events
+    ClientsModule.registerAsync([
+      {
+        name: 'RABBITMQ_SERVICE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get('RABBITMQ_URL') || 'amqp://user:password@localhost:5672'],
+            queue: 'user_created_queue',
+            queueOptions: {
+              durable: true,
+            },
+            // Ensure exchange is created and messages are routed correctly
+            socketOptions: {
+              heartbeatIntervalInSeconds: 60,
+              reconnectTimeInSeconds: 5,
+            },
+          },
+        }),
+      },
+    ]),
   ],
   controllers: [AccountsController],
   providers: [AccountsService],

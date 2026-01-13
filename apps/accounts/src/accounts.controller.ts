@@ -12,11 +12,13 @@ import type {
   GetProfileResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  GetUsersRequest,
+  GetUsersResponse,
 } from '@app/common/types/auth';
 
 @Controller()
 export class AccountsController {
-  constructor(private readonly accountsService: AccountsService) {}
+  constructor(private readonly accountsService: AccountsService) { }
 
   @GrpcMethod('AuthService', 'Register')
   async register(data: RegisterRequest): Promise<RegisterResponse> {

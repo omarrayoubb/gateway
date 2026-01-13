@@ -9,7 +9,7 @@ async function bootstrap() {
     transport: Transport.GRPC,
     options: {
       package: 'supplychain',
-      protoPath: join(__dirname, '../../../libs/common/src/proto/supplychain/supplychain.proto'),
+      protoPath: join(process.cwd(), 'proto/supplychain/supplychain.proto'),
       url: '0.0.0.0:50054',
     },
   });

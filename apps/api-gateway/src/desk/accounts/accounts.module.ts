@@ -12,8 +12,8 @@ import { AccountsController } from './accounts.controller';
         transport: Transport.GRPC,
         options: {
           package: ['accounts'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/accounts.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/accounts.proto'),
         },
       },
     ]),
@@ -22,7 +22,13 @@ import { AccountsController } from './accounts.controller';
   providers: [AccountsService],
   exports: [AccountsService],
 })
-export class AccountsModule {}
+export class AccountsModule { }
+
+
+
+
+
+
 
 
 

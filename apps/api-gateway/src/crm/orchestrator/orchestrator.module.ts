@@ -1,26 +1,14 @@
 import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
 import { OrchestratorService } from './orchestrator.service';
 import { OrchestratorController } from './orchestrator.controller';
 
 @Module({
   imports: [
-    ClientsModule.register([
-      {
-        name: 'CRM_PACKAGE',
-        transport: Transport.GRPC,
-        options: {
-          package: ['orchestrator'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/orchestrator.proto'),
-        },
-      },
-    ]),
+    // Client is registered in CrmModule
   ],
   controllers: [OrchestratorController],
   providers: [OrchestratorService],
   exports: [OrchestratorService],
 })
-export class OrchestratorModule {}
+export class OrchestratorModule { }
 

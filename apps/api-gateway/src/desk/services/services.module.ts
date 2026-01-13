@@ -13,7 +13,7 @@ import { ServicesController } from './services.controller';
         options: {
           package: ['services'],
           url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/services.proto'),
+          protoPath: join(process.cwd(), 'proto/desk/services.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { ServicesController } from './services.controller';
   providers: [ServicesService],
   exports: [ServicesService],
 })
-export class ServicesModule {}
+export class ServicesModule { }
 

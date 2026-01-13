@@ -13,7 +13,7 @@ import { TicketsController } from './tickets.controller';
         options: {
           package: ['tickets'],
           url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/tickets.proto'),
+          protoPath: join(process.cwd(), 'proto/desk/tickets.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { TicketsController } from './tickets.controller';
   providers: [TicketsService],
   exports: [TicketsService],
 })
-export class TicketsModule {}
+export class TicketsModule { }
 
