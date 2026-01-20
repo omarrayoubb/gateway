@@ -12,7 +12,7 @@ import { ServicesController } from './services.controller';
         transport: Transport.GRPC,
         options: {
           package: ['services'],
-          url: '0.0.0.0:50053',
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
           protoPath: join(process.cwd(), 'proto/desk/services.proto'),
         },
       },

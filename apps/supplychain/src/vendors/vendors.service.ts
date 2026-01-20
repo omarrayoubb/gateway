@@ -53,8 +53,40 @@ export class VendorsService {
 
     // Handle sorting
     if (sort) {
-      const [field, order] = sort.split(':');
-      queryBuilder.orderBy(`vendor.${field}`, order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+      let sortField = sort.trim();
+      let sortOrder: 'ASC' | 'DESC' = 'ASC';
+      
+      // Handle prefix-based sorting (e.g., "-created_at" means DESC)
+      if (sortField.startsWith('-')) {
+        sortField = sortField.substring(1).trim();
+        sortOrder = 'DESC';
+      } else if (sortField.includes(':')) {
+        // Handle colon-based sorting (e.g., "created_at:DESC")
+        const [field, order] = sortField.split(':');
+        sortField = field.trim();
+        sortOrder = order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC';
+      }
+      
+      // Map snake_case to camelCase for entity fields
+      const fieldMap: { [key: string]: string } = {
+        'created_at': 'createdAt',
+        'updated_at': 'updatedAt',
+        'account_name': 'accountName',
+      };
+      
+      const entityField = fieldMap[sortField] || sortField;
+      
+      // Sanitize field name to prevent SQL injection (only allow alphanumeric and underscore)
+      if (entityField && /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(entityField)) {
+        try {
+          queryBuilder.orderBy(`vendor.${entityField}`, sortOrder);
+        } catch (error) {
+          // If field doesn't exist, default to createdAt
+          queryBuilder.orderBy('vendor.createdAt', 'DESC');
+        }
+      } else {
+        queryBuilder.orderBy('vendor.createdAt', 'DESC');
+      }
     } else {
       queryBuilder.orderBy('vendor.createdAt', 'DESC');
     }

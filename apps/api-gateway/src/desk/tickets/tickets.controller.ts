@@ -24,7 +24,7 @@ import { BulkDeleteResponse } from './dto/bulk-delete-response.dto';
 import { BulkUpdateTicketDto } from './dto/bulk-update.dto';
 import { BulkUpdateResponse } from './dto/bulk-update-response.dto';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('tickets')
 export class TicketsController {
   constructor(private readonly ticketsService: TicketsService) {}

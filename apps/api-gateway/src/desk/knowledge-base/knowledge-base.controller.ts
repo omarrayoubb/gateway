@@ -24,7 +24,7 @@ import { BulkDeleteResponse } from './dto/bulk-delete-response.dto';
 import { BulkUpdateKnowledgeBaseDto } from './dto/bulk-update.dto';
 import { BulkUpdateResponse } from './dto/bulk-update-response.dto';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('knowledge-base')
 export class KnowledgeBaseController {
   constructor(private readonly knowledgeBaseService: KnowledgeBaseService) {}

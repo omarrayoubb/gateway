@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { SupplyChainService } from './supplychain.service';
 import { SupplyChainController } from './supplychain.controller';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import {credentials} from '@grpc/grpc-js';
 import { join } from 'path';
 
 @Module({

@@ -8,7 +8,17 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { RFQProductDto } from './rfq-product.dto';
-import { RFQCurrency, RFQStatus } from '../entities/rfq.entity';
+
+export enum RFQCurrency {
+  USD = 'USD',
+  AED = 'AED',
+  EGP = 'EGP',
+}
+
+export enum RFQStatus {
+  SUBMITTED = 'submitted',
+  COMPLETED = 'completed',
+}
 
 export class UpdateRFQDto {
   @IsString()

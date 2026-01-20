@@ -1,0 +1,4092 @@
+syntax = "proto3";
+
+package finance;
+
+service AccountsService {
+  rpc GetAccount (GetAccountRequest) returns (AccountResponse);
+  rpc GetAccounts (GetAccountsRequest) returns (AccountsResponse);
+  rpc CreateAccount (CreateAccountRequest) returns (AccountResponse);
+  rpc UpdateAccount (UpdateAccountRequest) returns (AccountResponse);
+  rpc DeleteAccount (DeleteAccountRequest) returns (DeleteAccountResponse);
+}
+
+service OrganizationsService {
+  rpc GetOrganization (GetOrganizationRequest) returns (OrganizationResponse);
+  rpc GetOrganizations (GetOrganizationsRequest) returns (OrganizationsResponse);
+  rpc CreateOrganization (CreateOrganizationRequest) returns (OrganizationResponse);
+  rpc UpdateOrganization (UpdateOrganizationRequest) returns (OrganizationResponse);
+  rpc DeleteOrganization (DeleteOrganizationRequest) returns (DeleteOrganizationResponse);
+}
+
+message GetAccountRequest {
+  string id = 1;
+}
+
+message GetAccountsRequest {
+  int32 limit = 1;
+  string sort = 2;
+  string filter = 3;
+}
+
+message CreateAccountRequest {
+  string organizationId = 1;
+  string accountCode = 2;
+  string accountName = 3;
+  string accountType = 4;
+  string accountSubtype = 5;
+  string description = 6;
+  string balance = 7;
+  string currency = 8;
+  bool isActive = 9;
+}
+
+message UpdateAccountRequest {
+  string id = 1;
+  string organizationId = 2;
+  string accountCode = 3;
+  string accountName = 4;
+  string accountType = 5;
+  string accountSubtype = 6;
+  string description = 7;
+  string balance = 8;
+  string currency = 9;
+  bool isActive = 10;
+}
+
+message DeleteAccountRequest {
+  string id = 1;
+}
+
+message AccountResponse {
+  string id = 1;
+  string organizationId = 2;
+  string accountCode = 3;
+  string accountName = 4;
+  string accountType = 5;
+  string accountSubtype = 6;
+  string description = 7;
+  string balance = 8;
+  string currency = 9;
+  bool isActive = 10;
+  string createdDate = 11;
+  string updatedAt = 12;
+}
+
+message AccountsResponse {
+  repeated AccountResponse accounts = 1;
+}
+
+message DeleteAccountResponse {
+  bool success = 1;
+}
+
+// Organization Messages
+message GetOrganizationRequest {
+  string id = 1;
+}
+
+message GetOrganizationsRequest {
+  int32 limit = 1;
+  string sort = 2;
+  string filter = 3;
+}
+
+message CreateOrganizationRequest {
+  string organizationCode = 1;
+  string organizationName = 2;
+  string description = 3;
+  string address = 4;
+  string city = 5;
+  string state = 6;
+  string zipCode = 7;
+  string country = 8;
+  string phone = 9;
+  string email = 10;
+  string website = 11;
+  string currency = 12;
+  string timezone = 13;
+  bool isActive = 14;
+}
+
+message UpdateOrganizationRequest {
+  string id = 1;
+  string organizationCode = 2;
+  string organizationName = 3;
+  string description = 4;
+  string address = 5;
+  string city = 6;
+  string state = 7;
+  string zipCode = 8;
+  string country = 9;
+  string phone = 10;
+  string email = 11;
+  string website = 12;
+  string currency = 13;
+  string timezone = 14;
+  bool isActive = 15;
+}
+
+message DeleteOrganizationRequest {
+  string id = 1;
+}
+
+message OrganizationResponse {
+  string id = 1;
+  string organizationCode = 2;
+  string organizationName = 3;
+  string description = 4;
+  string address = 5;
+  string city = 6;
+  string state = 7;
+  string zipCode = 8;
+  string country = 9;
+  string phone = 10;
+  string email = 11;
+  string website = 12;
+  string currency = 13;
+  string timezone = 14;
+  bool isActive = 15;
+  string createdDate = 16;
+  string updatedAt = 17;
+}
+
+message OrganizationsResponse {
+  repeated OrganizationResponse organizations = 1;
+}
+
+message DeleteOrganizationResponse {
+  bool success = 1;
+}
+
+// Journal Entry Services
+service JournalEntriesService {
+  rpc GetJournalEntry (GetJournalEntryRequest) returns (JournalEntryResponse);
+  rpc GetJournalEntries (GetJournalEntriesRequest) returns (JournalEntriesResponse);
+  rpc CreateJournalEntry (CreateJournalEntryRequest) returns (JournalEntryResponse);
+  rpc UpdateJournalEntry (UpdateJournalEntryRequest) returns (JournalEntryResponse);
+  rpc PostJournalEntry (PostJournalEntryRequest) returns (JournalEntryResponse);
+  rpc VoidJournalEntry (VoidJournalEntryRequest) returns (JournalEntryResponse);
+  rpc DeleteJournalEntry (DeleteJournalEntryRequest) returns (DeleteJournalEntryResponse);
+}
+
+service JournalEntryLinesService {
+  rpc GetJournalEntryLines (GetJournalEntryLinesRequest) returns (JournalEntryLinesResponse);
+  rpc CreateJournalEntryLine (CreateJournalEntryLineRequest) returns (JournalEntryLineResponse);
+  rpc DeleteJournalEntryLine (DeleteJournalEntryLineRequest) returns (DeleteJournalEntryLineResponse);
+}
+
+// Journal Entry Messages
+message GetJournalEntryRequest {
+  string id = 1;
+}
+
+message GetJournalEntriesRequest {
+  int32 limit = 1;
+  string sort = 2;
+  string entry_type = 3;
+  string status = 4;
+}
+
+message CreateJournalEntryRequest {
+  string organizationId = 1;
+  string entryNumber = 2;
+  string entryDate = 3;
+  string entryType = 4;
+  string reference = 5;
+  string description = 6;
+  string status = 7;
+  string notes = 8;
+  repeated JournalEntryLineRequest lines = 9;
+}
+
+message UpdateJournalEntryRequest {
+  string id = 1;
+  string organizationId = 2;
+  string entryNumber = 3;
+  string entryDate = 4;
+  string entryType = 5;
+  string reference = 6;
+  string description = 7;
+  string status = 8;
+  string notes = 9;
+  repeated JournalEntryLineRequest lines = 10;
+}
+
+message PostJournalEntryRequest {
+  string id = 1;
+}
+
+message VoidJournalEntryRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+message DeleteJournalEntryRequest {
+  string id = 1;
+}
+
+message JournalEntryLineRequest {
+  string accountId = 1;
+  int32 lineNumber = 2;
+  string description = 3;
+  string debit = 4;
+  string credit = 5;
+}
+
+message JournalEntryResponse {
+  string id = 1;
+  string organizationId = 2;
+  string entryNumber = 3;
+  string entryDate = 4;
+  string entryType = 5;
+  string reference = 6;
+  string description = 7;
+  string status = 8;
+  string totalDebit = 9;
+  string totalCredit = 10;
+  bool isBalanced = 11;
+  string notes = 12;
+  repeated JournalEntryLineResponse lines = 13;
+}
+
+message JournalEntriesResponse {
+  repeated JournalEntryResponse entries = 1;
+}
+
+message DeleteJournalEntryResponse {
+  bool success = 1;
+}
+
+// Journal Entry Line Messages
+message GetJournalEntryLinesRequest {
+  string journal_entry_id = 1;
+}
+
+message CreateJournalEntryLineRequest {
+  string organizationId = 1;
+  string journalEntryId = 2;
+  int32 lineNumber = 3;
+  string accountId = 4;
+  string description = 5;
+  string debit = 6;
+  string credit = 7;
+}
+
+message DeleteJournalEntryLineRequest {
+  string id = 1;
+}
+
+message JournalEntryLineResponse {
+  string id = 1;
+  string journalEntryId = 2;
+  int32 lineNumber = 3;
+  string accountId = 4;
+  string accountCode = 5;
+  string accountName = 6;
+  string description = 7;
+  string debit = 8;
+  string credit = 9;
+}
+
+message JournalEntryLinesResponse {
+  repeated JournalEntryLineResponse lines = 1;
+}
+
+message DeleteJournalEntryLineResponse {
+  bool success = 1;
+}
+
+// General Ledger Services
+service GeneralLedgerService {
+  rpc GetGeneralLedger (GetGeneralLedgerRequest) returns (GeneralLedgerResponse);
+  rpc GetAccountLedger (GetAccountLedgerRequest) returns (AccountLedgerResponse);
+  rpc GetGeneralLedgerReport (GetGeneralLedgerReportRequest) returns (GeneralLedgerReportResponse);
+}
+
+// General Ledger Messages
+message GetGeneralLedgerRequest {
+  string account_id = 1;
+  string period_start = 2;
+  string period_end = 3;
+  string sort = 4;
+}
+
+message GetAccountLedgerRequest {
+  string account_id = 1;
+  string period_start = 2;
+  string period_end = 3;
+}
+
+message GetGeneralLedgerReportRequest {
+  string period_start = 1;
+  string period_end = 2;
+  string account_type = 3;
+  string format = 4;
+}
+
+message GeneralLedgerEntryResponse {
+  string id = 1;
+  string accountId = 2;
+  string accountCode = 3;
+  string accountName = 4;
+  string transactionDate = 5;
+  string transactionType = 6;
+  string transactionId = 7;
+  string reference = 8;
+  string description = 9;
+  string debit = 10;
+  string credit = 11;
+  string balance = 12;
+}
+
+message GeneralLedgerResponse {
+  repeated GeneralLedgerEntryResponse entries = 1;
+}
+
+message AccountLedgerResponse {
+  AccountInfo account = 1;
+  string openingBalance = 2;
+  string closingBalance = 3;
+  repeated GeneralLedgerEntryResponse transactions = 4;
+  LedgerSummary summary = 5;
+}
+
+message AccountInfo {
+  string id = 1;
+  string accountCode = 2;
+  string accountName = 3;
+  string accountType = 4;
+}
+
+message LedgerSummary {
+  string totalDebits = 1;
+  string totalCredits = 2;
+  string netChange = 3;
+}
+
+message GeneralLedgerReportResponse {
+  string periodStart = 1;
+  string periodEnd = 2;
+  repeated ReportAccount accounts = 3;
+  ReportTotals totals = 4;
+}
+
+message ReportAccount {
+  string accountCode = 1;
+  string accountName = 2;
+  string openingBalance = 3;
+  string debits = 4;
+  string credits = 5;
+  string closingBalance = 6;
+}
+
+message ReportTotals {
+  string totalDebits = 1;
+  string totalCredits = 2;
+}
+
+// Accounting Periods Services
+service AccountingPeriodsService {
+  rpc GetAccountingPeriods (GetAccountingPeriodsRequest) returns (AccountingPeriodsResponse);
+  rpc GetAccountingPeriod (GetAccountingPeriodRequest) returns (AccountingPeriodResponse);
+  rpc GetCurrentAccountingPeriod (GetCurrentAccountingPeriodRequest) returns (AccountingPeriodResponse);
+  rpc CreateAccountingPeriod (CreateAccountingPeriodRequest) returns (AccountingPeriodResponse);
+  rpc UpdateAccountingPeriod (UpdateAccountingPeriodRequest) returns (AccountingPeriodResponse);
+  rpc CloseAccountingPeriod (CloseAccountingPeriodRequest) returns (CloseAccountingPeriodResponse);
+  rpc DeleteAccountingPeriod (DeleteAccountingPeriodRequest) returns (DeleteAccountingPeriodResponse);
+}
+
+// Accounting Period Messages
+message GetAccountingPeriodsRequest {
+  string status = 1;
+  string year = 2;
+}
+
+message GetAccountingPeriodRequest {
+  string id = 1;
+}
+
+message GetCurrentAccountingPeriodRequest {
+  string organization_id = 1;
+}
+
+message CreateAccountingPeriodRequest {
+  string organizationId = 1;
+  string periodName = 2;
+  string periodType = 3;
+  string periodStart = 4;
+  string periodEnd = 5;
+  string notes = 6;
+}
+
+message UpdateAccountingPeriodRequest {
+  string id = 1;
+  string organizationId = 2;
+  string periodName = 3;
+  string periodType = 4;
+  string periodStart = 5;
+  string periodEnd = 6;
+  string notes = 7;
+}
+
+message CloseAccountingPeriodRequest {
+  string id = 1;
+  string notes = 2;
+  bool force = 3;
+  string closed_by = 4;
+}
+
+message DeleteAccountingPeriodRequest {
+  string id = 1;
+}
+
+message AccountingPeriodResponse {
+  string id = 1;
+  string organizationId = 2;
+  string periodName = 3;
+  string periodType = 4;
+  string periodStart = 5;
+  string periodEnd = 6;
+  string status = 7;
+  string closedDate = 8;
+  string closedBy = 9;
+  string notes = 10;
+}
+
+message AccountingPeriodsResponse {
+  repeated AccountingPeriodResponse periods = 1;
+}
+
+message DeleteAccountingPeriodResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CloseAccountingPeriodResponse {
+  bool success = 1;
+  string message = 2;
+  AccountingPeriodResponse period = 3;
+  PeriodSummary summary = 4;
+}
+
+message PeriodSummary {
+  int32 totalTransactions = 1;
+  string totalDebits = 2;
+  string totalCredits = 3;
+  int32 unbalancedEntries = 4;
+}
+
+// Tax Configuration Services
+service TaxConfigurationsService {
+  rpc GetTaxConfigurations (GetTaxConfigurationsRequest) returns (TaxConfigurationsResponse);
+  rpc GetTaxConfiguration (GetTaxConfigurationRequest) returns (TaxConfigurationResponse);
+  rpc CreateTaxConfiguration (CreateTaxConfigurationRequest) returns (TaxConfigurationResponse);
+  rpc UpdateTaxConfiguration (UpdateTaxConfigurationRequest) returns (TaxConfigurationResponse);
+  rpc CalculateTax (CalculateTaxRequest) returns (CalculateTaxResponse);
+  rpc DeleteTaxConfiguration (DeleteTaxConfigurationRequest) returns (DeleteTaxConfigurationResponse);
+}
+
+// Tax Configuration Messages
+message GetTaxConfigurationsRequest {
+  string tax_type = 1;
+  bool is_active = 2;
+  string sort = 3;
+}
+
+message GetTaxConfigurationRequest {
+  string id = 1;
+}
+
+message CreateTaxConfigurationRequest {
+  string organizationId = 1;
+  string taxCode = 2;
+  string taxName = 3;
+  string taxType = 4;
+  string taxRate = 5;
+  string calculationMethod = 6;
+  bool isInclusive = 7;
+  repeated string appliesTo = 8;
+  string accountId = 9;
+  string effectiveFrom = 10;
+  string effectiveTo = 11;
+}
+
+message UpdateTaxConfigurationRequest {
+  string id = 1;
+  string organizationId = 2;
+  string taxCode = 3;
+  string taxName = 4;
+  string taxType = 5;
+  string taxRate = 6;
+  string calculationMethod = 7;
+  bool isInclusive = 8;
+  repeated string appliesTo = 9;
+  string accountId = 10;
+  string effectiveFrom = 11;
+  string effectiveTo = 12;
+}
+
+message CalculateTaxRequest {
+  string amount = 1;
+  string tax_code = 2;
+  string date = 3;
+  string organization_id = 4;
+}
+
+message DeleteTaxConfigurationRequest {
+  string id = 1;
+}
+
+message TaxConfigurationResponse {
+  string id = 1;
+  string organizationId = 2;
+  string taxCode = 3;
+  string taxName = 4;
+  string taxType = 5;
+  string taxRate = 6;
+  string calculationMethod = 7;
+  bool isInclusive = 8;
+  repeated string appliesTo = 9;
+  string accountId = 10;
+  bool isActive = 11;
+  string effectiveFrom = 12;
+  string effectiveTo = 13;
+}
+
+message TaxConfigurationsResponse {
+  repeated TaxConfigurationResponse taxConfigurations = 1;
+}
+
+message DeleteTaxConfigurationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CalculateTaxResponse {
+  string baseAmount = 1;
+  string taxCode = 2;
+  string taxRate = 3;
+  string taxAmount = 4;
+  string totalAmount = 5;
+}
+
+// Invoices Services
+service InvoicesService {
+  rpc GetInvoices (GetInvoicesRequest) returns (InvoicesResponse);
+  rpc GetInvoice (GetInvoiceRequest) returns (InvoiceResponse);
+  rpc CreateInvoice (CreateInvoiceRequest) returns (InvoiceResponse);
+  rpc UpdateInvoice (UpdateInvoiceRequest) returns (InvoiceResponse);
+  rpc SendInvoice (SendInvoiceRequest) returns (InvoiceResponse);
+  rpc ConvertProforma (ConvertProformaRequest) returns (ConvertProformaResponse);
+  rpc DeleteInvoice (DeleteInvoiceRequest) returns (DeleteInvoiceResponse);
+}
+
+// Invoice Messages
+message GetInvoicesRequest {
+  string sort = 1;
+  string status = 2;
+  string customer_id = 3;
+  bool is_proforma = 4;
+}
+
+message GetInvoiceRequest {
+  string id = 1;
+}
+
+message InvoiceItemRequest {
+  string description = 1;
+  string quantity = 2;
+  string unit_price = 3;
+  string tax_rate = 4;
+  string discount_percent = 5;
+}
+
+message CreateInvoiceRequest {
+  string organizationId = 1;
+  string invoiceNumber = 2;
+  string proformaNumber = 3;
+  bool isProforma = 4;
+  string customerAccountName = 5;
+  string customerName = 6;
+  string customerAccountId = 7;
+  string invoiceDate = 8;
+  string dueDate = 9;
+  string status = 10;
+  string currency = 11;
+  string taxRate = 12;
+  repeated InvoiceItemRequest items = 13;
+  string notes = 14;
+}
+
+message UpdateInvoiceRequest {
+  string id = 1;
+  string organizationId = 2;
+  string invoiceNumber = 3;
+  string proformaNumber = 4;
+  bool isProforma = 5;
+  string customerAccountName = 6;
+  string customerName = 7;
+  string customerAccountId = 8;
+  string invoiceDate = 9;
+  string dueDate = 10;
+  string status = 11;
+  string currency = 12;
+  string taxRate = 13;
+  repeated InvoiceItemRequest items = 14;
+  string notes = 15;
+}
+
+message SendInvoiceRequest {
+  string id = 1;
+  string send_method = 2;
+  repeated string email_to = 3;
+  string email_subject = 4;
+  string email_message = 5;
+  string sent_by = 6;
+}
+
+message ConvertProformaRequest {
+  string id = 1;
+}
+
+message DeleteInvoiceRequest {
+  string id = 1;
+}
+
+message InvoiceItemResponse {
+  string description = 1;
+  string quantity = 2;
+  string unit_price = 3;
+  string amount = 4;
+}
+
+message InvoiceResponse {
+  string id = 1;
+  string organizationId = 2;
+  string invoiceNumber = 3;
+  string proformaNumber = 4;
+  bool isProforma = 5;
+  string customerAccountId = 6;
+  string customerAccountName = 7;
+  string customerName = 8;
+  string invoiceDate = 9;
+  string dueDate = 10;
+  string status = 11;
+  string currency = 12;
+  string subtotal = 13;
+  string taxAmount = 14;
+  string totalAmount = 15;
+  string paidAmount = 16;
+  string balanceDue = 17;
+  repeated InvoiceItemResponse items = 18;
+}
+
+message InvoicesResponse {
+  repeated InvoiceResponse invoices = 1;
+}
+
+message DeleteInvoiceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ConvertProformaResponse {
+  bool success = 1;
+  string message = 2;
+  InvoiceResponse invoice = 3;
+}
+
+// Credit Notes Services
+service CreditNotesService {
+  rpc GetCreditNotes (GetCreditNotesRequest) returns (CreditNotesResponse);
+  rpc GetCreditNote (GetCreditNoteRequest) returns (CreditNoteResponse);
+  rpc CreateCreditNote (CreateCreditNoteRequest) returns (CreditNoteResponse);
+  rpc UpdateCreditNote (UpdateCreditNoteRequest) returns (CreditNoteResponse);
+  rpc ApplyCreditNote (ApplyCreditNoteRequest) returns (ApplyCreditNoteResponse);
+  rpc DeleteCreditNote (DeleteCreditNoteRequest) returns (DeleteCreditNoteResponse);
+}
+
+// Credit Note Messages
+message GetCreditNotesRequest {
+  string sort = 1;
+  string status = 2;
+  string customer_id = 3;
+}
+
+message GetCreditNoteRequest {
+  string id = 1;
+}
+
+message CreditNoteItemRequest {
+  string description = 1;
+  string quantity = 2;
+  string unit_price = 3;
+}
+
+message CreateCreditNoteRequest {
+  string organizationId = 1;
+  string creditNoteNumber = 2;
+  string customerId = 3;
+  string invoiceId = 4;
+  string creditDate = 5;
+  string reason = 6;
+  string totalAmount = 7;
+  string description = 8;
+  repeated CreditNoteItemRequest items = 9;
+  string status = 10;
+}
+
+message UpdateCreditNoteRequest {
+  string id = 1;
+  string organizationId = 2;
+  string creditNoteNumber = 3;
+  string customerId = 4;
+  string invoiceId = 5;
+  string creditDate = 6;
+  string reason = 7;
+  string totalAmount = 8;
+  string description = 9;
+  repeated CreditNoteItemRequest items = 10;
+  string status = 11;
+}
+
+message ApplyCreditNoteRequest {
+  string id = 1;
+  string invoice_id = 2;
+  string amount = 3;
+}
+
+message DeleteCreditNoteRequest {
+  string id = 1;
+}
+
+message CreditNoteResponse {
+  string id = 1;
+  string organizationId = 2;
+  string creditNoteNumber = 3;
+  string customerId = 4;
+  string customerName = 5;
+  string invoiceId = 6;
+  string creditDate = 7;
+  string reason = 8;
+  string status = 9;
+  string totalAmount = 10;
+  string appliedAmount = 11;
+  string balance = 12;
+}
+
+message CreditNotesResponse {
+  repeated CreditNoteResponse creditNotes = 1;
+}
+
+message DeleteCreditNoteResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ApplyCreditNoteResponse {
+  bool success = 1;
+  string message = 2;
+  CreditNoteResponse creditNote = 3;
+  InvoiceInfo invoice = 4;
+  string appliedAmount = 5;
+}
+
+message InvoiceInfo {
+  string id = 1;
+  string invoiceNumber = 2;
+  string balanceDue = 3;
+  string paidAmount = 4;
+  string status = 5;
+}
+
+// Customer Payments Services
+service CustomerPaymentsService {
+  rpc GetCustomerPayments (GetCustomerPaymentsRequest) returns (CustomerPaymentsResponse);
+  rpc GetCustomerPayment (GetCustomerPaymentRequest) returns (CustomerPaymentResponse);
+  rpc GetUnallocatedPayments (GetUnallocatedPaymentsRequest) returns (CustomerPaymentsResponse);
+  rpc CreateCustomerPayment (CreateCustomerPaymentRequest) returns (CustomerPaymentResponse);
+  rpc UpdateCustomerPayment (UpdateCustomerPaymentRequest) returns (CustomerPaymentResponse);
+  rpc AllocatePayment (AllocatePaymentRequest) returns (CustomerPaymentResponse);
+  rpc DeleteCustomerPayment (DeleteCustomerPaymentRequest) returns (DeleteCustomerPaymentResponse);
+}
+
+// Customer Payment Messages
+message GetCustomerPaymentsRequest {
+  string sort = 1;
+  string customer_id = 2;
+  string status = 3;
+}
+
+message GetCustomerPaymentRequest {
+  string id = 1;
+}
+
+message GetUnallocatedPaymentsRequest {
+}
+
+message PaymentAllocationRequest {
+  string invoice_id = 1;
+  string amount = 2;
+}
+
+message CreateCustomerPaymentRequest {
+  string organizationId = 1;
+  string paymentNumber = 2;
+  string customerId = 3;
+  string paymentDate = 4;
+  string paymentMethod = 5;
+  string paymentReference = 6;
+  string amount = 7;
+  string currency = 8;
+  string bankAccountId = 9;
+  repeated PaymentAllocationRequest allocations = 10;
+  string status = 11;
+}
+
+message UpdateCustomerPaymentRequest {
+  string id = 1;
+  string organizationId = 2;
+  string paymentNumber = 3;
+  string customerId = 4;
+  string paymentDate = 5;
+  string paymentMethod = 6;
+  string paymentReference = 7;
+  string amount = 8;
+  string currency = 9;
+  string bankAccountId = 10;
+  string status = 11;
+}
+
+message AllocatePaymentRequest {
+  string id = 1;
+  repeated PaymentAllocationRequest allocations = 2;
+}
+
+message DeleteCustomerPaymentRequest {
+  string id = 1;
+}
+
+message CustomerPaymentResponse {
+  string id = 1;
+  string organizationId = 2;
+  string paymentNumber = 3;
+  string customerId = 4;
+  string customerName = 5;
+  string paymentDate = 6;
+  string paymentMethod = 7;
+  string paymentReference = 8;
+  string amount = 9;
+  string currency = 10;
+  string status = 11;
+  string allocatedAmount = 12;
+  string unallocatedAmount = 13;
+  string bankAccountId = 14;
+}
+
+message CustomerPaymentsResponse {
+  repeated CustomerPaymentResponse payments = 1;
+}
+
+message DeleteCustomerPaymentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Customer Credits Services
+service CustomerCreditsService {
+  rpc GetCustomerCredits (GetCustomerCreditsRequest) returns (CustomerCreditsResponse);
+  rpc GetCustomerCredit (GetCustomerCreditRequest) returns (CustomerCreditResponse);
+  rpc CreateCustomerCredit (CreateCustomerCreditRequest) returns (CustomerCreditResponse);
+  rpc UpdateCustomerCredit (UpdateCustomerCreditRequest) returns (CustomerCreditResponse);
+  rpc DeleteCustomerCredit (DeleteCustomerCreditRequest) returns (DeleteCustomerCreditResponse);
+  rpc RecalculateBalance (RecalculateBalanceRequest) returns (CustomerCreditResponse);
+}
+
+// Customer Credit Messages
+message GetCustomerCreditsRequest {
+  string sort = 1;
+  string risk_level = 2;
+}
+
+message GetCustomerCreditRequest {
+  string id = 1;
+}
+
+message CustomerCreditResponse {
+  string id = 1;
+  string organizationId = 2;
+  string customerId = 3;
+  string customerName = 4;
+  string creditLimit = 5;
+  string currentBalance = 6;
+  string availableCredit = 7;
+  int32 creditScore = 8;
+  string riskLevel = 9;
+  string onTimePaymentRate = 10;
+  int32 averageDaysToPay = 11;
+}
+
+message CustomerCreditsResponse {
+  repeated CustomerCreditResponse credits = 1;
+}
+
+message CreateCustomerCreditRequest {
+  string organizationId = 1;
+  string customerId = 2;
+  string customerName = 3;
+  string creditLimit = 4;
+  string currentBalance = 5;
+  int32 creditScore = 6;
+  string riskLevel = 7;
+  string onTimePaymentRate = 8;
+  int32 averageDaysToPay = 9;
+}
+
+message UpdateCustomerCreditRequest {
+  string id = 1;
+  string organizationId = 2;
+  string customerId = 3;
+  string customerName = 4;
+  string creditLimit = 5;
+  string currentBalance = 6;
+  int32 creditScore = 7;
+  string riskLevel = 8;
+  string onTimePaymentRate = 9;
+  int32 averageDaysToPay = 10;
+}
+
+message DeleteCustomerCreditRequest {
+  string id = 1;
+}
+
+message DeleteCustomerCreditResponse {
+  bool success = 1;
+}
+
+message RecalculateBalanceRequest {
+  string customerId = 1;
+}
+
+// Reports Services
+service ReportsService {
+  rpc GetArAgingReport (GetArAgingReportRequest) returns (ArAgingReportResponse);
+  rpc GetBudgetVsActual (GetBudgetVsActualRequest) returns (BudgetVsActualResponse);
+}
+
+// Reports Messages
+message GetArAgingReportRequest {
+  string as_of_date = 1;
+  string customer_id = 2;
+  string format = 3;
+}
+
+message ArAgingSummary {
+  string totalReceivables = 1;
+  string current = 2;
+  string days30 = 3;
+  string days60 = 4;
+  string days90 = 5;
+  string over90 = 6;
+}
+
+message InvoiceAgingInfo {
+  string invoiceNumber = 1;
+  string invoiceDate = 2;
+  string dueDate = 3;
+  string amount = 4;
+  int32 daysOverdue = 5;
+  string agingBucket = 6;
+}
+
+message CustomerAgingInfo {
+  string customerId = 1;
+  string customerName = 2;
+  string totalBalance = 3;
+  string current = 4;
+  string days30 = 5;
+  string days60 = 6;
+  string days90 = 7;
+  string over90 = 8;
+  repeated InvoiceAgingInfo invoices = 9;
+}
+
+message ArAgingReportResponse {
+  string asOfDate = 1;
+  ArAgingSummary summary = 2;
+  repeated CustomerAgingInfo customers = 3;
+}
+
+message GetBudgetVsActualRequest {
+  int32 fiscalYear = 1;
+  string department = 2;
+  string projectId = 3;
+  string accountId = 4;
+  string format = 5;
+}
+
+message BudgetVsActualSummary {
+  string totalBudget = 1;
+  string totalActual = 2;
+  string variance = 3;
+  string variancePercent = 4;
+}
+
+message BudgetVsActualPeriod {
+  string period = 1;
+  string budget = 2;
+  string actual = 3;
+  string variance = 4;
+}
+
+message BudgetVsActualItem {
+  string budgetId = 1;
+  string budgetName = 2;
+  string accountCode = 3;
+  string accountName = 4;
+  string budgetAmount = 5;
+  string actualAmount = 6;
+  string variance = 7;
+  string variancePercent = 8;
+  repeated BudgetVsActualPeriod periods = 9;
+}
+
+message BudgetVsActualResponse {
+  int32 fiscalYear = 1;
+  BudgetVsActualSummary summary = 2;
+  repeated BudgetVsActualItem budgets = 3;
+}
+
+// Purchase Bills Service
+service PurchaseBillsService {
+  rpc GetPurchaseBills (GetPurchaseBillsRequest) returns (PurchaseBillsResponse);
+  rpc GetPurchaseBill (GetPurchaseBillRequest) returns (PurchaseBillResponse);
+  rpc CreatePurchaseBill (CreatePurchaseBillRequest) returns (PurchaseBillResponse);
+  rpc UpdatePurchaseBill (UpdatePurchaseBillRequest) returns (PurchaseBillResponse);
+  rpc ApprovePurchaseBill (ApprovePurchaseBillRequest) returns (PurchaseBillResponse);
+  rpc PostPurchaseBill (PostPurchaseBillRequest) returns (PostPurchaseBillResponse);
+  rpc DeletePurchaseBill (DeletePurchaseBillRequest) returns (DeletePurchaseBillResponse);
+}
+
+message GetPurchaseBillsRequest {
+  string sort = 1;
+  string status = 2;
+  string vendor_id = 3;
+}
+
+message GetPurchaseBillRequest {
+  string id = 1;
+}
+
+message CreatePurchaseBillRequest {
+  string organizationId = 1;
+  string billNumber = 2;
+  string vendorId = 3;
+  string billDate = 4;
+  string dueDate = 5;
+  string status = 6;
+  string currency = 7;
+  string taxRate = 8;
+  string attachmentUrl = 9;
+  string attachmentName = 10;
+  repeated PurchaseBillItemRequest items = 11;
+}
+
+message UpdatePurchaseBillRequest {
+  string id = 1;
+  string organizationId = 2;
+  string billNumber = 3;
+  string vendorId = 4;
+  string billDate = 5;
+  string dueDate = 6;
+  string status = 7;
+  string currency = 8;
+  string taxRate = 9;
+  string attachmentUrl = 10;
+  string attachmentName = 11;
+  repeated PurchaseBillItemRequest items = 12;
+}
+
+message PurchaseBillItemRequest {
+  string description = 1;
+  string quantity = 2;
+  string unitPrice = 3;
+  string accountId = 4;
+}
+
+message ApprovePurchaseBillRequest {
+  string id = 1;
+  string approved_by = 2;
+  string notes = 3;
+}
+
+message PostPurchaseBillRequest {
+  string id = 1;
+}
+
+message DeletePurchaseBillRequest {
+  string id = 1;
+}
+
+message PurchaseBillResponse {
+  string id = 1;
+  string organizationId = 2;
+  string billNumber = 3;
+  string vendorId = 4;
+  string vendorName = 5;
+  string billDate = 6;
+  string dueDate = 7;
+  string status = 8;
+  string currency = 9;
+  string subtotal = 10;
+  string taxAmount = 11;
+  string totalAmount = 12;
+  string paidAmount = 13;
+  string balanceDue = 14;
+  string taxRate = 15;
+  string notes = 16;
+  string attachmentUrl = 17;
+  string attachmentName = 18;
+  string approvedBy = 19;
+  string approvedAt = 20;
+  string journalEntryId = 21;
+  string postedAt = 22;
+  repeated PurchaseBillItemResponse items = 23;
+  string createdDate = 24;
+  string updatedAt = 25;
+}
+
+message PurchaseBillItemResponse {
+  string id = 1;
+  string description = 2;
+  string quantity = 3;
+  string unitPrice = 4;
+  string amount = 5;
+  string accountId = 6;
+}
+
+message PurchaseBillsResponse {
+  repeated PurchaseBillResponse purchaseBills = 1;
+}
+
+message PostPurchaseBillResponse {
+  bool success = 1;
+  string journalEntryId = 2;
+}
+
+message DeletePurchaseBillResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Vendor Credit Notes Service
+service VendorCreditNotesService {
+  rpc GetVendorCreditNotes (GetVendorCreditNotesRequest) returns (VendorCreditNotesResponse);
+  rpc GetVendorCreditNote (GetVendorCreditNoteRequest) returns (VendorCreditNoteResponse);
+  rpc CreateVendorCreditNote (CreateVendorCreditNoteRequest) returns (VendorCreditNoteResponse);
+  rpc ApplyVendorCreditNote (ApplyVendorCreditNoteRequest) returns (VendorCreditNoteResponse);
+}
+
+message GetVendorCreditNotesRequest {
+  string sort = 1;
+  string status = 2;
+  string vendor_id = 3;
+}
+
+message GetVendorCreditNoteRequest {
+  string id = 1;
+}
+
+message CreateVendorCreditNoteRequest {
+  string organization_id = 1;
+  string credit_note_number = 2;
+  string vendor_id = 3;
+  string bill_id = 4;
+  string credit_date = 5;
+  string reason = 6;
+  string status = 7;
+  string total_amount = 8;
+  string description = 9;
+  repeated VendorCreditNoteItemRequest items = 10;
+}
+
+message VendorCreditNoteItemRequest {
+  string description = 1;
+  string quantity = 2;
+  string unit_price = 3;
+  string amount = 4;
+}
+
+message ApplyVendorCreditNoteRequest {
+  string id = 1;
+  string bill_id = 2;
+  string amount = 3;
+}
+
+message VendorCreditNoteResponse {
+  string id = 1;
+  string organizationId = 2;
+  string creditNoteNumber = 3;
+  string vendorId = 4;
+  string vendorName = 5;
+  string billId = 6;
+  string creditDate = 7;
+  string reason = 8;
+  string status = 9;
+  string totalAmount = 10;
+  string appliedAmount = 11;
+  string balance = 12;
+  string description = 13;
+  string createdDate = 14;
+  string updatedAt = 15;
+}
+
+message VendorCreditNotesResponse {
+  repeated VendorCreditNoteResponse vendorCreditNotes = 1;
+}
+
+// Vendor Payments Service
+service VendorPaymentsService {
+  rpc GetVendorPayments (GetVendorPaymentsRequest) returns (VendorPaymentsResponse);
+  rpc GetVendorPayment (GetVendorPaymentRequest) returns (VendorPaymentResponse);
+  rpc CreateVendorPayment (CreateVendorPaymentRequest) returns (VendorPaymentResponse);
+  rpc ProcessVendorPayment (ProcessVendorPaymentRequest) returns (ProcessVendorPaymentResponse);
+  rpc DeleteVendorPayment (DeleteVendorPaymentRequest) returns (DeleteVendorPaymentResponse);
+}
+
+message GetVendorPaymentsRequest {
+  string sort = 1;
+  string vendor_id = 2;
+  string status = 3;
+}
+
+message GetVendorPaymentRequest {
+  string id = 1;
+}
+
+message CreateVendorPaymentRequest {
+  string organization_id = 1;
+  string payment_number = 2;
+  string vendor_id = 3;
+  string payment_date = 4;
+  string payment_method = 5;
+  string amount = 6;
+  string currency = 7;
+  string bank_account_id = 8;
+  repeated VendorPaymentAllocationRequest allocations = 9;
+}
+
+message VendorPaymentAllocationRequest {
+  string bill_id = 1;
+  string amount = 2;
+}
+
+message ProcessVendorPaymentRequest {
+  string id = 1;
+}
+
+message DeleteVendorPaymentRequest {
+  string id = 1;
+}
+
+message VendorPaymentResponse {
+  string id = 1;
+  string organizationId = 2;
+  string paymentNumber = 3;
+  string vendorId = 4;
+  string vendorName = 5;
+  string paymentDate = 6;
+  string paymentMethod = 7;
+  string paymentReference = 8;
+  string amount = 9;
+  string currency = 10;
+  string status = 11;
+  string bankAccountId = 12;
+  repeated VendorPaymentAllocationResponse allocations = 13;
+  string createdDate = 14;
+  string updatedAt = 15;
+}
+
+message VendorPaymentAllocationResponse {
+  string id = 1;
+  string billId = 2;
+  string amount = 3;
+}
+
+message VendorPaymentsResponse {
+  repeated VendorPaymentResponse vendorPayments = 1;
+}
+
+message ProcessVendorPaymentResponse {
+  bool success = 1;
+  VendorPaymentResponse payment = 2;
+}
+
+message DeleteVendorPaymentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Payment Schedules Service
+service PaymentSchedulesService {
+  rpc GetPaymentSchedules (GetPaymentSchedulesRequest) returns (PaymentSchedulesResponse);
+  rpc GetPaymentSchedule (GetPaymentScheduleRequest) returns (PaymentScheduleResponse);
+  rpc CreatePaymentSchedule (CreatePaymentScheduleRequest) returns (PaymentScheduleResponse);
+  rpc DeletePaymentSchedule (DeletePaymentScheduleRequest) returns (DeletePaymentScheduleResponse);
+}
+
+message GetPaymentSchedulesRequest {
+  string vendor_id = 1;
+  string status = 2;
+  string due_date_from = 3;
+  string due_date_to = 4;
+  string sort = 5;
+}
+
+message GetPaymentScheduleRequest {
+  string id = 1;
+}
+
+message CreatePaymentScheduleRequest {
+  string organization_id = 1;
+  string vendor_id = 2;
+  string bill_id = 3;
+  string due_date = 4;
+  string amount_due = 5;
+  string payment_method = 6;
+  string scheduled_payment_date = 7;
+  string priority = 8;
+}
+
+message DeletePaymentScheduleRequest {
+  string id = 1;
+}
+
+message PaymentScheduleResponse {
+  string id = 1;
+  string organizationId = 2;
+  string vendorId = 3;
+  string vendorName = 4;
+  string billId = 5;
+  string billNumber = 6;
+  string dueDate = 7;
+  string amountDue = 8;
+  string status = 9;
+  string paymentMethod = 10;
+  string scheduledPaymentDate = 11;
+  string priority = 12;
+  string createdDate = 13;
+  string updatedAt = 14;
+}
+
+message PaymentSchedulesResponse {
+  repeated PaymentScheduleResponse paymentSchedules = 1;
+}
+
+message DeletePaymentScheduleResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Recurring Bills Service
+service RecurringBillsService {
+  rpc GetRecurringBills (GetRecurringBillsRequest) returns (RecurringBillsResponse);
+  rpc GetRecurringBill (GetRecurringBillRequest) returns (RecurringBillResponse);
+  rpc CreateRecurringBill (CreateRecurringBillRequest) returns (RecurringBillResponse);
+  rpc DeleteRecurringBill (DeleteRecurringBillRequest) returns (DeleteRecurringBillResponse);
+}
+
+message GetRecurringBillsRequest {
+  string sort = 1;
+  bool is_active = 2;
+}
+
+message GetRecurringBillRequest {
+  string id = 1;
+}
+
+message CreateRecurringBillRequest {
+  string organization_id = 1;
+  string bill_name = 2;
+  string vendor_id = 3;
+  string category = 4;
+  string amount = 5;
+  string currency = 6;
+  string frequency = 7;
+  string start_date = 8;
+  string end_date = 9;
+  bool is_active = 10;
+  bool auto_create = 11;
+  string account_id = 12;
+}
+
+message DeleteRecurringBillRequest {
+  string id = 1;
+}
+
+message RecurringBillResponse {
+  string id = 1;
+  string organizationId = 2;
+  string billName = 3;
+  string vendorId = 4;
+  string vendorName = 5;
+  string category = 6;
+  string amount = 7;
+  string currency = 8;
+  string frequency = 9;
+  string startDate = 10;
+  string endDate = 11;
+  string nextDueDate = 12;
+  bool isActive = 13;
+  bool autoCreate = 14;
+  string accountId = 15;
+  string createdDate = 16;
+  string updatedAt = 17;
+}
+
+message RecurringBillsResponse {
+  repeated RecurringBillResponse recurringBills = 1;
+}
+
+message DeleteRecurringBillResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Bank Accounts Service
+service BankAccountsService {
+  rpc GetBankAccounts (GetBankAccountsRequest) returns (BankAccountsResponse);
+  rpc GetBankAccount (GetBankAccountRequest) returns (BankAccountResponse);
+  rpc CreateBankAccount (CreateBankAccountRequest) returns (BankAccountResponse);
+  rpc GetBankAccountBalance (GetBankAccountBalanceRequest) returns (BankAccountBalanceResponse);
+  rpc DeleteBankAccount (DeleteBankAccountRequest) returns (DeleteBankAccountResponse);
+}
+
+message GetBankAccountsRequest {
+  string sort = 1;
+  bool is_active = 2;
+}
+
+message GetBankAccountRequest {
+  string id = 1;
+}
+
+message CreateBankAccountRequest {
+  string organization_id = 1;
+  string account_name = 2;
+  string account_number = 3;
+  string bank_name = 4;
+  string account_type = 5;
+  string currency = 6;
+  string opening_balance = 7;
+  bool is_active = 8;
+}
+
+message GetBankAccountBalanceRequest {
+  string id = 1;
+  string as_of_date = 2;
+}
+
+message DeleteBankAccountRequest {
+  string id = 1;
+}
+
+message BankAccountResponse {
+  string id = 1;
+  string organizationId = 2;
+  string accountName = 3;
+  string accountNumber = 4;
+  string bankName = 5;
+  string accountType = 6;
+  string currency = 7;
+  string openingBalance = 8;
+  string currentBalance = 9;
+  bool isActive = 10;
+  string createdDate = 11;
+  string updatedAt = 12;
+}
+
+message BankAccountsResponse {
+  repeated BankAccountResponse bankAccounts = 1;
+}
+
+message BankAccountBalanceResponse {
+  string accountId = 1;
+  string accountName = 2;
+  string openingBalance = 3;
+  string currentBalance = 4;
+  string asOfDate = 5;
+  string reconciledBalance = 6;
+  int32 unreconciledTransactions = 7;
+}
+
+message DeleteBankAccountResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Cash Accounts Service
+service CashAccountsService {
+  rpc GetCashAccounts (GetCashAccountsRequest) returns (CashAccountsResponse);
+  rpc GetCashAccount (GetCashAccountRequest) returns (CashAccountResponse);
+  rpc CreateCashAccount (CreateCashAccountRequest) returns (CashAccountResponse);
+  rpc DeleteCashAccount (DeleteCashAccountRequest) returns (DeleteCashAccountResponse);
+}
+
+message GetCashAccountsRequest {
+  string sort = 1;
+  bool is_active = 2;
+}
+
+message GetCashAccountRequest {
+  string id = 1;
+}
+
+message CreateCashAccountRequest {
+  string organization_id = 1;
+  string account_name = 2;
+  string account_code = 3;
+  string location = 4;
+  string currency = 5;
+  string opening_balance = 6;
+  bool is_active = 7;
+}
+
+message DeleteCashAccountRequest {
+  string id = 1;
+}
+
+message CashAccountResponse {
+  string id = 1;
+  string organizationId = 2;
+  string accountName = 3;
+  string accountCode = 4;
+  string location = 5;
+  string currency = 6;
+  string openingBalance = 7;
+  string currentBalance = 8;
+  bool isActive = 9;
+  string createdDate = 10;
+  string updatedAt = 11;
+}
+
+message CashAccountsResponse {
+  repeated CashAccountResponse cashAccounts = 1;
+}
+
+message DeleteCashAccountResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Bank Transactions Service
+service BankTransactionsService {
+  rpc GetBankTransactions (GetBankTransactionsRequest) returns (BankTransactionsResponse);
+  rpc GetBankTransaction (GetBankTransactionRequest) returns (BankTransactionResponse);
+  rpc CreateBankTransaction (CreateBankTransactionRequest) returns (BankTransactionResponse);
+  rpc ImportBankTransactions (ImportBankTransactionsRequest) returns (ImportBankTransactionsResponse);
+  rpc DeleteBankTransaction (DeleteBankTransactionRequest) returns (DeleteBankTransactionResponse);
+}
+
+message GetBankTransactionsRequest {
+  string sort = 1;
+  string bank_account_id = 2;
+  string category = 3;
+  string date_from = 4;
+  string date_to = 5;
+}
+
+message GetBankTransactionRequest {
+  string id = 1;
+}
+
+message CreateBankTransactionRequest {
+  string organization_id = 1;
+  string bank_account_id = 2;
+  string transaction_date = 3;
+  string transaction_type = 4;
+  string amount = 5;
+  string currency = 6;
+  string reference = 7;
+  string description = 8;
+  string category = 9;
+}
+
+message ImportBankTransactionsRequest {
+  string bank_account_id = 1;
+  string file_url = 2;
+  string file_format = 3;
+  ImportMapping mapping = 4;
+}
+
+message ImportMapping {
+  string date = 1;
+  string amount = 2;
+  string description = 3;
+  string reference = 4;
+}
+
+message DeleteBankTransactionRequest {
+  string id = 1;
+}
+
+message BankTransactionResponse {
+  string id = 1;
+  string organizationId = 2;
+  string bankAccountId = 3;
+  string bankAccountName = 4;
+  string transactionDate = 5;
+  string transactionType = 6;
+  string amount = 7;
+  string currency = 8;
+  string reference = 9;
+  string description = 10;
+  string category = 11;
+  bool isReconciled = 12;
+  string reconciliationId = 13;
+  string createdDate = 14;
+  string updatedAt = 15;
+}
+
+message BankTransactionsResponse {
+  repeated BankTransactionResponse bankTransactions = 1;
+}
+
+message ImportBankTransactionsResponse {
+  bool success = 1;
+  int32 importedCount = 2;
+  repeated string errors = 3;
+  repeated BankTransactionResponse transactions = 4;
+}
+
+message DeleteBankTransactionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Bank Reconciliations Service
+service BankReconciliationsService {
+  rpc GetBankReconciliations (GetBankReconciliationsRequest) returns (BankReconciliationsResponse);
+  rpc GetBankReconciliation (GetBankReconciliationRequest) returns (BankReconciliationResponse);
+  rpc CreateBankReconciliation (CreateBankReconciliationRequest) returns (BankReconciliationResponse);
+  rpc GetUnmatchedTransactions (GetUnmatchedTransactionsRequest) returns (UnmatchedTransactionsResponse);
+  rpc MatchTransactions (MatchTransactionsRequest) returns (BankReconciliationResponse);
+  rpc CompleteReconciliation (CompleteReconciliationRequest) returns (BankReconciliationResponse);
+  rpc DeleteBankReconciliation (DeleteBankReconciliationRequest) returns (DeleteBankReconciliationResponse);
+}
+
+message GetBankReconciliationsRequest {
+  string sort = 1;
+  string bank_account_id = 2;
+  string status = 3;
+}
+
+message GetBankReconciliationRequest {
+  string id = 1;
+}
+
+message CreateBankReconciliationRequest {
+  string organization_id = 1;
+  string bank_account_id = 2;
+  string reconciliation_date = 3;
+  string statement_balance = 4;
+  string outstanding_deposits = 5;
+  string outstanding_checks = 6;
+  string bank_charges = 7;
+  string interest_earned = 8;
+  string notes = 9;
+}
+
+message GetUnmatchedTransactionsRequest {
+  string id = 1;
+}
+
+message MatchTransactionsRequest {
+  string reconciliation_id = 1;
+  repeated MatchItem matches = 2;
+}
+
+message MatchItem {
+  string transaction_id = 1;
+  int32 statement_item_index = 2;
+}
+
+message CompleteReconciliationRequest {
+  string id = 1;
+  string notes = 2;
+}
+
+message DeleteBankReconciliationRequest {
+  string id = 1;
+}
+
+message BankReconciliationResponse {
+  string id = 1;
+  string organizationId = 2;
+  string bankAccountId = 3;
+  string bankAccountName = 4;
+  string reconciliationDate = 5;
+  string statementBalance = 6;
+  string bookBalance = 7;
+  string adjustedBalance = 8;
+  string status = 9;
+  string outstandingDeposits = 10;
+  string outstandingChecks = 11;
+  string bankCharges = 12;
+  string interestEarned = 13;
+  string notes = 14;
+  string createdDate = 15;
+  string updatedAt = 16;
+}
+
+message BankReconciliationsResponse {
+  repeated BankReconciliationResponse bankReconciliations = 1;
+}
+
+message UnmatchedTransactionsResponse {
+  string reconciliationId = 1;
+  repeated UnmatchedTransaction unmatchedTransactions = 2;
+  repeated UnmatchedStatementItem unmatchedStatementItems = 3;
+}
+
+message UnmatchedTransaction {
+  string transactionId = 1;
+  string transactionDate = 2;
+  string amount = 3;
+  string description = 4;
+  string type = 5;
+}
+
+message UnmatchedStatementItem {
+  string date = 1;
+  string amount = 2;
+  string description = 3;
+  string type = 4;
+}
+
+message DeleteBankReconciliationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Cheques Service
+service ChequesService {
+  rpc GetCheques (GetChequesRequest) returns (ChequesResponse);
+  rpc GetCheque (GetChequeRequest) returns (ChequeResponse);
+  rpc CreateCheque (CreateChequeRequest) returns (ChequeResponse);
+  rpc DepositCheque (DepositChequeRequest) returns (ChequeResponse);
+  rpc ClearCheque (ClearChequeRequest) returns (ChequeResponse);
+  rpc DeleteCheque (DeleteChequeRequest) returns (DeleteChequeResponse);
+}
+
+message GetChequesRequest {
+  string sort = 1;
+  string type = 2;
+  string status = 3;
+}
+
+message GetChequeRequest {
+  string id = 1;
+}
+
+message CreateChequeRequest {
+  string organization_id = 1;
+  string cheque_number = 2;
+  string type = 3;
+  string cheque_date = 4;
+  string amount = 5;
+  string currency = 6;
+  string payee_name = 7;
+  string bank_name = 8;
+  string bank_account_id = 9;
+}
+
+message DepositChequeRequest {
+  string id = 1;
+  string deposit_date = 2;
+  string bank_account_id = 3;
+}
+
+message ClearChequeRequest {
+  string id = 1;
+  string clear_date = 2;
+}
+
+message DeleteChequeRequest {
+  string id = 1;
+}
+
+message ChequeResponse {
+  string id = 1;
+  string organizationId = 2;
+  string chequeNumber = 3;
+  string type = 4;
+  string chequeDate = 5;
+  string amount = 6;
+  string currency = 7;
+  string payeeName = 8;
+  string bankName = 9;
+  string status = 10;
+  string bankAccountId = 11;
+  string depositDate = 12;
+  string clearDate = 13;
+  string createdDate = 14;
+  string updatedAt = 15;
+}
+
+message ChequesResponse {
+  repeated ChequeResponse cheques = 1;
+}
+
+message DeleteChequeResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Cash Flow Service
+service CashFlowService {
+  rpc GetCashFlow (GetCashFlowRequest) returns (CashFlowResponse);
+  rpc GetForecast (GetForecastRequest) returns (ForecastResponse);
+  rpc GetActual (GetActualRequest) returns (ActualResponse);
+  rpc CalculateCashFlow (CalculateCashFlowRequest) returns (CalculateCashFlowResponse);
+}
+
+// Budgets Service
+service BudgetsService {
+  rpc GetBudgets (GetBudgetsRequest) returns (BudgetsResponse);
+  rpc GetBudget (GetBudgetRequest) returns (BudgetResponse);
+  rpc CreateBudget (CreateBudgetRequest) returns (BudgetResponse);
+  rpc UpdateBudget (UpdateBudgetRequest) returns (BudgetResponse);
+  rpc DeleteBudget (DeleteBudgetRequest) returns (DeleteBudgetResponse);
+}
+
+// Expenses Service
+service ExpensesService {
+  rpc GetExpenses (GetExpensesRequest) returns (ExpensesResponse);
+  rpc GetExpense (GetExpenseRequest) returns (ExpenseResponse);
+  rpc CreateExpense (CreateExpenseRequest) returns (ExpenseResponse);
+  rpc UpdateExpense (UpdateExpenseRequest) returns (ExpenseResponse);
+  rpc ApproveExpense (ApproveExpenseRequest) returns (ExpenseResponse);
+  rpc RejectExpense (RejectExpenseRequest) returns (ExpenseResponse);
+  rpc DeleteExpense (DeleteExpenseRequest) returns (DeleteExpenseResponse);
+  rpc PostExpenseToGl (PostExpenseToGlRequest) returns (PostExpenseToGlResponse);
+  rpc BulkPostExpensesToGl (BulkPostExpensesToGlRequest) returns (BulkPostExpensesToGlResponse);
+}
+
+message GetCashFlowRequest {
+  string periodStart = 1;
+  string periodEnd = 2;
+  string accountType = 3;
+}
+
+message GetForecastRequest {
+  string periodStart = 1;
+  string periodEnd = 2;
+  bool includeRecurring = 3;
+}
+
+message GetActualRequest {
+  string periodStart = 1;
+  string periodEnd = 2;
+}
+
+message CalculateCashFlowRequest {
+  string periodStart = 1;
+  string periodEnd = 2;
+  repeated string accountIds = 3;
+  bool includeForecast = 4;
+}
+
+message CashFlowEntry {
+  string id = 1;
+  string organizationId = 2;
+  string periodStart = 3;
+  string periodEnd = 4;
+  string accountId = 5;
+  string accountName = 6;
+  string openingBalance = 7;
+  string inflows = 8;
+  string outflows = 9;
+  string closingBalance = 10;
+}
+
+message CashFlowResponse {
+  repeated CashFlowEntry cashFlows = 1;
+}
+
+message DailyForecast {
+  string date = 1;
+  string inflows = 2;
+  string outflows = 3;
+  string balance = 4;
+}
+
+message ForecastSources {
+  string customerPayments = 1;
+  string vendorPayments = 2;
+  string expenses = 3;
+}
+
+message ForecastResponse {
+  string periodStart = 1;
+  string periodEnd = 2;
+  string openingBalance = 3;
+  string projectedInflows = 4;
+  string projectedOutflows = 5;
+  string projectedClosingBalance = 6;
+  repeated DailyForecast dailyForecast = 7;
+  ForecastSources sources = 8;
+}
+
+message DailyActual {
+  string date = 1;
+  string inflows = 2;
+  string outflows = 3;
+  string balance = 4;
+}
+
+message ActualResponse {
+  string periodStart = 1;
+  string periodEnd = 2;
+  string openingBalance = 3;
+  string actualInflows = 4;
+  string actualOutflows = 5;
+  string actualClosingBalance = 6;
+  repeated DailyActual dailyActual = 7;
+}
+
+message AccountFlow {
+  string accountId = 1;
+  string accountName = 2;
+  string openingBalance = 3;
+  string inflows = 4;
+  string outflows = 5;
+  string closingBalance = 6;
+}
+
+message CalculateCashFlowResponse {
+  string periodStart = 1;
+  string periodEnd = 2;
+  repeated AccountFlow accounts = 3;
+  string totalOpeningBalance = 4;
+  string totalInflows = 5;
+  string totalOutflows = 6;
+  string totalClosingBalance = 7;
+}
+
+// Budgets Messages
+message GetBudgetsRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string sort = 3;
+  int32 fiscalYear = 4;
+  string department = 5;
+  string projectId = 6;
+}
+
+message GetBudgetRequest {
+  string id = 1;
+}
+
+message CreateBudgetRequest {
+  string organizationId = 1;
+  string budgetName = 2;
+  int32 fiscalYear = 3;
+  string periodType = 4;
+  string department = 5;
+  string projectId = 6;
+  string accountId = 7;
+  string budgetAmount = 8;
+  string currency = 9;
+  string status = 10;
+  repeated BudgetPeriod periods = 11;
+}
+
+message UpdateBudgetRequest {
+  string id = 1;
+  string organizationId = 2;
+  string budgetName = 3;
+  int32 fiscalYear = 4;
+  string periodType = 5;
+  string department = 6;
+  string projectId = 7;
+  string accountId = 8;
+  string budgetAmount = 9;
+  string currency = 10;
+  string status = 11;
+  repeated BudgetPeriod periods = 12;
+}
+
+message BudgetPeriod {
+  string period = 1;
+  string amount = 2;
+}
+
+message DeleteBudgetRequest {
+  string id = 1;
+}
+
+message BudgetResponse {
+  string id = 1;
+  string organizationId = 2;
+  string budgetName = 3;
+  int32 fiscalYear = 4;
+  string periodType = 5;
+  string department = 6;
+  string projectId = 7;
+  string accountId = 8;
+  string accountCode = 9;
+  string accountName = 10;
+  string budgetAmount = 11;
+  string currency = 12;
+  string status = 13;
+  repeated BudgetPeriod periods = 14;
+}
+
+message BudgetsResponse {
+  repeated BudgetResponse budgets = 1;
+  int32 total = 2;
+}
+
+message DeleteBudgetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Expenses Messages
+message GetExpensesRequest {
+  int32 limit = 1;
+  int32 page = 2;
+  string sort = 3;
+  string status = 4;
+  string employeeId = 5;
+  string categoryId = 6;
+}
+
+message GetExpenseRequest {
+  string id = 1;
+}
+
+message CreateExpenseRequest {
+  string organizationId = 1;
+  string expenseNumber = 2;
+  string employeeId = 3;
+  string expenseDate = 4;
+  string categoryId = 5;
+  string description = 6;
+  string amount = 7;
+  string currency = 8;
+  string receiptUrl = 9;
+  string accountId = 10;
+}
+
+message UpdateExpenseRequest {
+  string id = 1;
+  string organizationId = 2;
+  string expenseNumber = 3;
+  string employeeId = 4;
+  string expenseDate = 5;
+  string categoryId = 6;
+  string description = 7;
+  string amount = 8;
+  string currency = 9;
+  string receiptUrl = 10;
+  string status = 11;
+  string accountId = 12;
+}
+
+message ApproveExpenseRequest {
+  string id = 1;
+}
+
+message RejectExpenseRequest {
+  string id = 1;
+  string reason = 2;
+}
+
+message DeleteExpenseRequest {
+  string id = 1;
+}
+
+message ExpenseResponse {
+  string id = 1;
+  string organizationId = 2;
+  string expenseNumber = 3;
+  string employeeId = 4;
+  string employeeName = 5;
+  string expenseDate = 6;
+  string categoryId = 7;
+  string categoryName = 8;
+  string description = 9;
+  string amount = 10;
+  string currency = 11;
+  string receiptUrl = 12;
+  string status = 13;
+  string accountId = 14;
+  bool isPostedToGl = 15;
+}
+
+message ExpensesResponse {
+  repeated ExpenseResponse expenses = 1;
+  int32 total = 2;
+}
+
+message DeleteExpenseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PostExpenseToGlRequest {
+  string id = 1;
+  string postingDate = 2;
+  string journalEntryReference = 3;
+}
+
+message PostExpenseToGlResponse {
+  bool success = 1;
+  string message = 2;
+  string journalEntryId = 3;
+}
+
+message BulkPostExpensesToGlRequest {
+  repeated string expenseIds = 1;
+  string postingDate = 2;
+}
+
+message BulkPostExpensesToGlResponse {
+  bool success = 1;
+  int32 postedCount = 2;
+  repeated BulkPostError errors = 3;
+  string journalEntryId = 4;
+}
+
+message BulkPostError {
+  string expenseId = 1;
+  string error = 2;
+}
+
+// Expense Categories Service
+service ExpenseCategoriesService {
+  rpc GetExpenseCategories (GetExpenseCategoriesRequest) returns (ExpenseCategoriesResponse);
+  rpc GetExpenseCategory (GetExpenseCategoryRequest) returns (ExpenseCategoryResponse);
+  rpc CreateExpenseCategory (CreateExpenseCategoryRequest) returns (ExpenseCategoryResponse);
+  rpc UpdateExpenseCategory (UpdateExpenseCategoryRequest) returns (ExpenseCategoryResponse);
+  rpc DeleteExpenseCategory (DeleteExpenseCategoryRequest) returns (DeleteExpenseCategoryResponse);
+}
+
+// Expense Categories Messages
+message GetExpenseCategoriesRequest {
+  int32 limit = 1;
+  int32 page = 2;
+  string sort = 3;
+  bool isActive = 4;
+}
+
+message GetExpenseCategoryRequest {
+  string id = 1;
+}
+
+message CreateExpenseCategoryRequest {
+  string organizationId = 1;
+  string categoryCode = 2;
+  string categoryName = 3;
+  string description = 4;
+  string accountId = 5;
+  bool requiresReceipt = 6;
+  bool requiresApproval = 7;
+  string approvalLimit = 8;
+  bool isActive = 9;
+}
+
+message UpdateExpenseCategoryRequest {
+  string id = 1;
+  string organizationId = 2;
+  string categoryCode = 3;
+  string categoryName = 4;
+  string description = 5;
+  string accountId = 6;
+  bool requiresReceipt = 7;
+  bool requiresApproval = 8;
+  string approvalLimit = 9;
+  bool isActive = 10;
+}
+
+message DeleteExpenseCategoryRequest {
+  string id = 1;
+}
+
+message ExpenseCategoryResponse {
+  string id = 1;
+  string organizationId = 2;
+  string categoryCode = 3;
+  string categoryName = 4;
+  string description = 5;
+  string accountId = 6;
+  bool requiresReceipt = 7;
+  bool requiresApproval = 8;
+  string approvalLimit = 9;
+  bool isActive = 10;
+}
+
+message ExpenseCategoriesResponse {
+  repeated ExpenseCategoryResponse categories = 1;
+  int32 total = 2;
+}
+
+message DeleteExpenseCategoryResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Expense Claims Service
+service ExpenseClaimsService {
+  rpc GetExpenseClaims (GetExpenseClaimsRequest) returns (ExpenseClaimsResponse);
+  rpc GetExpenseClaim (GetExpenseClaimRequest) returns (ExpenseClaimResponse);
+  rpc CreateExpenseClaim (CreateExpenseClaimRequest) returns (ExpenseClaimResponse);
+  rpc UpdateExpenseClaim (UpdateExpenseClaimRequest) returns (ExpenseClaimResponse);
+  rpc SubmitExpenseClaim (SubmitExpenseClaimRequest) returns (ExpenseClaimResponse);
+  rpc ApproveExpenseClaim (ApproveExpenseClaimRequest) returns (ExpenseClaimResponse);
+  rpc RejectExpenseClaim (RejectExpenseClaimRequest) returns (ExpenseClaimResponse);
+  rpc DeleteExpenseClaim (DeleteExpenseClaimRequest) returns (DeleteExpenseClaimResponse);
+}
+
+// Expense Claims Messages
+message GetExpenseClaimsRequest {
+  int32 limit = 1;
+  int32 page = 2;
+  string sort = 3;
+  string status = 4;
+  string employeeId = 5;
+}
+
+message GetExpenseClaimRequest {
+  string id = 1;
+}
+
+message CreateExpenseClaimRequest {
+  string organizationId = 1;
+  string claimNumber = 2;
+  string employeeId = 3;
+  string claimDate = 4;
+  repeated string expenseIds = 5;
+  string notes = 6;
+}
+
+message UpdateExpenseClaimRequest {
+  string id = 1;
+  string organizationId = 2;
+  string claimNumber = 3;
+  string employeeId = 4;
+  string claimDate = 5;
+  repeated string expenseIds = 6;
+  string notes = 7;
+  string status = 8;
+}
+
+message SubmitExpenseClaimRequest {
+  string id = 1;
+}
+
+message ApproveExpenseClaimRequest {
+  string id = 1;
+  string approvedBy = 2;
+  string notes = 3;
+}
+
+message RejectExpenseClaimRequest {
+  string id = 1;
+  string rejectedBy = 2;
+  string rejectionReason = 3;
+  string notes = 4;
+}
+
+message DeleteExpenseClaimRequest {
+  string id = 1;
+}
+
+message ExpenseClaimExpenseItem {
+  string expenseId = 1;
+  string description = 2;
+  string amount = 3;
+}
+
+message ExpenseClaimResponse {
+  string id = 1;
+  string organizationId = 2;
+  string claimNumber = 3;
+  string employeeId = 4;
+  string employeeName = 5;
+  string claimDate = 6;
+  string totalAmount = 7;
+  string currency = 8;
+  string status = 9;
+  string notes = 10;
+  string approvedBy = 11;
+  string rejectedBy = 12;
+  string rejectionReason = 13;
+  repeated ExpenseClaimExpenseItem expenses = 14;
+}
+
+message ExpenseClaimsResponse {
+  repeated ExpenseClaimResponse claims = 1;
+  int32 total = 2;
+}
+
+message DeleteExpenseClaimResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Expense Approvals Service
+service ExpenseApprovalsService {
+  rpc GetExpenseApprovals (GetExpenseApprovalsRequest) returns (ExpenseApprovalsResponse);
+  rpc GetExpenseApproval (GetExpenseApprovalRequest) returns (ExpenseApprovalResponse);
+  rpc CreateExpenseApproval (CreateExpenseApprovalRequest) returns (ExpenseApprovalResponse);
+  rpc UpdateExpenseApproval (UpdateExpenseApprovalRequest) returns (ExpenseApprovalResponse);
+  rpc ApproveExpenseApproval (ApproveExpenseApprovalRequest) returns (ExpenseApprovalResponse);
+  rpc RejectExpenseApproval (RejectExpenseApprovalRequest) returns (ExpenseApprovalResponse);
+  rpc DeleteExpenseApproval (DeleteExpenseApprovalRequest) returns (DeleteExpenseApprovalResponse);
+}
+
+// Expense Approvals Messages
+message GetExpenseApprovalsRequest {
+  int32 limit = 1;
+  int32 page = 2;
+  string sort = 3;
+  string status = 4;
+  string approverId = 5;
+}
+
+message GetExpenseApprovalRequest {
+  string id = 1;
+}
+
+message CreateExpenseApprovalRequest {
+  string organizationId = 1;
+  string expenseId = 2;
+  string expenseClaimId = 3;
+  string approverId = 4;
+  int32 approvalLevel = 5;
+}
+
+message UpdateExpenseApprovalRequest {
+  string id = 1;
+  string organizationId = 2;
+  string expenseId = 3;
+  string expenseClaimId = 4;
+  string approverId = 5;
+  int32 approvalLevel = 6;
+  string status = 7;
+  string approvedDate = 8;
+  string notes = 9;
+}
+
+message ApproveExpenseApprovalRequest {
+  string id = 1;
+  string notes = 2;
+}
+
+message RejectExpenseApprovalRequest {
+  string id = 1;
+  string notes = 2;
+}
+
+message DeleteExpenseApprovalRequest {
+  string id = 1;
+}
+
+message ExpenseApprovalResponse {
+  string id = 1;
+  string organizationId = 2;
+  string expenseId = 3;
+  string expenseClaimId = 4;
+  string approverId = 5;
+  string approverName = 6;
+  int32 approvalLevel = 7;
+  string status = 8;
+  string approvedDate = 9;
+  string notes = 10;
+}
+
+message ExpenseApprovalsResponse {
+  repeated ExpenseApprovalResponse approvals = 1;
+  int32 total = 2;
+}
+
+message DeleteExpenseApprovalResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Inventory Valuations Service
+service InventoryValuationsService {
+  rpc GetInventoryValuations (GetInventoryValuationsRequest) returns (InventoryValuationsResponse);
+  rpc GetInventoryValuation (GetInventoryValuationRequest) returns (InventoryValuationResponse);
+  rpc CreateInventoryValuation (CreateInventoryValuationRequest) returns (InventoryValuationResponse);
+  rpc UpdateInventoryValuation (UpdateInventoryValuationRequest) returns (InventoryValuationResponse);
+  rpc DeleteInventoryValuation (DeleteInventoryValuationRequest) returns (DeleteInventoryValuationResponse);
+  rpc CalculateInventoryValuation (CalculateInventoryValuationRequest) returns (CalculateInventoryValuationResponse);
+  rpc SyncInventoryValuations (SyncInventoryValuationsRequest) returns (SyncInventoryValuationsResponse);
+}
+
+// COGS Service
+service CogsService {
+  rpc GetCogs (GetCogsRequest) returns (GetCogsResponse);
+  rpc GetCogsRecord (GetCogsRecordRequest) returns (CogsRecord);
+  rpc CreateCogs (CreateCogsRequest) returns (CogsRecord);
+  rpc UpdateCogs (UpdateCogsRequest) returns (CogsRecord);
+  rpc DeleteCogs (DeleteCogsRequest) returns (DeleteCogsResponse);
+  rpc CalculateCogs (CalculateCogsRequest) returns (CalculateCogsResponse);
+  rpc GetCogsReport (GetCogsReportRequest) returns (GetCogsReportResponse);
+}
+
+// Inventory Adjustments Service
+service InventoryAdjustmentsService {
+  rpc GetInventoryAdjustments (GetInventoryAdjustmentsRequest) returns (GetInventoryAdjustmentsResponse);
+  rpc GetInventoryAdjustment (GetInventoryAdjustmentRequest) returns (InventoryAdjustmentResponse);
+  rpc CreateInventoryAdjustment (CreateInventoryAdjustmentRequest) returns (InventoryAdjustmentResponse);
+  rpc UpdateInventoryAdjustment (UpdateInventoryAdjustmentRequest) returns (InventoryAdjustmentResponse);
+  rpc DeleteInventoryAdjustment (DeleteInventoryAdjustmentRequest) returns (DeleteInventoryAdjustmentResponse);
+  rpc PostInventoryAdjustment (PostInventoryAdjustmentRequest) returns (PostInventoryAdjustmentResponse);
+}
+
+// Stock Impacts Service
+service StockImpactsService {
+  rpc GetStockImpacts (GetStockImpactsRequest) returns (GetStockImpactsResponse);
+  rpc GetStockImpact (GetStockImpactRequest) returns (StockImpactResponse);
+  rpc CreateStockImpact (CreateStockImpactRequest) returns (StockImpactResponse);
+  rpc UpdateStockImpact (UpdateStockImpactRequest) returns (StockImpactResponse);
+  rpc DeleteStockImpact (DeleteStockImpactRequest) returns (DeleteStockImpactResponse);
+  rpc CalculateStockImpacts (CalculateStockImpactsRequest) returns (CalculateStockImpactsResponse);
+}
+
+// Inventory Valuations Messages
+message GetInventoryValuationsRequest {
+  string as_of_date = 1;
+  string valuation_method = 2;
+}
+
+message GetInventoryValuationRequest {
+  string id = 1;
+}
+
+message CreateInventoryValuationRequest {
+  string organizationId = 1;
+  string itemId = 2;
+  string valuationDate = 3;
+  string valuationMethod = 4;
+  string quantity = 5;
+  string unitCost = 6;
+}
+
+message UpdateInventoryValuationRequest {
+  string id = 1;
+  string valuationDate = 2;
+  string valuationMethod = 3;
+  string quantity = 4;
+  string unitCost = 5;
+}
+
+message DeleteInventoryValuationRequest {
+  string id = 1;
+}
+
+message CalculateInventoryValuationRequest {
+  string as_of_date = 1;
+  string valuation_method = 2;
+}
+
+message InventoryValuationResponse {
+  string id = 1;
+  string organizationId = 2;
+  string itemId = 3;
+  string itemCode = 4;
+  string itemName = 5;
+  string valuationDate = 6;
+  string valuationMethod = 7;
+  string quantity = 8;
+  string unitCost = 9;
+  string totalValue = 10;
+  string currency = 11;
+}
+
+message InventoryValuationsResponse {
+  repeated InventoryValuationResponse valuations = 1;
+}
+
+message DeleteInventoryValuationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CalculateInventoryValuationResponse {
+  string as_of_date = 1;
+  string valuation_method = 2;
+  string total_inventory_value = 3;
+  repeated InventoryValuationItem items = 4;
+}
+
+message InventoryValuationItem {
+  string item_id = 1;
+  string item_code = 2;
+  string item_name = 3;
+  string quantity = 4;
+  string unit_cost = 5;
+  string total_value = 6;
+}
+
+message SyncInventoryValuationsRequest {
+  string valuation_method = 1;
+  repeated InventoryBatchData batches = 2;
+}
+
+message InventoryBatchData {
+  string id = 1;
+  string productId = 2;
+  string productName = 3;
+  string productSku = 4;
+  string quantityAvailable = 5;
+  string unitCost = 6;
+  string receivedDate = 7;
+}
+
+message SyncInventoryValuationsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 totalcreated = 3;
+  int32 totalupdated = 4;
+  repeated string errors = 5;
+}
+
+// COGS Messages
+message GetCogsRequest {
+  string periodstart = 1;
+  string periodend = 2;
+}
+
+message GetCogsResponse {
+  repeated CogsRecord cogs = 1;
+}
+
+message GetCogsRecordRequest {
+  string id = 1;
+}
+
+message CreateCogsRequest {
+  string organization_id = 1;
+  string periodstart = 2;
+  string periodend = 3;
+  string itemid = 4;
+  string quantitysold = 5;
+  string unitcost = 6;
+}
+
+message UpdateCogsRequest {
+  string id = 1;
+  string organizationid = 2;
+  string periodstart = 3;
+  string periodend = 4;
+  string itemid = 5;
+  string quantitysold = 6;
+  string unitcost = 7;
+}
+
+message DeleteCogsRequest {
+  string id = 1;
+}
+
+message DeleteCogsResponse {
+  bool success = 1;
+}
+
+message CogsRecord {
+  string id = 1;
+  string organizationId = 2;
+  string periodStart = 3;
+  string periodEnd = 4;
+  string itemId = 5;
+  string itemCode = 6;
+  string itemName = 7;
+  string quantitySold = 8;
+  string unitCost = 9;
+  string totalCogs = 10;
+  string currency = 11;
+}
+
+message CalculateCogsRequest {
+  string periodstart = 1;
+  string periodend = 2;
+  repeated string itemids = 3;
+}
+
+message CalculateCogsResponse {
+  string periodstart = 1;
+  string periodend = 2;
+  string totalcogs = 3;
+  repeated CogsItem items = 4;
+}
+
+message CogsItem {
+  string itemid = 1;
+  string itemcode = 2;
+  string itemname = 3;
+  string quantitysold = 4;
+  string unitcost = 5;
+  string totalcogs = 6;
+}
+
+message GetCogsReportRequest {
+  string periodstart = 1;
+  string periodend = 2;
+  string format = 3;
+}
+
+message GetCogsReportResponse {
+  string periodstart = 1;
+  string periodend = 2;
+  CogsReportSummary summary = 3;
+  repeated CogsReportItem items = 4;
+}
+
+message CogsReportSummary {
+  string totalcogs = 1;
+  string totalrevenue = 2;
+  string grossprofit = 3;
+  string grossprofitmargin = 4;
+}
+
+message CogsReportItem {
+  string itemid = 1;
+  string itemcode = 2;
+  string itemname = 3;
+  string quantitysold = 4;
+  string unitcost = 5;
+  string totalcogs = 6;
+  string revenue = 7;
+  string profit = 8;
+}
+
+// Inventory Adjustments Messages
+message GetInventoryAdjustmentsRequest {
+  string sort = 1;
+  string adjustment_type = 2;
+}
+
+message GetInventoryAdjustmentsResponse {
+  repeated InventoryAdjustmentResponse adjustments = 1;
+}
+
+message GetInventoryAdjustmentRequest {
+  string id = 1;
+}
+
+message InventoryAdjustmentResponse {
+  string id = 1;
+  string organizationId = 2;
+  string adjustmentNumber = 3;
+  string adjustmentDate = 4;
+  string adjustmentType = 5;
+  string itemId = 6;
+  string itemCode = 7;
+  string quantityAdjusted = 8;
+  string unitCost = 9;
+  string adjustmentAmount = 10;
+  string accountId = 11;
+  string reason = 12;
+  string status = 13;
+  string journalEntryId = 14;
+}
+
+message CreateInventoryAdjustmentRequest {
+  string organizationId = 1;
+  string adjustmentNumber = 2;
+  string adjustmentDate = 3;
+  string adjustmentType = 4;
+  string itemId = 5;
+  string quantityAdjusted = 6;
+  string unitCost = 7;
+  string adjustmentAmount = 8;
+  string accountId = 9;
+  string reason = 10;
+}
+
+message UpdateInventoryAdjustmentRequest {
+  string id = 1;
+  string adjustmentDate = 2;
+  string adjustmentType = 3;
+  string itemId = 4;
+  string quantityAdjusted = 5;
+  string unitCost = 6;
+  string adjustmentAmount = 7;
+  string accountId = 8;
+  string reason = 9;
+}
+
+message DeleteInventoryAdjustmentRequest {
+  string id = 1;
+}
+
+message DeleteInventoryAdjustmentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PostInventoryAdjustmentRequest {
+  string id = 1;
+}
+
+message PostInventoryAdjustmentResponse {
+  bool success = 1;
+  string journal_entry_id = 2;
+}
+
+// Stock Impacts Messages
+message GetStockImpactsRequest {
+  string periodstart = 1;
+  string periodend = 2;
+}
+
+message GetStockImpactsResponse {
+  repeated StockImpactResponse stockImpacts = 1;
+}
+
+message GetStockImpactRequest {
+  string id = 1;
+}
+
+message StockImpactResponse {
+  string id = 1;
+  string organizationId = 2;
+  string transactionDate = 3;
+  string transactionType = 4;
+  string itemId = 5;
+  string itemCode = 6;
+  string itemName = 7;
+  string quantity = 8;
+  string unitCost = 9;
+  string totalCost = 10;
+  string inventoryAccountId = 11;
+  string cogsAccountId = 12;
+  string expenseAccountId = 13;
+  string referenceId = 14;
+  string referenceType = 15;
+}
+
+message CreateStockImpactRequest {
+  string organizationId = 1;
+  string transactionDate = 2;
+  string transactionType = 3;
+  string itemId = 4;
+  string quantity = 5;
+  string unitCost = 6;
+  string totalCost = 7;
+  string inventoryAccountId = 8;
+  string cogsAccountId = 9;
+  string expenseAccountId = 10;
+  string referenceId = 11;
+  string referenceType = 12;
+}
+
+message UpdateStockImpactRequest {
+  string id = 1;
+  string transactionDate = 2;
+  string transactionType = 3;
+  string itemId = 4;
+  string quantity = 5;
+  string unitCost = 6;
+  string totalCost = 7;
+  string inventoryAccountId = 8;
+  string cogsAccountId = 9;
+  string expenseAccountId = 10;
+  string referenceId = 11;
+  string referenceType = 12;
+}
+
+message DeleteStockImpactRequest {
+  string id = 1;
+}
+
+message DeleteStockImpactResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CalculateStockImpactsRequest {
+  string periodstart = 1;
+  string periodend = 2;
+  repeated string itemids = 3;
+}
+
+message CalculateStockImpactsResponse {
+  repeated StockImpactResponse stockImpacts = 1;
+}
+
+// Assets Service
+service AssetsService {
+  rpc GetAssets (GetAssetsRequest) returns (GetAssetsResponse);
+  rpc GetAsset (GetAssetRequest) returns (AssetResponse);
+  rpc CreateAsset (CreateAssetRequest) returns (AssetResponse);
+  rpc UpdateAsset (UpdateAssetRequest) returns (AssetResponse);
+  rpc DeleteAsset (DeleteAssetRequest) returns (DeleteAssetResponse);
+}
+
+// Assets Messages
+message GetAssetsRequest {
+  string sort = 1;
+  string status = 2;
+  string asset_type = 3;
+}
+
+message GetAssetsResponse {
+  repeated AssetResponse assets = 1;
+}
+
+message GetAssetRequest {
+  string id = 1;
+}
+
+message AssetResponse {
+  string id = 1;
+  string organizationId = 2;
+  string assetCode = 3;
+  string assetName = 4;
+  string assetType = 5;
+  string purchaseDate = 6;
+  string purchasePrice = 7;
+  string currentValue = 8;
+  string accumulatedDepreciation = 9;
+  string netBookValue = 10;
+  string depreciationMethod = 11;
+  string usefulLifeYears = 12;
+  string salvageValue = 13;
+  string status = 14;
+  string location = 15;
+  string accountId = 16;
+}
+
+message CreateAssetRequest {
+  string organizationId = 1;
+  string assetCode = 2;
+  string assetName = 3;
+  string assetType = 4;
+  string purchaseDate = 5;
+  string purchasePrice = 6;
+  string depreciationMethod = 7;
+  string usefulLifeYears = 8;
+  string salvageValue = 9;
+  string location = 10;
+  string accountId = 11;
+}
+
+message UpdateAssetRequest {
+  string id = 1;
+  string assetCode = 2;
+  string assetName = 3;
+  string assetType = 4;
+  string purchaseDate = 5;
+  string purchasePrice = 6;
+  string currentValue = 7;
+  string accumulatedDepreciation = 8;
+  string netBookValue = 9;
+  string depreciationMethod = 10;
+  string usefulLifeYears = 11;
+  string salvageValue = 12;
+  string status = 13;
+  string location = 14;
+  string accountId = 15;
+}
+
+message DeleteAssetRequest {
+  string id = 1;
+}
+
+message DeleteAssetResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Depreciations Service
+service DepreciationsService {
+  rpc GetDepreciations (GetDepreciationsRequest) returns (GetDepreciationsResponse);
+  rpc GetDepreciation (GetDepreciationRequest) returns (DepreciationResponse);
+  rpc CreateDepreciation (CreateDepreciationRequest) returns (DepreciationResponse);
+  rpc UpdateDepreciation (UpdateDepreciationRequest) returns (DepreciationResponse);
+  rpc DeleteDepreciation (DeleteDepreciationRequest) returns (DeleteDepreciationResponse);
+  rpc CalculateDepreciation (CalculateDepreciationRequest) returns (CalculateDepreciationResponse);
+  rpc GetDepreciationSchedule (GetDepreciationScheduleRequest) returns (GetDepreciationScheduleResponse);
+  rpc PostDepreciation (PostDepreciationRequest) returns (PostDepreciationResponse);
+}
+
+// Depreciations Messages
+message GetDepreciationsRequest {
+  string assetId = 1;
+  string periodStart = 2;
+  string periodEnd = 3;
+}
+
+message GetDepreciationsResponse {
+  repeated DepreciationResponse depreciations = 1;
+}
+
+message GetDepreciationRequest {
+  string id = 1;
+}
+
+message DepreciationResponse {
+  string id = 1;
+  string organizationId = 2;
+  string assetId = 3;
+  string assetCode = 4;
+  string assetName = 5;
+  string depreciationDate = 6;
+  string period = 7;
+  string depreciationAmount = 8;
+  string accumulatedDepreciation = 9;
+  string netBookValue = 10;
+  string status = 11;
+  string journalEntryId = 12;
+}
+
+message CreateDepreciationRequest {
+  string organizationId = 1;
+  string assetId = 2;
+  string depreciationDate = 3;
+  string period = 4;
+  string depreciationAmount = 5;
+  string accumulatedDepreciation = 6;
+  string netBookValue = 7;
+  string status = 8;
+}
+
+message UpdateDepreciationRequest {
+  string id = 1;
+  string depreciationDate = 2;
+  string period = 3;
+  string depreciationAmount = 4;
+  string accumulatedDepreciation = 5;
+  string netBookValue = 6;
+  string status = 7;
+}
+
+message DeleteDepreciationRequest {
+  string id = 1;
+}
+
+message DeleteDepreciationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CalculateDepreciationRequest {
+  string assetId = 1;
+  string periodStart = 2;
+  string periodEnd = 3;
+}
+
+message DepreciationScheduleItem {
+  string period = 1;
+  string depreciationAmount = 2;
+  string accumulatedDepreciation = 3;
+  string netBookValue = 4;
+}
+
+message CalculateDepreciationResponse {
+  string assetId = 1;
+  string assetName = 2;
+  string periodStart = 3;
+  string periodEnd = 4;
+  repeated DepreciationScheduleItem depreciationSchedule = 5;
+  string totalDepreciation = 6;
+}
+
+message GetDepreciationScheduleRequest {
+  string assetId = 1;
+}
+
+message AssetInfo {
+  string id = 1;
+  string assetCode = 2;
+  string assetName = 3;
+  string purchasePrice = 4;
+  string currentValue = 5;
+  string accumulatedDepreciation = 6;
+  string netBookValue = 7;
+  string depreciationMethod = 8;
+  string usefulLifeYears = 9;
+  string salvageValue = 10;
+}
+
+message DepreciationScheduleItemWithStatus {
+  string period = 1;
+  string depreciationAmount = 2;
+  string accumulatedDepreciation = 3;
+  string netBookValue = 4;
+  string status = 5;
+}
+
+message GetDepreciationScheduleResponse {
+  AssetInfo asset = 1;
+  repeated DepreciationScheduleItemWithStatus depreciationSchedule = 2;
+  string totalDepreciation = 3;
+  string remainingLifeYears = 4;
+}
+
+message PostDepreciationRequest {
+  string id = 1;
+}
+
+message PostDepreciationResponse {
+  bool success = 1;
+  string journalEntryId = 2;
+}
+
+// Asset Revaluations Service
+service AssetRevaluationsService {
+  rpc GetAssetRevaluations (GetAssetRevaluationsRequest) returns (GetAssetRevaluationsResponse);
+  rpc GetAssetRevaluation (GetAssetRevaluationRequest) returns (AssetRevaluationResponse);
+  rpc CreateAssetRevaluation (CreateAssetRevaluationRequest) returns (AssetRevaluationResponse);
+  rpc UpdateAssetRevaluation (UpdateAssetRevaluationRequest) returns (AssetRevaluationResponse);
+  rpc DeleteAssetRevaluation (DeleteAssetRevaluationRequest) returns (DeleteAssetRevaluationResponse);
+  rpc PostAssetRevaluation (PostAssetRevaluationRequest) returns (PostAssetRevaluationResponse);
+}
+
+// Asset Revaluations Messages
+message GetAssetRevaluationsRequest {
+  string assetId = 1;
+  string sort = 2;
+}
+
+message GetAssetRevaluationsResponse {
+  repeated AssetRevaluationResponse assetRevaluations = 1;
+}
+
+message GetAssetRevaluationRequest {
+  string id = 1;
+}
+
+message AssetRevaluationResponse {
+  string id = 1;
+  string organizationId = 2;
+  string assetId = 3;
+  string assetCode = 4;
+  string assetName = 5;
+  string revaluationDate = 6;
+  string previousValue = 7;
+  string newValue = 8;
+  string revaluationAmount = 9;
+  string revaluationType = 10;
+  string reason = 11;
+  string status = 12;
+  string accountId = 13;
+  string journalEntryId = 14;
+}
+
+message CreateAssetRevaluationRequest {
+  string organizationId = 1;
+  string assetId = 2;
+  string revaluationDate = 3;
+  string newValue = 4;
+  string reason = 5;
+  string accountId = 6;
+}
+
+message UpdateAssetRevaluationRequest {
+  string id = 1;
+  string revaluationDate = 2;
+  string newValue = 3;
+  string reason = 4;
+  string status = 5;
+  string accountId = 6;
+}
+
+message DeleteAssetRevaluationRequest {
+  string id = 1;
+}
+
+message DeleteAssetRevaluationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PostAssetRevaluationRequest {
+  string id = 1;
+}
+
+message PostAssetRevaluationResponse {
+  bool success = 1;
+  string journalEntryId = 2;
+}
+
+// Asset Disposals Service
+service AssetDisposalsService {
+  rpc GetAssetDisposals (GetAssetDisposalsRequest) returns (GetAssetDisposalsResponse);
+  rpc GetAssetDisposal (GetAssetDisposalRequest) returns (AssetDisposalResponse);
+  rpc CreateAssetDisposal (CreateAssetDisposalRequest) returns (AssetDisposalResponse);
+  rpc DisposeAsset (DisposeAssetRequest) returns (AssetDisposalResponse);
+  rpc UpdateAssetDisposal (UpdateAssetDisposalRequest) returns (AssetDisposalResponse);
+  rpc DeleteAssetDisposal (DeleteAssetDisposalRequest) returns (DeleteAssetDisposalResponse);
+  rpc PostAssetDisposal (PostAssetDisposalRequest) returns (PostAssetDisposalResponse);
+}
+
+// Asset Disposals Messages
+message GetAssetDisposalsRequest {
+  string assetId = 1;
+  string sort = 2;
+}
+
+message GetAssetDisposalsResponse {
+  repeated AssetDisposalResponse assetDisposals = 1;
+}
+
+message GetAssetDisposalRequest {
+  string id = 1;
+}
+
+message AssetDisposalResponse {
+  string id = 1;
+  string organizationId = 2;
+  string assetId = 3;
+  string assetCode = 4;
+  string assetName = 5;
+  string disposalDate = 6;
+  string disposalMethod = 7;
+  string disposalAmount = 8;
+  string netBookValue = 9;
+  string gainLoss = 10;
+  string reason = 11;
+  string status = 12;
+  string accountId = 13;
+  string journalEntryId = 14;
+}
+
+message CreateAssetDisposalRequest {
+  string organizationId = 1;
+  string assetId = 2;
+  string disposalDate = 3;
+  string disposalMethod = 4;
+  string disposalAmount = 5;
+  string reason = 6;
+  string accountId = 7;
+}
+
+message DisposeAssetRequest {
+  string assetId = 1;
+  string disposalDate = 2;
+  string disposalMethod = 3;
+  string disposalAmount = 4;
+  string reason = 5;
+  string accountId = 6;
+}
+
+message UpdateAssetDisposalRequest {
+  string id = 1;
+  string disposalDate = 2;
+  string disposalMethod = 3;
+  string disposalAmount = 4;
+  string gainLoss = 5;
+  string reason = 6;
+  string status = 7;
+  string accountId = 8;
+}
+
+message DeleteAssetDisposalRequest {
+  string id = 1;
+}
+
+message DeleteAssetDisposalResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PostAssetDisposalRequest {
+  string id = 1;
+}
+
+message PostAssetDisposalResponse {
+  bool success = 1;
+  string journalEntryId = 2;
+}
+
+// Loans Service
+service LoansService {
+  rpc GetLoans (GetLoansRequest) returns (GetLoansResponse);
+  rpc GetLoan (GetLoanRequest) returns (LoanResponse);
+  rpc CreateLoan (CreateLoanRequest) returns (LoanResponse);
+  rpc UpdateLoan (UpdateLoanRequest) returns (LoanResponse);
+  rpc DeleteLoan (DeleteLoanRequest) returns (DeleteLoanResponse);
+  rpc MakePayment (MakePaymentRequest) returns (LoanPaymentResponse);
+  rpc GetSchedule (GetScheduleRequest) returns (GetScheduleResponse);
+}
+
+// Loans Messages
+message GetLoansRequest {
+  string sort = 1;
+  string status = 2;
+  string loanType = 3;
+}
+
+message GetLoansResponse {
+  repeated LoanResponse loans = 1;
+}
+
+message GetLoanRequest {
+  string id = 1;
+}
+
+message LoanResponse {
+  string id = 1;
+  string organizationId = 2;
+  string loanNumber = 3;
+  string loanName = 4;
+  string lender = 5;
+  string loanType = 6;
+  string loanAmount = 7;
+  string interestRate = 8;
+  string loanDate = 9;
+  string maturityDate = 10;
+  string paymentFrequency = 11;
+  string paymentAmount = 12;
+  string outstandingBalance = 13;
+  string status = 14;
+  string accountId = 15;
+}
+
+message CreateLoanRequest {
+  string organizationId = 1;
+  string loanNumber = 2;
+  string loanName = 3;
+  string lender = 4;
+  string loanType = 5;
+  string loanAmount = 6;
+  string interestRate = 7;
+  string loanDate = 8;
+  string maturityDate = 9;
+  string paymentFrequency = 10;
+  string accountId = 11;
+}
+
+message UpdateLoanRequest {
+  string id = 1;
+  string loanNumber = 2;
+  string loanName = 3;
+  string lender = 4;
+  string loanType = 5;
+  string loanAmount = 6;
+  string interestRate = 7;
+  string loanDate = 8;
+  string maturityDate = 9;
+  string paymentFrequency = 10;
+  string paymentAmount = 11;
+  string outstandingBalance = 12;
+  string status = 13;
+  string accountId = 14;
+}
+
+message DeleteLoanRequest {
+  string id = 1;
+}
+
+message DeleteLoanResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message MakePaymentRequest {
+  string loanId = 1;
+  string paymentDate = 2;
+  string paymentAmount = 3;
+  string principalAmount = 4;
+  string interestAmount = 5;
+  string bankAccountId = 6;
+}
+
+message LoanPaymentResponse {
+  string id = 1;
+  string loanId = 2;
+  string paymentDate = 3;
+  int32 paymentNumber = 4;
+  string paymentAmount = 5;
+  string principalAmount = 6;
+  string interestAmount = 7;
+  string outstandingBalance = 8;
+  string status = 9;
+  string bankAccountId = 10;
+  string journalEntryId = 11;
+}
+
+message GetScheduleRequest {
+  string id = 1;
+}
+
+message PaymentScheduleItem {
+  int32 paymentNumber = 1;
+  string paymentDate = 2;
+  string paymentAmount = 3;
+  string principalAmount = 4;
+  string interestAmount = 5;
+  string outstandingBalance = 6;
+  string status = 7;
+}
+
+message GetScheduleResponse {
+  LoanResponse loan = 1;
+  repeated PaymentScheduleItem paymentSchedule = 2;
+  string totalPrincipal = 3;
+  string totalInterest = 4;
+  string totalPayments = 5;
+}
+
+// Accrued Expenses Service
+service AccruedExpensesService {
+  rpc GetAccruedExpenses (GetAccruedExpensesRequest) returns (GetAccruedExpensesResponse);
+  rpc GetAccruedExpense (GetAccruedExpenseRequest) returns (AccruedExpenseResponse);
+  rpc CreateAccruedExpense (CreateAccruedExpenseRequest) returns (AccruedExpenseResponse);
+  rpc UpdateAccruedExpense (UpdateAccruedExpenseRequest) returns (AccruedExpenseResponse);
+  rpc DeleteAccruedExpense (DeleteAccruedExpenseRequest) returns (DeleteAccruedExpenseResponse);
+  rpc ReverseAccruedExpense (ReverseAccruedExpenseRequest) returns (AccruedExpenseResponse);
+}
+
+// Accrued Expenses Messages
+message GetAccruedExpensesRequest {
+  string sort = 1;
+  string status = 2;
+}
+
+message GetAccruedExpensesResponse {
+  repeated AccruedExpenseResponse accruedExpenses = 1;
+}
+
+message GetAccruedExpenseRequest {
+  string id = 1;
+}
+
+message AccruedExpenseResponse {
+  string id = 1;
+  string organizationId = 2;
+  string accrualNumber = 3;
+  string expenseDescription = 4;
+  string accrualDate = 5;
+  string amount = 6;
+  string currency = 7;
+  string accountId = 8;
+  string vendorId = 9;
+  string status = 10;
+  string reversalDate = 11;
+}
+
+message CreateAccruedExpenseRequest {
+  string organizationId = 1;
+  string accrualNumber = 2;
+  string expenseDescription = 3;
+  string accrualDate = 4;
+  string amount = 5;
+  string currency = 6;
+  string accountId = 7;
+  string vendorId = 8;
+}
+
+message UpdateAccruedExpenseRequest {
+  string id = 1;
+  string accrualNumber = 2;
+  string expenseDescription = 3;
+  string accrualDate = 4;
+  string amount = 5;
+  string currency = 6;
+  string accountId = 7;
+  string vendorId = 8;
+  string status = 9;
+  string reversalDate = 10;
+  string reversalReason = 11;
+}
+
+message DeleteAccruedExpenseRequest {
+  string id = 1;
+}
+
+message DeleteAccruedExpenseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ReverseAccruedExpenseRequest {
+  string id = 1;
+  string reversalDate = 2;
+  string reason = 3;
+}
+
+// Tax Payables Service
+service TaxPayablesService {
+  rpc GetTaxPayables (GetTaxPayablesRequest) returns (GetTaxPayablesResponse);
+  rpc GetTaxPayable (GetTaxPayableRequest) returns (TaxPayableResponse);
+  rpc CreateTaxPayable (CreateTaxPayableRequest) returns (TaxPayableResponse);
+  rpc UpdateTaxPayable (UpdateTaxPayableRequest) returns (TaxPayableResponse);
+  rpc DeleteTaxPayable (DeleteTaxPayableRequest) returns (DeleteTaxPayableResponse);
+  rpc PayTaxPayable (PayTaxPayableRequest) returns (TaxPayableResponse);
+  rpc CalculateTaxPayable (CalculateTaxPayableRequest) returns (CalculateTaxPayableResponse);
+}
+
+// Tax Payables Messages
+message GetTaxPayablesRequest {
+  string sort = 1;
+  string status = 2;
+  string taxType = 3;
+}
+
+message GetTaxPayablesResponse {
+  repeated TaxPayableResponse taxPayables = 1;
+}
+
+message GetTaxPayableRequest {
+  string id = 1;
+}
+
+message TaxPayableResponse {
+  string id = 1;
+  string organizationId = 2;
+  string taxType = 3;
+  string taxPeriod = 4;
+  string dueDate = 5;
+  string amount = 6;
+  string currency = 7;
+  string status = 8;
+  string accountId = 9;
+  string paidDate = 10;
+}
+
+message CreateTaxPayableRequest {
+  string organizationId = 1;
+  string taxType = 2;
+  string taxPeriod = 3;
+  string dueDate = 4;
+  string amount = 5;
+  string currency = 6;
+  string accountId = 7;
+}
+
+message UpdateTaxPayableRequest {
+  string id = 1;
+  string taxType = 2;
+  string taxPeriod = 3;
+  string dueDate = 4;
+  string amount = 5;
+  string currency = 6;
+  string accountId = 7;
+  string status = 8;
+  string paidDate = 9;
+  string paidAmount = 10;
+}
+
+message DeleteTaxPayableRequest {
+  string id = 1;
+}
+
+message DeleteTaxPayableResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PayTaxPayableRequest {
+  string id = 1;
+  string paymentDate = 2;
+  string paymentAmount = 3;
+  string bankAccountId = 4;
+}
+
+message CalculateTaxPayableRequest {
+  string taxType = 1;
+  string period = 2;
+}
+
+message TaxBreakdown {
+  string sales = 1;
+  string purchases = 2;
+  string netTax = 3;
+}
+
+message CalculateTaxPayableResponse {
+  string taxType = 1;
+  string period = 2;
+  string calculatedAmount = 3;
+  TaxBreakdown breakdown = 4;
+}
+
+// Liabilities Service
+service LiabilitiesService {
+  rpc GetLiabilities (GetLiabilitiesRequest) returns (GetLiabilitiesResponse);
+  rpc GetLiability (GetLiabilityRequest) returns (LiabilityResponse);
+  rpc CreateLiability (CreateLiabilityRequest) returns (LiabilityResponse);
+  rpc UpdateLiability (UpdateLiabilityRequest) returns (LiabilityResponse);
+  rpc DeleteLiability (DeleteLiabilityRequest) returns (DeleteLiabilityResponse);
+  rpc GetLongTermLiabilities (GetLongTermLiabilitiesRequest) returns (GetLiabilitiesResponse);
+  rpc GetShortTermLiabilities (GetShortTermLiabilitiesRequest) returns (GetLiabilitiesResponse);
+}
+
+// Liabilities Messages
+message GetLiabilitiesRequest {
+  string sort = 1;
+  string liabilityType = 2;
+}
+
+message GetLiabilitiesResponse {
+  repeated LiabilityResponse liabilities = 1;
+}
+
+message GetLiabilityRequest {
+  string id = 1;
+}
+
+message LiabilityResponse {
+  string id = 1;
+  string organizationId = 2;
+  string liabilityCode = 3;
+  string liabilityName = 4;
+  string liabilityType = 5;
+  string amount = 6;
+  string currency = 7;
+  string dueDate = 8;
+  string interestRate = 9;
+  string status = 10;
+  string accountId = 11;
+}
+
+message CreateLiabilityRequest {
+  string organizationId = 1;
+  string liabilityCode = 2;
+  string liabilityName = 3;
+  string liabilityType = 4;
+  string amount = 5;
+  string currency = 6;
+  string dueDate = 7;
+  string interestRate = 8;
+  string accountId = 9;
+}
+
+message UpdateLiabilityRequest {
+  string id = 1;
+  string liabilityCode = 2;
+  string liabilityName = 3;
+  string liabilityType = 4;
+  string amount = 5;
+  string currency = 6;
+  string dueDate = 7;
+  string interestRate = 8;
+  string status = 9;
+  string accountId = 10;
+}
+
+message DeleteLiabilityRequest {
+  string id = 1;
+}
+
+message DeleteLiabilityResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetLongTermLiabilitiesRequest {
+}
+
+message GetShortTermLiabilitiesRequest {
+}
+
+// Projects Service
+service ProjectsService {
+  rpc GetProjects (GetProjectsRequest) returns (GetProjectsResponse);
+  rpc GetProject (GetProjectRequest) returns (ProjectResponse);
+  rpc CreateProject (CreateProjectRequest) returns (ProjectResponse);
+  rpc UpdateProject (UpdateProjectRequest) returns (ProjectResponse);
+  rpc DeleteProject (DeleteProjectRequest) returns (DeleteProjectResponse);
+  rpc GetProjectBudget (GetProjectBudgetRequest) returns (GetProjectBudgetResponse);
+}
+
+// Projects Messages
+message GetProjectsRequest {
+  string sort = 1;
+  string status = 2;
+  string department = 3;
+  string startDate = 4;
+  string endDate = 5;
+}
+
+message GetProjectsResponse {
+  repeated ProjectResponse projects = 1;
+}
+
+message GetProjectRequest {
+  string id = 1;
+}
+
+message ProjectResponse {
+  string id = 1;
+  string organizationId = 2;
+  string projectCode = 3;
+  string projectName = 4;
+  string description = 5;
+  string projectType = 6;
+  string status = 7;
+  string startDate = 8;
+  string endDate = 9;
+  string budgetedAmount = 10;
+  string actualAmount = 11;
+  string currency = 12;
+  string department = 13;
+  string projectManagerId = 14;
+  string projectManagerName = 15;
+  string costCenterId = 16;
+  bool isActive = 17;
+  string createdAt = 18;
+}
+
+message CreateProjectRequest {
+  string organizationId = 1;
+  string projectCode = 2;
+  string projectName = 3;
+  string description = 4;
+  string projectType = 5;
+  string status = 6;
+  string startDate = 7;
+  string endDate = 8;
+  string budgetedAmount = 9;
+  string currency = 10;
+  string department = 11;
+  string projectManagerId = 12;
+  string costCenterId = 13;
+}
+
+message UpdateProjectRequest {
+  string id = 1;
+  string projectCode = 2;
+  string projectName = 3;
+  string description = 4;
+  string projectType = 5;
+  string status = 6;
+  string startDate = 7;
+  string endDate = 8;
+  string budgetedAmount = 9;
+  string currency = 10;
+  string department = 11;
+  string projectManagerId = 12;
+  string costCenterId = 13;
+  bool isActive = 14;
+}
+
+message DeleteProjectRequest {
+  string id = 1;
+}
+
+message DeleteProjectResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetProjectBudgetRequest {
+  string id = 1;
+}
+
+message BudgetBreakdown {
+  string accountId = 1;
+  string accountCode = 2;
+  string accountName = 3;
+  string budgeted = 4;
+  string actual = 5;
+  string variance = 6;
+}
+
+message GetProjectBudgetResponse {
+  string projectId = 1;
+  string projectName = 2;
+  string budgetedAmount = 3;
+  string actualAmount = 4;
+  string variance = 5;
+  string variancePercent = 6;
+  repeated BudgetBreakdown breakdown = 7;
+}
+
+// Cost Centers Service
+service CostCentersService {
+  rpc GetCostCenters (GetCostCentersRequest) returns (GetCostCentersResponse);
+  rpc GetCostCenter (GetCostCenterRequest) returns (CostCenterResponse);
+  rpc CreateCostCenter (CreateCostCenterRequest) returns (CostCenterResponse);
+  rpc UpdateCostCenter (UpdateCostCenterRequest) returns (CostCenterResponse);
+  rpc DeleteCostCenter (DeleteCostCenterRequest) returns (DeleteCostCenterResponse);
+  rpc GetCostCenterBudget (GetCostCenterBudgetRequest) returns (GetCostCenterBudgetResponse);
+}
+
+// Cost Centers Messages
+message GetCostCentersRequest {
+  string sort = 1;
+  bool isActive = 2;
+  string department = 3;
+  string parentId = 4;
+}
+
+message GetCostCentersResponse {
+  repeated CostCenterResponse costCenters = 1;
+}
+
+message GetCostCenterRequest {
+  string id = 1;
+}
+
+message CostCenterResponse {
+  string id = 1;
+  string organizationId = 2;
+  string costCenterCode = 3;
+  string costCenterName = 4;
+  string description = 5;
+  string department = 6;
+  string parentId = 7;
+  string parentName = 8;
+  string managerId = 9;
+  string managerName = 10;
+  string budgetedAmount = 11;
+  string actualAmount = 12;
+  string currency = 13;
+  bool isActive = 14;
+  string createdAt = 15;
+}
+
+message CreateCostCenterRequest {
+  string organizationId = 1;
+  string costCenterCode = 2;
+  string costCenterName = 3;
+  string description = 4;
+  string department = 5;
+  string parentId = 6;
+  string managerId = 7;
+  string budgetedAmount = 8;
+  string currency = 9;
+  bool isActive = 10;
+}
+
+message UpdateCostCenterRequest {
+  string id = 1;
+  string costCenterCode = 2;
+  string costCenterName = 3;
+  string description = 4;
+  string department = 5;
+  string parentId = 6;
+  string managerId = 7;
+  string budgetedAmount = 8;
+  string currency = 9;
+  bool isActive = 10;
+}
+
+message DeleteCostCenterRequest {
+  string id = 1;
+}
+
+message DeleteCostCenterResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message GetCostCenterBudgetRequest {
+  string id = 1;
+  string periodStart = 2;
+  string periodEnd = 3;
+}
+
+message CostCenterBudgetBreakdown {
+  string accountId = 1;
+  string accountCode = 2;
+  string accountName = 3;
+  string budgeted = 4;
+  string actual = 5;
+}
+
+message GetCostCenterBudgetResponse {
+  string costCenterId = 1;
+  string costCenterName = 2;
+  string periodStart = 3;
+  string periodEnd = 4;
+  string budgetedAmount = 5;
+  string actualAmount = 6;
+  string variance = 7;
+  string variancePercent = 8;
+  repeated CostCenterBudgetBreakdown breakdown = 9;
+}
+
+// Pricing Service
+service PricingService {
+  rpc GetPricings (GetPricingsRequest) returns (GetPricingsResponse);
+  rpc GetPricing (GetPricingRequest) returns (PricingResponse);
+  rpc CreatePricing (CreatePricingRequest) returns (PricingResponse);
+  rpc UpdatePricing (UpdatePricingRequest) returns (PricingResponse);
+  rpc DeletePricing (DeletePricingRequest) returns (DeletePricingResponse);
+  rpc CalculatePricing (CalculatePricingRequest) returns (CalculatePricingResponse);
+}
+
+// Pricing Messages
+message GetPricingsRequest {
+  string sort = 1;
+  string productId = 2;
+  string customerId = 3;
+  bool isActive = 4;
+  string effectiveDate = 5;
+}
+
+message GetPricingsResponse {
+  repeated PricingResponse pricings = 1;
+}
+
+message GetPricingRequest {
+  string id = 1;
+}
+
+message PricingResponse {
+  string id = 1;
+  string organizationId = 2;
+  string pricingCode = 3;
+  string productId = 4;
+  string productCode = 5;
+  string productName = 6;
+  string customerId = 7;
+  string customerName = 8;
+  string pricingType = 9;
+  string basePrice = 10;
+  string discountPercent = 11;
+  string discountAmount = 12;
+  string finalPrice = 13;
+  string currency = 14;
+  string minimumQuantity = 15;
+  string effectiveDate = 16;
+  string expiryDate = 17;
+  bool isActive = 18;
+  string notes = 19;
+}
+
+message CreatePricingRequest {
+  string organizationId = 1;
+  string pricingCode = 2;
+  string productId = 3;
+  string customerId = 4;
+  string pricingType = 5;
+  string basePrice = 6;
+  string discountPercent = 7;
+  string discountAmount = 8;
+  string currency = 9;
+  string minimumQuantity = 10;
+  string effectiveDate = 11;
+  string expiryDate = 12;
+  bool isActive = 13;
+  string notes = 14;
+}
+
+message UpdatePricingRequest {
+  string id = 1;
+  string pricingCode = 2;
+  string productId = 3;
+  string customerId = 4;
+  string pricingType = 5;
+  string basePrice = 6;
+  string discountPercent = 7;
+  string discountAmount = 8;
+  string currency = 9;
+  string minimumQuantity = 10;
+  string effectiveDate = 11;
+  string expiryDate = 12;
+  bool isActive = 13;
+  string notes = 14;
+}
+
+message DeletePricingRequest {
+  string id = 1;
+}
+
+message DeletePricingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message CalculatePricingRequest {
+  string productId = 1;
+  string customerId = 2;
+  string quantity = 3;
+  string date = 4;
+}
+
+message CalculatePricingResponse {
+  string productId = 1;
+  string productCode = 2;
+  string productName = 3;
+  string customerId = 4;
+  string customerName = 5;
+  string quantity = 6;
+  string basePrice = 7;
+  string discountPercent = 8;
+  string discountAmount = 9;
+  string finalPrice = 10;
+  string totalAmount = 11;
+  string currency = 12;
+  string pricingTier = 13;
+  string effectiveDate = 14;
+}
+
+// Contracts Service
+service ContractsService {
+  rpc GetContracts (GetContractsRequest) returns (GetContractsResponse);
+  rpc GetContract (GetContractRequest) returns (ContractResponse);
+  rpc CreateContract (CreateContractRequest) returns (ContractResponse);
+  rpc UpdateContract (UpdateContractRequest) returns (ContractResponse);
+  rpc DeleteContract (DeleteContractRequest) returns (DeleteContractResponse);
+  rpc ActivateContract (ActivateContractRequest) returns (ActivateContractResponse);
+  rpc RenewContract (RenewContractRequest) returns (RenewContractResponse);
+  rpc TerminateContract (TerminateContractRequest) returns (TerminateContractResponse);
+  rpc GetContractPayments (GetContractPaymentsRequest) returns (GetContractPaymentsResponse);
+}
+
+// Contracts Messages
+message GetContractsRequest {
+  string sort = 1;
+  string status = 2;
+  string contractType = 3;
+  string customerId = 4;
+  string vendorId = 5;
+  string startDate = 6;
+  string endDate = 7;
+}
+
+message GetContractsResponse {
+  repeated ContractResponse contracts = 1;
+}
+
+message GetContractRequest {
+  string id = 1;
+}
+
+message ContractResponse {
+  string id = 1;
+  string organizationId = 2;
+  string contractNumber = 3;
+  string contractName = 4;
+  string contractType = 5;
+  string status = 6;
+  string partyType = 7;
+  string partyId = 8;
+  string partyName = 9;
+  string startDate = 10;
+  string endDate = 11;
+  string totalValue = 12;
+  string currency = 13;
+  string paymentTerms = 14;
+  string billingFrequency = 15;
+  bool autoRenew = 16;
+  string renewalDate = 17;
+  string projectId = 18;
+  string costCenterId = 19;
+  string notes = 20;
+  string documentUrl = 21;
+  string createdAt = 22;
+}
+
+message CreateContractRequest {
+  string organizationId = 1;
+  string contractNumber = 2;
+  string contractName = 3;
+  string contractType = 4;
+  string partyType = 5;
+  string partyId = 6;
+  string startDate = 7;
+  string endDate = 8;
+  string totalValue = 9;
+  string currency = 10;
+  string paymentTerms = 11;
+  string billingFrequency = 12;
+  bool autoRenew = 13;
+  string renewalDate = 14;
+  string projectId = 15;
+  string costCenterId = 16;
+  string notes = 17;
+  string documentUrl = 18;
+}
+
+message UpdateContractRequest {
+  string id = 1;
+  string contractNumber = 2;
+  string contractName = 3;
+  string contractType = 4;
+  string status = 5;
+  string partyType = 6;
+  string partyId = 7;
+  string startDate = 8;
+  string endDate = 9;
+  string totalValue = 10;
+  string currency = 11;
+  string paymentTerms = 12;
+  string billingFrequency = 13;
+  bool autoRenew = 14;
+  string renewalDate = 15;
+  string projectId = 16;
+  string costCenterId = 17;
+  string notes = 18;
+  string documentUrl = 19;
+}
+
+message DeleteContractRequest {
+  string id = 1;
+}
+
+message DeleteContractResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message ActivateContractRequest {
+  string id = 1;
+  string activationDate = 2;
+}
+
+message ActivateContractResponse {
+  bool success = 1;
+  string message = 2;
+  ContractResponse contract = 3;
+}
+
+message RenewContractRequest {
+  string id = 1;
+  string newEndDate = 2;
+  string renewalTerms = 3;
+  string updatedValue = 4;
+}
+
+message RenewContractResponse {
+  bool success = 1;
+  string message = 2;
+  ContractResponse contract = 3;
+}
+
+message TerminateContractRequest {
+  string id = 1;
+  string terminationDate = 2;
+  string terminationReason = 3;
+  string notes = 4;
+}
+
+message TerminateContractResponse {
+  bool success = 1;
+  string message = 2;
+  ContractResponse contract = 3;
+}
+
+message GetContractPaymentsRequest {
+  string id = 1;
+}
+
+message ContractPaymentItem {
+  string paymentId = 1;
+  string paymentDate = 2;
+  string amount = 3;
+  string status = 4;
+  string dueDate = 5;
+}
+
+message GetContractPaymentsResponse {
+  string contractId = 1;
+  string contractName = 2;
+  string totalValue = 3;
+  string paidAmount = 4;
+  string outstandingAmount = 5;
+  repeated ContractPaymentItem payments = 6;
+}
+

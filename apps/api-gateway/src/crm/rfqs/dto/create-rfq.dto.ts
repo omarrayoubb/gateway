@@ -18,8 +18,8 @@ export enum RFQCurrency {
 }
 
 export enum RFQStatus {
-  SUBMITTED = 'submitted',
-  COMPLETED = 'completed',
+  SUBMITTED = 'SUBMITTED',
+  COMPLETED = 'COMPLETED',
 }
 
 export class CreateRFQDto {

@@ -1,17 +1,17 @@
 export interface CreateTicketRequest {
   contactName?: string;
   accountName?: string;
-  email: string;
+  email?: string;
   phone?: string;
-  subject: string;
-  description: string;
+  subject?: string;
+  description?: string;
   status?: string;
   priority?: string;
   classification?: string;
   ticketOwner?: string;
   productName?: string;
-  vendor: string;
-  serialNumber: string;
+  vendor?: string;
+  serialNumber?: string;
   dateTime1?: string;
   channel?: string;
   language?: string;

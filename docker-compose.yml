@@ -98,6 +98,44 @@ services:
       postgres:
         condition: service_healthy
 
+  desk:
+    build:
+      context: .
+      args:
+        APP_NAME: desk
+    ports:
+      - "50053:50053"
+    environment:
+      - DESK_DB_HOST=postgres
+      - DESK_DB_PORT=5432
+      - DESK_DB_USERNAME=user
+      - DESK_DB_PASSWORD=password
+      - DESK_DB_DATABASE=desk_db
+      - DESK_DB_SYNCHRONIZE=true
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  finance:
+    build:
+      context: .
+      args:
+        APP_NAME: finance
+    ports:
+      - "50055:50055"
+    environment:
+      - FINANCE_DB_HOST=postgres
+      - FINANCE_DB_PORT=5432
+      - FINANCE_DB_USERNAME=user
+      - FINANCE_DB_PASSWORD=password
+      - FINANCE_DB_DATABASE=finance_db
+      - FINANCE_DB_SYNCHRONIZE=true
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api-gateway:
     build:
       context: .
@@ -112,12 +150,18 @@ services:
       - ACCOUNTS_GRPC_URL=accounts:50051
       - CRM_GRPC_URL=crm:50052
       - SUPPLYCHAIN_GRPC_URL=supplychain:50054
+      - DESK_GRPC_URL=desk:50053
+      - FINANCE_GRPC_URL=finance:50055
     depends_on:
       accounts:
         condition: service_started
       crm:
         condition: service_started
       supplychain:
+        condition: service_started
+      desk:
+        condition: service_started
+      finance:
         condition: service_started
 
 volumes:

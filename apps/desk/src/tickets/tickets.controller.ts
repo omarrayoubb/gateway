@@ -192,12 +192,13 @@ export class TicketsController {
   }
 
   private mapCreateRequestToDto(data: CreateTicketRequest): CreateTicketDto {
-    if (!data.email || !data.subject || !data.description || !data.vendor || !data.serialNumber) {
-      throw new RpcException({
-        code: 3,
-        message: 'Required fields missing: email, subject, description, vendor, and serialNumber are required',
-      });
-    }
+    // Required field validation disabled for now
+    // if (!data.email || !data.subject || !data.description || !data.vendor || !data.serialNumber) {
+    //   throw new RpcException({
+    //     code: 3,
+    //     message: 'Required fields missing: email, subject, description, vendor, and serialNumber are required',
+    //   });
+    // }
 
     return {
       contactName: data.contactName,

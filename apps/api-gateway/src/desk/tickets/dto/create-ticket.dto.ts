@@ -4,6 +4,7 @@ import {
   IsOptional,
   IsEnum,
   IsDateString,
+  IsNotEmpty,
 } from 'class-validator';
 import { TicketStatus } from 'libs/common/src/enums/ticket-status.enum';
 import { TicketPriority } from 'libs/common/src/enums/ticket-priority.enum';
@@ -19,17 +20,20 @@ export class CreateTicketDto {
   accountName?: string;
 
   @IsEmail()
-  email: string;
+  @IsOptional()
+  email?: string;
 
   @IsString()
   @IsOptional()
   phone?: string;
 
   @IsString()
-  subject: string;
+  @IsOptional()
+  subject?: string;
 
   @IsString()
-  description: string;
+  @IsOptional()
+  description?: string;
 
   @IsEnum(TicketStatus)
   @IsOptional()
@@ -52,10 +56,12 @@ export class CreateTicketDto {
   productName?: string;
 
   @IsString()
-  vendor: string;
+  @IsOptional()
+  vendor?: string;
 
   @IsString()
-  serialNumber: string;
+  @IsOptional()
+  serialNumber?: string;
 
   @IsDateString()
   @IsOptional()

@@ -19,11 +19,11 @@ import { PaginationQueryDto } from './dto/pagination.dto';
 import { RFQResponseDto } from './dto/rfq-response.dto';
 
 interface RFQGrpcService {
-  createRfq(data: CreateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
-  findAllRfQs(data: PaginationRequest): Observable<PaginatedRFQsResponse>;
-  findOneRfq(data: FindOneRFQRequest): Observable<RFQResponse>;
-  updateRfq(data: UpdateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
-  deleteRfq(data: DeleteRFQRequest): Observable<DeleteRFQResponse>;
+  createRFQ(data: CreateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
+  findAllRFQs(data: PaginationRequest): Observable<PaginatedRFQsResponse>;
+  findOneRFQ(data: FindOneRFQRequest): Observable<RFQResponse>;
+  updateRFQ(data: UpdateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
+  deleteRFQ(data: DeleteRFQRequest): Observable<DeleteRFQResponse>;
 }
 
 export interface PaginatedRFQsResult {
@@ -39,21 +39,17 @@ export class RFQsService implements OnModuleInit {
 
   constructor(@Inject('CRM_PACKAGE') private readonly client: ClientGrpc) {}
 
-  onModuleInit() {
-    this.rfqGrpcService = this.client.getService<RFQGrpcService>('RFQService');
-    console.log(this.rfqGrpcService);
+  async onModuleInit() {
+    this.rfqGrpcService = this.client.getService<RFQGrpcService>('RFQService');  
   }
 
   createRFQ(createRFQDto: CreateRFQDto, currentUser: { id: string; name: string; email: string }): Observable<RFQResponseDto> {
-    console.log("HERE");
     if (!this.rfqGrpcService) {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
     const request: CreateRFQRequest = this.mapCreateDtoToRequest(createRFQDto);
     const metadata = this.createUserMetadata(currentUser);
-    console.log("HERE2");
-    console.log(this.rfqGrpcService.createRfq);
-    return this.rfqGrpcService.createRfq(request, metadata).pipe(
+    return this.rfqGrpcService.createRFQ(request, metadata).pipe(
       map(response => this.mapResponseToDto(response)),
       catchError(error => {
         console.error('Error in createRFQ gRPC call:', error);
@@ -73,7 +69,7 @@ export class RFQsService implements OnModuleInit {
       page: Math.max(1, Math.floor(page)),
       limit: Math.max(1, Math.min(100, Math.floor(limit))),
     };
-    return this.rfqGrpcService.findAllRfQs(request).pipe(
+    return this.rfqGrpcService.findAllRFQs(request).pipe(
       map(response => {
         if (!response) {
           throw new Error('Empty response from CRM microservice');
@@ -106,7 +102,7 @@ export class RFQsService implements OnModuleInit {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
     const request: FindOneRFQRequest = { id };
-    return this.rfqGrpcService.findOneRfq(request).pipe(
+    return this.rfqGrpcService.findOneRFQ(request).pipe(
       map(response => this.mapResponseToDto(response)),
       catchError(error => {
         console.error('Error in findOneRFQ gRPC call:', error);
@@ -124,7 +120,7 @@ export class RFQsService implements OnModuleInit {
       ...this.mapUpdateDtoToRequest(updateRFQDto),
     };
     const metadata = this.createUserMetadata(currentUser);
-    return this.rfqGrpcService.updateRfq(request, metadata).pipe(
+    return this.rfqGrpcService.updateRFQ(request, metadata).pipe(
       map(response => this.mapResponseToDto(response)),
       catchError(error => {
         console.error('Error in updateRFQ gRPC call:', error);
@@ -138,7 +134,7 @@ export class RFQsService implements OnModuleInit {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
     const request: DeleteRFQRequest = { id };
-    return this.rfqGrpcService.deleteRfq(request).pipe(
+    return this.rfqGrpcService.deleteRFQ(request).pipe(
       map(response => ({
         success: response.success,
         message: response.message,
@@ -220,10 +216,12 @@ export class RFQsService implements OnModuleInit {
   }
 
   private createUserMetadata(user: { id: string; name: string; email: string }): Metadata {
+    // Handle undefined user
+    const safeUser = user || { id: 'system', name: 'System User', email: 'system@example.com' };
     const metadata = new Metadata();
-    metadata.set('user-id', user.id);
-    metadata.set('user-name', user.name);
-    metadata.set('user-email', user.email);
+    metadata.set('user-id', safeUser.id);
+    metadata.set('user-name', safeUser.name);
+    metadata.set('user-email', safeUser.email);
     return metadata;
   }
 }

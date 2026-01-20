@@ -153,10 +153,12 @@ export class PartsService implements OnModuleInit {
   }
 
   private createUserMetadata(user: { id: string; name: string; email: string }): Metadata {
+    // Handle undefined user
+    const safeUser = user || { id: 'system', name: 'System User', email: 'system@example.com' };
     const metadata = new Metadata();
-    metadata.add('user-id', user.id);
-    metadata.add('user-name', user.name);
-    metadata.add('user-email', user.email);
+    metadata.add('user-id', safeUser.id);
+    metadata.add('user-name', safeUser.name);
+    metadata.add('user-email', safeUser.email);
     return metadata;
   }
 

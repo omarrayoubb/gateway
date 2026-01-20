@@ -12,7 +12,7 @@ import { KnowledgeBaseController } from './knowledge-base.controller';
         transport: Transport.GRPC,
         options: {
           package: ['knowledgeBase'],
-          url: '0.0.0.0:50053',
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
           protoPath: join(process.cwd(), 'proto/desk/knowledge-base.proto'),
         },
       },

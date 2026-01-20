@@ -21,16 +21,16 @@ export class Ticket extends BaseEntity {
   @Column({ nullable: true })
   accountName: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
   @Column({ nullable: true })
   phone: string;
 
-  @Column()
+  @Column({ nullable: true })
   subject: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   description: string;
 
   @Column({
@@ -60,10 +60,10 @@ export class Ticket extends BaseEntity {
   @Column({ nullable: true })
   productName: string;
 
-  @Column()
+  @Column({ nullable: true })
   vendor: string;
 
-  @Column()
+  @Column({ nullable: true })
   serialNumber: string;
 
   @Column({ type: 'timestamp', nullable: true })
