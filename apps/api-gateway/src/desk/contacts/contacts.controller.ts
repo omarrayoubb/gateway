@@ -12,7 +12,7 @@ import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { PaginationQueryDto } from './dto/pagination.dto';
 import { ContactResponseDto } from './dto/contact-response.dto';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('desk/contacts')
 export class ContactsController {
   constructor(private readonly contactsService: ContactsService) {}

@@ -13,3 +13,5 @@ export * from './types/orchestrator';
 export * from './types/roles';
 export * from './types/tasks';
 export * from './types/knowledge-base';
+export * from './types/rfqs';
+export * from './events/user-created.event';

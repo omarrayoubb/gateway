@@ -16,17 +16,17 @@ service TicketService {
 message CreateTicketRequest {
   optional string contactName = 1;
   optional string accountName = 2;
-  string email = 3;
+  optional string email = 3;
   optional string phone = 4;
-  string subject = 5;
-  string description = 6;
+  optional string subject = 5;
+  optional string description = 6;
   optional string status = 7; // open, onHold, escalated, closed
   optional string priority = 8; // low, medium, high
   optional string classification = 9; // question, problem, request, none, feature, others
   optional string ticketOwner = 10;
   optional string productName = 11;
-  string vendor = 12;
-  string serialNumber = 13;
+  optional string vendor = 12;
+  optional string serialNumber = 13;
   optional string dateTime1 = 14; // ISO date string
   optional string channel = 15;
   optional string language = 16;

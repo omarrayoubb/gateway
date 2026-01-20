@@ -12,8 +12,8 @@ import { ActivitiesController } from './activities.controller';
         transport: Transport.GRPC,
         options: {
           package: ['activities'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/activities.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/activities.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { ActivitiesController } from './activities.controller';
   providers: [ActivitiesService],
   exports: [ActivitiesService],
 })
-export class ActivitiesModule {}
+export class ActivitiesModule { }
 

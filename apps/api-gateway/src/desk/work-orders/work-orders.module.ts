@@ -12,8 +12,8 @@ import { WorkOrdersController } from './work-orders.controller';
         transport: Transport.GRPC,
         options: {
           package: ['workOrders'],
-          url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/work-orders.proto'),
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
+          protoPath: join(process.cwd(), 'proto/desk/work-orders.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { WorkOrdersController } from './work-orders.controller';
   providers: [WorkOrdersService],
   exports: [WorkOrdersService],
 })
-export class WorkOrdersModule {}
+export class WorkOrdersModule { }
 

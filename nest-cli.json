@@ -56,7 +56,11 @@
       "sourceRoot": "apps/crm/src",
       "compilerOptions": {
         "tsConfigPath": "apps/crm/tsconfig.app.json"
-      }
+      },
+      "assets": [
+        "**/*.proto"
+      ],
+      "watchAssets": true
     },
     "desk": {
       "type": "application",
@@ -74,6 +78,19 @@
       "sourceRoot": "apps/supplychain/src",
       "compilerOptions": {
         "tsConfigPath": "apps/supplychain/tsconfig.app.json",
+        "assets": [
+          "**/*.proto"
+        ],
+        "watchAssets": true
+      }
+    },
+    "finance": {
+      "type": "application",
+      "root": "apps/finance",
+      "entryFile": "main",
+      "sourceRoot": "apps/finance/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/finance/tsconfig.app.json",
         "assets": [
           "**/*.proto"
         ],

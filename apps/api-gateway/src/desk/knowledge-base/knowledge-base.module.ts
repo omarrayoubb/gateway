@@ -12,8 +12,8 @@ import { KnowledgeBaseController } from './knowledge-base.controller';
         transport: Transport.GRPC,
         options: {
           package: ['knowledgeBase'],
-          url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/knowledge-base.proto'),
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
+          protoPath: join(process.cwd(), 'proto/desk/knowledge-base.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { KnowledgeBaseController } from './knowledge-base.controller';
   providers: [KnowledgeBaseService],
   exports: [KnowledgeBaseService],
 })
-export class KnowledgeBaseModule {}
+export class KnowledgeBaseModule { }
 

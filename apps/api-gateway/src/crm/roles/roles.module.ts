@@ -12,8 +12,8 @@ import { RolesController } from './roles.controller';
         transport: Transport.GRPC,
         options: {
           package: ['roles'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/roles.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/roles.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { RolesController } from './roles.controller';
   providers: [RolesService],
   exports: [RolesService],
 })
-export class RolesModule {}
+export class RolesModule { }
 

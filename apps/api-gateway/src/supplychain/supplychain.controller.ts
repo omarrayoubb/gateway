@@ -45,7 +45,7 @@ import { UpdateDeliveryNoteDto } from './dto/delivery-notes/update-delivery-note
 import { UpdateStockMovementDto } from './dto/stock-movements/update-stock-movement.dto';
 
 @Controller('supplychain')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 // @UseGuards(JwtAuthGuard) // Temporarily disabled for development
 export class SupplyChainController {
   constructor(private readonly supplyChainService: SupplyChainService) {}

@@ -1,6 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, OnModuleInit, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import type { ClientGrpc } from '@nestjs/microservices';
+import { Observable, firstValueFrom } from 'rxjs';
+import { Metadata } from '@grpc/grpc-js';
 import { AccountsService } from '../accounts/accounts.service';
 import { ContactsService } from '../contacts/contacts.service';
 import { ProfilesService } from '../profiles/profiles.service';
@@ -11,7 +14,8 @@ import {
   RegisterFormOrchestratorResponse,
   DealFormOrchestratorResponse,
   ActivityFormOrchestratorResponse,
-  DeliveryNoteFormOrchestratorResponse
+  DeliveryNoteFormOrchestratorResponse,
+  RfqFormOrchestratorResponse
 } from './dto/orchestrator-response.dto';
 import { ContactResponseDto } from '../contacts/dto/contact-response.dto';
 import { CreateContactDto } from '../contacts/dto/create-contact.dto';
@@ -19,8 +23,19 @@ import { User } from '../users/entities/user.entity';
 import { Lead } from '../leads/entities/lead.entity';
 import { Contact } from '../contacts/entities/contacts.entity';
 
+interface ProductsService {
+  GetProducts(data: { page?: number; limit?: number; search?: string; sort?: string; status?: string; category_id?: string; type?: string }, metadata?: Metadata): Observable<any>;
+}
+
+interface VendorsService {
+  GetVendors(data: { page?: number; limit?: number; sort?: string; status?: string; search?: string }, metadata?: Metadata): Observable<any>;
+}
+
 @Injectable()
-export class OrchestratorService {
+export class OrchestratorService implements OnModuleInit {
+  private productsService: ProductsService;
+  private vendorsService: VendorsService;
+
   constructor(
     private readonly accountsService: AccountsService,
     private readonly contactsService: ContactsService,
@@ -32,7 +47,14 @@ export class OrchestratorService {
     private readonly contactRepository: Repository<Contact>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @Inject('SUPPLYCHAIN_PACKAGE')
+    private readonly supplychainClient: ClientGrpc,
   ) {}
+
+  onModuleInit() {
+    this.productsService = this.supplychainClient.getService<ProductsService>('ProductsService');
+    this.vendorsService = this.supplychainClient.getService<VendorsService>('VendorsService');
+  }
 
   /**
    * Returns options needed for the Account Creation form.
@@ -250,5 +272,89 @@ export class OrchestratorService {
     return {
       accounts: accounts.map(a => ({ id: a.id, name: a.name, accountNumber: a.accountNumber })),
     };
+  }
+
+  /**
+   * Returns options needed for the RFQ Creation form.
+   * Needs: List of Products (id, name, sku) and Vendors (id, name) from Supplychain service,
+   * and Accounts (id, name, accountNumber), Contacts (id, name), Leads (id, name) from CRM
+   */
+  async getRfqFormOptions(): Promise<RfqFormOrchestratorResponse> {
+    try {
+      // Fetch products and vendors from Supplychain service, and accounts, contacts, leads from CRM in parallel
+      const [productsResponse, vendorsResponse, accounts, contacts, leads] = await Promise.all([
+        firstValueFrom(
+          this.productsService.GetProducts(
+            { page: 1, limit: 1000, status: 'active' },
+            new Metadata()
+          )
+        ),
+        firstValueFrom(
+          this.vendorsService.GetVendors(
+            { page: 1, limit: 1000, status: 'active' },
+            new Metadata()
+          )
+        ),
+        this.accountsService.findAllForDropdown(),
+        this.contactRepository.find({
+          select: ['id', 'first_name', 'last_name'],
+          order: { first_name: 'ASC', last_name: 'ASC' },
+        }),
+        this.leadRepository.find({
+          select: ['id', 'first_name', 'last_name'],
+          order: { first_name: 'ASC', last_name: 'ASC' },
+        }),
+      ]);
+
+      // Map products to SimpleProduct format
+      const products = (productsResponse?.products || []).map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        sku: product.sku,
+      }));
+
+      // Map vendors to SimpleVendor format
+      const vendors = (vendorsResponse?.vendors || []).map((vendor: any) => ({
+        id: vendor.id,
+        name: vendor.name,
+      }));
+
+      // Map accounts to SimpleAccount format
+      const accountsList = accounts.map((account) => ({
+        id: account.id,
+        name: account.name,
+        accountNumber: account.accountNumber || '',
+      }));
+
+      // Map contacts to SimpleContact format
+      const contactsList = contacts.map((contact) => ({
+        id: contact.id,
+        name: `${contact.first_name} ${contact.last_name}`.trim(),
+      }));
+
+      // Map leads to SimpleLead format
+      const leadsList = leads.map((lead) => ({
+        id: lead.id,
+        name: `${lead.first_name} ${lead.last_name}`.trim(),
+      }));
+
+      return {
+        products,
+        vendors,
+        accounts: accountsList,
+        contacts: contactsList,
+        leads: leadsList,
+      };
+    } catch (error) {
+      console.error('Error fetching RFQ form options:', error);
+      // Return empty arrays on error to prevent form from breaking
+      return {
+        products: [],
+        vendors: [],
+        accounts: [],
+        contacts: [],
+        leads: [],
+      };
+    }
   }
 }

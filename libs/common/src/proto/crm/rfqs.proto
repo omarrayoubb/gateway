@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package rfqs;
+
+service RFQService {
+  rpc CreateRFQ (CreateRFQRequest) returns (RFQResponse) {}
+  rpc FindAllRFQs (PaginationRequest) returns (PaginatedRFQsResponse) {}
+  rpc FindOneRFQ (FindOneRFQRequest) returns (RFQResponse) {}
+  rpc UpdateRFQ (UpdateRFQRequest) returns (RFQResponse) {}
+  rpc DeleteRFQ (DeleteRFQRequest) returns (DeleteRFQResponse) {}
+}
+
+// Request Messages
+message CreateRFQRequest {
+  string rfqName = 1;
+  optional string rfqNumber = 2;
+  string accountId = 3;
+  optional string contactId = 4;
+  optional string leadId = 5;
+  optional string vendorId = 6;
+  string currency = 7; // USD, AED, EGP
+  optional string status = 8; // submitted, completed
+  optional string paymentTerms = 9;
+  optional string additionalNotes = 10;
+  repeated RFQProductMessage rfqProducts = 11;
+}
+
+message UpdateRFQRequest {
+  string id = 1;
+  optional string rfqName = 2;
+  optional string rfqNumber = 3;
+  optional string accountId = 4;
+  optional string contactId = 5;
+  optional string leadId = 6;
+  optional string vendorId = 7;
+  optional string currency = 8;
+  optional string status = 9;
+  optional string paymentTerms = 10;
+  optional string additionalNotes = 11;
+  repeated RFQProductMessage rfqProducts = 12;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneRFQRequest {
+  string id = 1;
+}
+
+message DeleteRFQRequest {
+  string id = 1;
+}
+
+message RFQProductMessage {
+  optional string productId = 1;
+  double quantity = 2;
+  optional string discount = 3;
+}
+
+// Response Messages
+message RFQProductResponse {
+  string id = 1;
+  string productId = 2;
+  string productName = 3; // Resolved from supplychain
+  double quantity = 4;
+  optional string discount = 5;
+}
+
+message RFQResponse {
+  string id = 1;
+  string rfqName = 2;
+  string rfqNumber = 3;
+  string accountId = 4;
+  string accountName = 5; // Resolved from CRM
+  optional string contactId = 6;
+  optional string contactName = 7; // Resolved from CRM
+  optional string leadId = 8;
+  optional string leadName = 9; // Resolved from CRM
+  optional string vendorId = 10;
+  optional string vendorName = 11; // Resolved from supplychain
+  string currency = 12;
+  string status = 13;
+  optional string paymentTerms = 14;
+  optional string additionalNotes = 15;
+  repeated RFQProductResponse rfqProducts = 16;
+  string createdAt = 17; // ISO date string
+  string updatedAt = 18; // ISO date string
+}
+
+message PaginatedRFQsResponse {
+  repeated RFQResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteRFQResponse {
+  bool success = 1;
+  string message = 2;
+}
+

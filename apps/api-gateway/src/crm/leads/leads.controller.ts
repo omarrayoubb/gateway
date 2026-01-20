@@ -73,6 +73,7 @@ export class LeadsController {
   findAll(
     @Query() paginationQuery: PaginationQueryDto,
   ): Observable<PaginatedLeadsResult> {
+    console.log("omar");
     return this.leadsService.findAllLeads(paginationQuery);
   }
 

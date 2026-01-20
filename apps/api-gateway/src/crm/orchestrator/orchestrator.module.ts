@@ -12,8 +12,8 @@ import { OrchestratorController } from './orchestrator.controller';
         transport: Transport.GRPC,
         options: {
           package: ['orchestrator'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/orchestrator.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/orchestrator.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { OrchestratorController } from './orchestrator.controller';
   providers: [OrchestratorService],
   exports: [OrchestratorService],
 })
-export class OrchestratorModule {}
+export class OrchestratorModule { }
 

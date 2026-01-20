@@ -9,6 +9,8 @@ import type {
   GetProfileResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  GetUsersRequest,
+  GetUsersResponse,
 } from '@app/common/types/auth';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
@@ -20,14 +22,16 @@ interface AuthService {
   login(data: LoginRequest): Observable<LoginResponse>;
   validate(data: ValidateRequest): Observable<ValidateResponse>;
   getProfile(data: GetProfileRequest): Observable<GetProfileResponse>;
+
   updateProfile(data: UpdateProfileRequest): Observable<UpdateProfileResponse>;
+  getUsers(data: GetUsersRequest): Observable<GetUsersResponse>;
 }
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
   private authService: AuthService;
 
-  constructor(@Inject('AUTH_PACKAGE') private readonly client: ClientGrpc) {}
+  constructor(@Inject('AUTH_PACKAGE') private readonly client: ClientGrpc) { }
 
   onModuleInit() {
     this.authService = this.client.getService<AuthService>('AuthService');
@@ -94,5 +98,9 @@ export class AccountsService implements OnModuleInit {
         }),
       ),
     );
+  }
+
+  getUsers(): Observable<GetUsersResponse> {
+    return this.authService.getUsers({});
   }
 }

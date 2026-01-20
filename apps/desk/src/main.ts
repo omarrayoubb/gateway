@@ -7,7 +7,7 @@ import { GrpcLoggingInterceptor } from './interceptors/grpc-logging.interceptor'
 async function bootstrap() {
   // Use process.cwd() to get the project root, which works from both src and dist
   const protoPath = (filename: string) => 
-    join(process.cwd(), 'libs', 'common', 'src', 'proto', 'desk', filename);
+    join(process.cwd(), 'proto', 'desk', filename);
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(DeskModule, {
     transport: Transport.GRPC,

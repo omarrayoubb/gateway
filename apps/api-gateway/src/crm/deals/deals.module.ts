@@ -12,8 +12,8 @@ import { DealsController } from './deals.controller';
         transport: Transport.GRPC,
         options: {
           package: ['deals'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/deals.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/deals.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { DealsController } from './deals.controller';
   providers: [DealsService],
   exports: [DealsService],
 })
-export class DealsModule {}
+export class DealsModule { }
 

@@ -9,6 +9,7 @@ service OrchestratorService {
   rpc GetDealFormOptions (Empty) returns (DealFormOptionsResponse) {}
   rpc GetActivityFormOptions (Empty) returns (ActivityFormOptionsResponse) {}
   rpc GetDeliveryNoteFormOptions (Empty) returns (DeliveryNoteFormOptionsResponse) {}
+  rpc GetRfqFormOptions (Empty) returns (RfqFormOptionsResponse) {}
   rpc ConvertLeadToContact (ConvertLeadToContactRequest) returns (ContactResponse) {}
 }
 
@@ -52,6 +53,17 @@ message SimpleContact {
   string name = 2;
 }
 
+message SimpleProduct {
+  string id = 1;
+  string name = 2;
+  string sku = 3;
+}
+
+message SimpleVendor {
+  string id = 1;
+  string name = 2;
+}
+
 message AccountFormOptionsResponse {
   repeated SimpleUser owners = 1;
 }
@@ -80,6 +92,14 @@ message ActivityFormOptionsResponse {
 
 message DeliveryNoteFormOptionsResponse {
   repeated SimpleAccount accounts = 1;
+}
+
+message RfqFormOptionsResponse {
+  repeated SimpleProduct products = 1;
+  repeated SimpleVendor vendors = 2;
+  repeated SimpleAccount accounts = 3;
+  repeated SimpleContact contacts = 4;
+  repeated SimpleLead leads = 5;
 }
 
 // Reuse ContactResponse from contacts.proto

@@ -12,6 +12,7 @@ import type {
   DealFormOptionsResponse,
   ActivityFormOptionsResponse,
   DeliveryNoteFormOptionsResponse,
+  RfqFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -22,6 +23,7 @@ interface OrchestratorGrpcService {
   getDealFormOptions(data: Empty): Observable<DealFormOptionsResponse>;
   getActivityFormOptions(data: Empty): Observable<ActivityFormOptionsResponse>;
   getDeliveryNoteFormOptions(data: Empty): Observable<DeliveryNoteFormOptionsResponse>;
+  getRfqFormOptions(data: Empty): Observable<RfqFormOptionsResponse>;
   convertLeadToContact(data: ConvertLeadToContactRequest, metadata?: Metadata): Observable<ContactResponse>;
 }
 
@@ -101,6 +103,17 @@ export class OrchestratorService implements OnModuleInit {
     );
   }
 
+  getRfqFormOptions(): Observable<RfqFormOptionsResponse> {
+    const request: Empty = {};
+    return this.orchestratorGrpcService.getRfqFormOptions(request).pipe(
+      map(response => response),
+      catchError(error => {
+        console.error('Error in getRfqFormOptions gRPC call:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
   convertLeadToContact(
     leadId: string,
     currentUser: { id: string; name: string; email: string },
@@ -117,10 +130,12 @@ export class OrchestratorService implements OnModuleInit {
   }
 
   private createUserMetadata(user: { id: string; name: string; email: string }): Metadata {
+    // Handle undefined user
+    const safeUser = user || { id: 'system', name: 'System User', email: 'system@example.com' };
     const metadata = new Metadata();
-    metadata.add('user-id', user.id);
-    metadata.add('user-name', user.name);
-    metadata.add('user-email', user.email);
+    metadata.add('user-id', safeUser.id);
+    metadata.add('user-name', safeUser.name);
+    metadata.add('user-email', safeUser.email);
     return metadata;
   }
 }

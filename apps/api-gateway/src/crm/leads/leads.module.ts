@@ -12,9 +12,9 @@ import { LeadsController } from './leads.controller';
         transport: Transport.GRPC,
         options: {
           package: ['leads'],
-          url: '0.0.0.0:50052',
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
           // apps/api-gateway/src/crm/leads/leads.module.ts
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/leads.proto'),
+          protoPath: join(process.cwd(), 'proto/crm/leads.proto'),
         },
       },
     ]),
@@ -23,4 +23,4 @@ import { LeadsController } from './leads.controller';
   providers: [LeadsService],
   exports: [LeadsService],
 })
-export class LeadsModule {}
+export class LeadsModule { }

@@ -10,12 +10,13 @@ import type {
   GetProfileResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  GetUsersResponse,
 } from '@app/common/types/auth';
 import { Observable } from 'rxjs';
 
 @Controller('accounts')
 export class AccountsController {
-  constructor(private readonly accountsService: AccountsService) {}
+  constructor(private readonly accountsService: AccountsService) { }
 
   @Post('register')
   register(@Body() body: RegisterRequest): Observable<RegisterResponse> {
@@ -47,5 +48,9 @@ export class AccountsController {
     // Extract token from Authorization header (Bearer token)
     const token = authorization?.replace('Bearer ', '');
     return this.accountsService.updateProfile(token, body);
+  }
+  @Get('users')
+  getUsers(): Observable<GetUsersResponse> {
+    return this.accountsService.getUsers();
   }
 }

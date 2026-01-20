@@ -37,6 +37,7 @@ export interface UserData {
   id: string;
   email: string;
   name: string;
+  role: string;
 }
 
 // Validate Types
@@ -92,4 +93,11 @@ export interface UpdateProfileResponse {
   status: number;
   error: string[];
   profile: UserProfile | null;
+}
+
+// GetUsers Types
+export interface GetUsersRequest { }
+
+export interface GetUsersResponse {
+  users: UserData[];
 }

@@ -12,8 +12,8 @@ import { ProfilesController } from './profiles.controller';
         transport: Transport.GRPC,
         options: {
           package: ['profiles'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/profiles.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/profiles.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { ProfilesController } from './profiles.controller';
   providers: [ProfilesService],
   exports: [ProfilesService],
 })
-export class ProfilesModule {}
+export class ProfilesModule { }
 

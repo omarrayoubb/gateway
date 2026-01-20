@@ -12,8 +12,8 @@ import { ServicesController } from './services.controller';
         transport: Transport.GRPC,
         options: {
           package: ['services'],
-          url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/services.proto'),
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
+          protoPath: join(process.cwd(), 'proto/desk/services.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { ServicesController } from './services.controller';
   providers: [ServicesService],
   exports: [ServicesService],
 })
-export class ServicesModule {}
+export class ServicesModule { }
 

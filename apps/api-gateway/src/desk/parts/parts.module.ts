@@ -12,8 +12,8 @@ import { PartsController } from './parts.controller';
         transport: Transport.GRPC,
         options: {
           package: ['parts'],
-          url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/parts.proto'),
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
+          protoPath: join(process.cwd(), 'proto/desk/parts.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { PartsController } from './parts.controller';
   providers: [PartsService],
   exports: [PartsService],
 })
-export class PartsModule {}
+export class PartsModule { }
 

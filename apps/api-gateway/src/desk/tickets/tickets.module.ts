@@ -12,8 +12,8 @@ import { TicketsController } from './tickets.controller';
         transport: Transport.GRPC,
         options: {
           package: ['tickets'],
-          url: '0.0.0.0:50053',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/desk/tickets.proto'),
+          url: process.env.DESK_GRPC_URL || 'desk:50053',
+          protoPath: join(process.cwd(), 'proto/desk/tickets.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { TicketsController } from './tickets.controller';
   providers: [TicketsService],
   exports: [TicketsService],
 })
-export class TicketsModule {}
+export class TicketsModule { }
 

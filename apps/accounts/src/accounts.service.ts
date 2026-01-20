@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { ClientProxy } from '@nestjs/microservices';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import type {
@@ -14,18 +15,39 @@ import type {
   GetProfileResponse,
   UpdateProfileRequest,
   UpdateProfileResponse,
+  GetUsersRequest,
+  GetUsersResponse,
 } from '@app/common/types/auth';
+import { UserCreatedEvent } from '@app/common/events/user-created.event';
 import { User } from './users.entity';
 
 @Injectable()
-export class AccountsService {
+export class AccountsService implements OnModuleInit, OnModuleDestroy {
   private readonly saltRounds = 10;
+  private readonly logger = new Logger(AccountsService.name);
 
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
-  ) {}
+    @Inject('RABBITMQ_SERVICE')
+    private readonly rabbitmqClient: ClientProxy,
+  ) { }
+
+  async onModuleInit() {
+    // Connect RabbitMQ client on module initialization
+    try {
+      await this.rabbitmqClient.connect();
+      this.logger.log('RabbitMQ client connected successfully');
+    } catch (error) {
+      this.logger.error('Failed to connect RabbitMQ client:', error);
+    }
+  }
+
+  async onModuleDestroy() {
+    // Close RabbitMQ connection on module destroy
+    await this.rabbitmqClient.close();
+  }
 
   async register(data: RegisterRequest): Promise<RegisterResponse> {
     try {
@@ -61,6 +83,35 @@ export class AccountsService {
 
       // Save to database
       await this.userRepository.save(user);
+
+      // Publish UserCreatedEvent to RabbitMQ
+      try {
+        const event: UserCreatedEvent = {
+          id: user.id,
+          workId: user.workId,
+          email: user.email,
+          name: user.name,
+          role: user.role || '',
+          department: user.department || '',
+        };
+        this.logger.log(`Attempting to publish UserCreatedEvent for user ${user.id}`);
+        
+        // Use firstValueFrom to ensure we wait for the emit to complete
+        this.rabbitmqClient.emit('user.created', event).subscribe({
+          next: () => {
+            this.logger.log(`✓ UserCreatedEvent published successfully for user ${user.id} (${user.email})`);
+          },
+          error: (error) => {
+            this.logger.error(`✗ Failed to publish UserCreatedEvent for user ${user.id}:`, error);
+          },
+          complete: () => {
+            this.logger.debug(`UserCreatedEvent emit completed for user ${user.id}`);
+          },
+        });
+      } catch (error) {
+        // Log error but don't fail registration if event publish fails
+        this.logger.error(`Error publishing UserCreatedEvent for user ${user.id}:`, error);
+      }
 
       return {
         status: 201,
@@ -109,6 +160,7 @@ export class AccountsService {
         sub: user.id,
         email: user.email,
         name: user.name,
+        role: user.role,
       };
       const accessToken = this.jwtService.sign(payload);
 
@@ -120,6 +172,7 @@ export class AccountsService {
           id: user.id,
           email: user.email,
           name: user.name,
+          role: user.role,
         },
       };
     } catch (error) {
@@ -135,7 +188,7 @@ export class AccountsService {
   async validate(data: ValidateRequest): Promise<ValidateResponse> {
     try {
       const decoded = this.jwtService.verify(data.token);
-      
+
       // Optionally verify user still exists
       const user = await this.userRepository.findOne({
         where: { id: decoded.sub },
@@ -154,6 +207,7 @@ export class AccountsService {
           id: decoded.sub,
           email: decoded.email,
           name: decoded.name,
+          role: decoded.role,
         },
       };
     } catch (error) {

@@ -8,6 +8,7 @@ service AuthService {
     rpc Validate (ValidateRequest) returns (ValidateResponse) {}
     rpc GetProfile (GetProfileRequest) returns (GetProfileResponse) {}
     rpc UpdateProfile (UpdateProfileRequest) returns (UpdateProfileResponse) {}
+    rpc GetUsers (GetUsersRequest) returns (GetUsersResponse) {}
 }
 
 message LoginRequest {
@@ -27,7 +28,15 @@ message UserData {
     string id = 1;
     string email = 2;
     string name = 3;
+    string role = 4;
 }
+
+message GetUsersRequest {}
+
+message GetUsersResponse {
+    repeated UserData users = 1;
+}
+
 
 message RegisterRequest {
   string workId = 1;        // e.g., "EMP001"

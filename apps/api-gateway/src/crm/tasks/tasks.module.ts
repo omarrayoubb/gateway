@@ -12,8 +12,8 @@ import { TasksController } from './tasks.controller';
         transport: Transport.GRPC,
         options: {
           package: ['tasks'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/tasks.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/tasks.proto'),
         },
       },
     ]),
@@ -22,5 +22,5 @@ import { TasksController } from './tasks.controller';
   providers: [TasksService],
   exports: [TasksService],
 })
-export class TasksModule {}
+export class TasksModule { }
 

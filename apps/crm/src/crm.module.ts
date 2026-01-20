@@ -13,6 +13,7 @@ import { AccountsModule } from './accounts/accounts.module';
 import { ActivitiesModule } from './activities/activities.module';
 import { OrchestratorModule } from './orchestrator/orchestrator.module';
 import { TasksModule } from './tasks/tasks.module';
+import { RFQsModule } from './rfqs/rfqs.module';
 import { Lead } from './leads/entities/lead.entity';
 import { Profile } from './profiles/entities/profile.entity';
 import { User } from './users/entities/user.entity';
@@ -22,6 +23,8 @@ import { Account } from './accounts/entities/accounts.entity';
 import { Activity } from './activities/entities/activity.entity';
 import { Role } from './roles/entities/role.entity';
 import { Task } from './tasks/entities/task.entity';
+import { RFQ } from './rfqs/entities/rfq.entity';
+import { RFQProduct } from './rfqs/entities/rfq-product.entity';
 
 @Module({
   imports: [
@@ -41,10 +44,12 @@ import { Task } from './tasks/entities/task.entity';
         username: configService.get('CRM_DB_USERNAME'),
         password: configService.get('CRM_DB_PASSWORD'),
         database: configService.get('CRM_DB_DATABASE'),
-        entities: [Lead, Profile, User, Contact, Deal, Account, Activity, Role, Task],
+        entities: [Lead, Profile, User, Contact, Deal, Account, Activity, Role, Task, RFQ, RFQProduct],
         synchronize: configService.get('CRM_DB_SYNCHRONIZE') === 'true',
       }),
     }),
+    // Register User entity for dependency injection
+    TypeOrmModule.forFeature([User]),
     LeadsModule,
     ProfilesModule,
     ContactsModule,
@@ -53,6 +58,7 @@ import { Task } from './tasks/entities/task.entity';
     ActivitiesModule,
     OrchestratorModule,
     TasksModule,
+    RFQsModule,
   ],
   controllers: [CrmController, UsersController],
   providers: [CrmService, UsersService],

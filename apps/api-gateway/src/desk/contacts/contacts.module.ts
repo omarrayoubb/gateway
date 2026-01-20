@@ -12,8 +12,8 @@ import { ContactsController } from './contacts.controller';
         transport: Transport.GRPC,
         options: {
           package: ['contacts'],
-          url: '0.0.0.0:50052',
-          protoPath: join(__dirname, '../../../libs/common/src/proto/crm/contacts.proto'),
+          url: process.env.CRM_GRPC_URL || '0.0.0.0:50052',
+          protoPath: join(process.cwd(), 'proto/crm/contacts.proto'),
         },
       },
     ]),
@@ -22,7 +22,13 @@ import { ContactsController } from './contacts.controller';
   providers: [ContactsService],
   exports: [ContactsService],
 })
-export class ContactsModule {}
+export class ContactsModule { }
+
+
+
+
+
+
 
 
 

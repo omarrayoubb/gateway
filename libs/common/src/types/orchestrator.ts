@@ -1,7 +1,7 @@
 // libs/common/src/types/orchestrator.ts
 
 // Request Types
-export interface Empty {}
+export interface Empty { }
 
 export interface ConvertLeadToContactRequest {
   leadId: string;
@@ -40,6 +40,17 @@ export interface SimpleContact {
   name: string;
 }
 
+export interface SimpleProduct {
+  id: string;
+  name: string;
+  sku: string;
+}
+
+export interface SimpleVendor {
+  id: string;
+  name: string;
+}
+
 export interface AccountFormOptionsResponse {
   owners: SimpleUser[];
 }
@@ -64,6 +75,18 @@ export interface DealFormOptionsResponse {
 export interface ActivityFormOptionsResponse {
   leads: SimpleLead[];
   contacts: SimpleContact[];
+}
+
+export interface DeliveryNoteFormOptionsResponse {
+  accounts: SimpleAccount[];
+}
+
+export interface RfqFormOptionsResponse {
+  products: SimpleProduct[];
+  vendors: SimpleVendor[];
+  accounts: SimpleAccount[];
+  contacts: SimpleContact[];
+  leads: SimpleLead[];
 }
 
 export interface SimpleDeal {

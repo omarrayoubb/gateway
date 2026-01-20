@@ -30,6 +30,17 @@ interface SimpleUser {
     id: string;
     name: string;
   }
+
+  interface SimpleProduct {
+    id: string;
+    name: string;
+    sku: string;
+  }
+
+  interface SimpleVendor {
+    id: string;
+    name: string;
+  }
   
   // Response for the Account Creation Form
   export class AccountOrchestratorResponse {
@@ -65,4 +76,13 @@ interface SimpleUser {
   // Response for the Delivery Note Form
   export class DeliveryNoteFormOrchestratorResponse {
     accounts: SimpleAccount[];
+  }
+
+  // Response for the RFQ Creation Form
+  export class RfqFormOrchestratorResponse {
+    products: SimpleProduct[];
+    vendors: SimpleVendor[];
+    accounts: SimpleAccount[];
+    contacts: SimpleContact[];
+    leads: SimpleLead[];
   }
