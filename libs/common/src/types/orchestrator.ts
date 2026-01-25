@@ -89,6 +89,11 @@ export interface RfqFormOptionsResponse {
   leads: SimpleLead[];
 }
 
+export interface SalesOrderFormOptionsResponse {
+  products: SimpleProduct[];
+  vendors: SimpleVendor[];
+}
+
 export interface SimpleDeal {
   id: string;
   name: string;

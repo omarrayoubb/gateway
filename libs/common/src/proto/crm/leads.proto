@@ -19,8 +19,10 @@ message CreateLeadRequest {
   string lastName = 2;
   string phone = 3;
   string email = 4;
-  string shippingStreet = 5;
-  string billingCity = 6;
+  
+  // Optional fields
+  optional string shippingStreet = 5;
+  optional string billingCity = 6;
   
   // Optional fields
   optional string ownerId = 7;

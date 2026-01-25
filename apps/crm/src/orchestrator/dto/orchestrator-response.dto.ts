@@ -86,3 +86,9 @@ interface SimpleUser {
     contacts: SimpleContact[];
     leads: SimpleLead[];
   }
+
+  // Response for the Sales Order Form
+  export class SalesOrderFormOrchestratorResponse {
+    products: SimpleProduct[];
+    vendors: SimpleVendor[];
+  }

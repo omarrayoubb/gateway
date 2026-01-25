@@ -204,8 +204,6 @@ export class LeadsController {
     if (!data.lastName) missingFields.push('lastName');
     if (!data.phone) missingFields.push('phone');
     if (!data.email) missingFields.push('email');
-    if (!data.shippingStreet) missingFields.push('shippingStreet');
-    if (!data.billingCity) missingFields.push('billingCity');
 
     if (missingFields.length > 0) {
       throw new RpcException({
@@ -224,8 +222,8 @@ export class LeadsController {
       last_name: data.lastName,
       phone: data.phone,
       email: data.email,
-      shipping_street: data.shippingStreet,
-      billing_city: data.billingCity,
+      shipping_street: safeValue(data.shippingStreet),
+      billing_city: safeValue(data.billingCity),
       // Optional fields - use safeValue to convert empty strings to undefined
       ownerId: safeValue(data.ownerId),
       salutation: safeValue(data.salutation),

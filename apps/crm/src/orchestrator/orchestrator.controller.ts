@@ -13,6 +13,7 @@ import type {
   ActivityFormOptionsResponse,
   DeliveryNoteFormOptionsResponse,
   RfqFormOptionsResponse,
+  SalesOrderFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -93,6 +94,17 @@ export class OrchestratorController {
       return this.mapRfqFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getRfqFormOptions:', error);
+      throw GrpcErrorMapper.fromHttpException(error);
+    }
+  }
+
+  @GrpcMethod('OrchestratorService', 'GetSalesOrderFormOptions')
+  async getSalesOrderFormOptions(data: Empty): Promise<SalesOrderFormOptionsResponse> {
+    try {
+      const result = await this.orchestratorService.getSalesOrderFormOptions();
+      return this.mapSalesOrderFormOptionsToProto(result);
+    } catch (error) {
+      console.error('Error in getSalesOrderFormOptions:', error);
       throw GrpcErrorMapper.fromHttpException(error);
     }
   }
@@ -238,6 +250,20 @@ export class OrchestratorController {
       leads: dto.leads.map((lead: any) => ({
         id: lead.id,
         name: lead.name,
+      })),
+    };
+  }
+
+  private mapSalesOrderFormOptionsToProto(dto: any): SalesOrderFormOptionsResponse {
+    return {
+      products: dto.products.map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        sku: product.sku,
+      })),
+      vendors: dto.vendors.map((vendor: any) => ({
+        id: vendor.id,
+        name: vendor.name,
       })),
     };
   }

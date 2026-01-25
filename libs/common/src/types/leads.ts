@@ -7,10 +7,10 @@ export interface CreateLeadRequest {
   lastName: string;
   phone: string;
   email: string;
-  shippingStreet: string;
-  billingCity: string;
   
   // Optional fields
+  shippingStreet?: string;
+  billingCity?: string;
   ownerId?: string;
   salutation?: string;
   accountId?: string;

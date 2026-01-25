@@ -13,6 +13,7 @@ import type {
   ActivityFormOptionsResponse,
   DeliveryNoteFormOptionsResponse,
   RfqFormOptionsResponse,
+  SalesOrderFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -24,6 +25,7 @@ interface OrchestratorGrpcService {
   getActivityFormOptions(data: Empty): Observable<ActivityFormOptionsResponse>;
   getDeliveryNoteFormOptions(data: Empty): Observable<DeliveryNoteFormOptionsResponse>;
   getRfqFormOptions(data: Empty): Observable<RfqFormOptionsResponse>;
+  getSalesOrderFormOptions(data: Empty): Observable<SalesOrderFormOptionsResponse>;
   convertLeadToContact(data: ConvertLeadToContactRequest, metadata?: Metadata): Observable<ContactResponse>;
 }
 
@@ -82,6 +84,13 @@ export class OrchestratorService implements OnModuleInit {
   getRfqFormOptions(): Observable<RfqFormOptionsResponse> {
     const request: Empty = {};
     return this.orchestratorGrpcService.getRfqFormOptions(request).pipe(
+      map(response => response),
+    );
+  }
+
+  getSalesOrderFormOptions(): Observable<SalesOrderFormOptionsResponse> {
+    const request: Empty = {};
+    return this.orchestratorGrpcService.getSalesOrderFormOptions(request).pipe(
       map(response => response),
     );
   }

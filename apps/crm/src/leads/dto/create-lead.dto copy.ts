@@ -35,12 +35,12 @@ export class CreateLeadDto {
   email: string;
 
   @IsString()
-  @IsNotEmpty()
-  shipping_street: string;
+  @IsOptional()
+  shipping_street?: string;
 
   @IsString()
-  @IsNotEmpty()
-  billing_city: string;
+  @IsOptional()
+  billing_city?: string;
 
   // --- OPTIONAL FIELDS ---
 
