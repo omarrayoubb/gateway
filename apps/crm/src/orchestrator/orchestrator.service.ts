@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, OnModuleInit, Inject } from '@nestjs/common';
+import { ErrorMessages } from '@app/common/errors';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import type { ClientGrpc } from '@nestjs/microservices';
@@ -100,7 +101,7 @@ export class OrchestratorService implements OnModuleInit {
     });
 
     if (!lead) {
-      throw new NotFoundException(`Lead with ID ${leadId} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Lead', leadId));
     }
 
     // Fetch the full user from database
@@ -109,7 +110,7 @@ export class OrchestratorService implements OnModuleInit {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${currentUser.id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('User', currentUser.id));
     }
 
     // Map all lead fields to contact fields

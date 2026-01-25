@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { ErrorMessages } from '@app/common/errors';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Account } from './entities/accounts.entity';
@@ -61,7 +62,7 @@ export class AccountsService {
     });
 
     if (existingAccount) {
-      throw new ConflictException(`Account with name ${createAccountDto.name} already exists`);
+      throw new ConflictException(ErrorMessages.alreadyExists('Account', 'name', createAccountDto.name));
     }
 
     // Auto-generate account number if not provided or is 0/null/empty
@@ -76,7 +77,7 @@ export class AccountsService {
     });
 
     if (existingAccountNumber) {
-      throw new ConflictException(`Account number ${accountNumber} already exists`);
+      throw new ConflictException(ErrorMessages.alreadyExists('Account', 'accountNumber', accountNumber));
     }
 
     // Prepare account data (exclude userIds as it's not a column)
@@ -95,7 +96,7 @@ export class AccountsService {
     });
 
     if (users.length !== createAccountDto.userIds.length) {
-      throw new NotFoundException('One or more user IDs not found');
+      throw new NotFoundException(ErrorMessages.custom('One or more user IDs not found'));
     }
 
     const newAccount: Account = this.accountRepository.create(accountData);
@@ -174,7 +175,7 @@ export class AccountsService {
     });
 
     if (!account) {
-      throw new NotFoundException(`Account with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Account', id));
     }
 
     // Handle ManyToMany users relationship update
@@ -184,7 +185,7 @@ export class AccountsService {
       });
 
       if (users.length !== updateAccountDto.userIds.length) {
-        throw new NotFoundException('One or more user IDs not found');
+        throw new NotFoundException(ErrorMessages.custom('One or more user IDs not found'));
       }
 
       account.users = users;
@@ -212,7 +213,7 @@ export class AccountsService {
     // We can't use this.findOne(id) anymore as it returns a transformed response
     const account = await this.accountRepository.findOneBy({ id });
      if (!account) {
-      throw new NotFoundException(`Account with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Account', id));
     }
     await this.accountRepository.remove(account);
   }
@@ -235,7 +236,7 @@ export class AccountsService {
     // Track which IDs were not found
     for (const id of ids) {
       if (!foundIds.has(id)) {
-        failedIds.push({ id, error: 'Account not found' });
+        failedIds.push({ id, error: ErrorMessages.notFound('Account', id) });
       }
     }
 
@@ -273,7 +274,7 @@ export class AccountsService {
     // Track which IDs were not found
     for (const id of ids) {
       if (!foundIds.has(id)) {
-        failedItems.push({ id, error: 'Account not found' });
+        failedItems.push({ id, error: ErrorMessages.notFound('Account', id) });
       }
     }
 
@@ -290,7 +291,7 @@ export class AccountsService {
           updatedCount: 0,
           failedItems: ids.map((id) => ({
             id,
-            error: 'One or more user IDs not found',
+            error: ErrorMessages.custom('One or more user IDs not found'),
           })),
         };
       }
@@ -367,7 +368,7 @@ export class AccountsService {
     });
 
     if (!account) {
-      throw new NotFoundException(`Account with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Account', id));
     }
     return account;
   }

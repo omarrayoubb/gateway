@@ -1,6 +1,7 @@
 export * from './common.module';
 export * from './common.service';
 export * from './dto';
+export * from './errors';
 export * from './types/auth';
 export * from './types/leads';
 export * from './types/profiles';

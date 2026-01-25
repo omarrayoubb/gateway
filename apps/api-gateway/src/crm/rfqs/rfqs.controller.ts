@@ -38,7 +38,7 @@ export class RFQsController {
   findAll(
     @Query() paginationQuery: PaginationQueryDto,
   ): Observable<PaginatedRFQsResult> {
-    return this.rfqsService.findAllRFQs(paginationQuery);
+    return this.rfqsService.findAllRfqs(paginationQuery);
   }
 
   @Get(':id')

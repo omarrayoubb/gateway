@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Metadata } from '@grpc/grpc-js';
 import type {
   Empty,
@@ -41,10 +41,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getAccountFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getAccountFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -52,10 +48,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getContactLeadFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getContactLeadFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -63,10 +55,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getRegisterFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getRegisterFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -74,10 +62,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getDealFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getDealFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -85,10 +69,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getActivityFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getActivityFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -96,10 +76,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getDeliveryNoteFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getDeliveryNoteFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -107,10 +83,6 @@ export class OrchestratorService implements OnModuleInit {
     const request: Empty = {};
     return this.orchestratorGrpcService.getRfqFormOptions(request).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in getRfqFormOptions gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -122,10 +94,6 @@ export class OrchestratorService implements OnModuleInit {
     const metadata = this.createUserMetadata(currentUser);
     return this.orchestratorGrpcService.convertLeadToContact(request, metadata).pipe(
       map(response => response),
-      catchError(error => {
-        console.error('Error in convertLeadToContact gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 

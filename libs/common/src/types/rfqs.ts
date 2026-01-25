@@ -77,7 +77,7 @@ export interface RFQResponse {
   updatedAt: string;
 }
 
-export interface PaginatedRFQsResponse {
+export interface PaginatedRfqsResponse {
   data: RFQResponse[];
   total: number;
   page: number;

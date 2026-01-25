@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
+import { GrpcErrorMapper } from '../common';
 import { TasksService } from './tasks.service';
 import { Metadata } from '@grpc/grpc-js';
 import type {
@@ -38,10 +39,7 @@ export class TasksController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error('Error in CRM TasksController.createTask:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -75,10 +73,7 @@ export class TasksController {
       };
     } catch (error) {
       console.error('Error in findAllTasks:', error);
-      throw new RpcException({
-        code: 13,
-        message: `Failed to fetch tasks: ${error.message}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 

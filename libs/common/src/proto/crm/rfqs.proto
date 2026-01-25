@@ -3,11 +3,11 @@ syntax = "proto3";
 package rfqs;
 
 service RFQService {
-  rpc CreateRFQ (CreateRFQRequest) returns (RFQResponse) {}
-  rpc FindAllRFQs (PaginationRequest) returns (PaginatedRFQsResponse) {}
-  rpc FindOneRFQ (FindOneRFQRequest) returns (RFQResponse) {}
-  rpc UpdateRFQ (UpdateRFQRequest) returns (RFQResponse) {}
-  rpc DeleteRFQ (DeleteRFQRequest) returns (DeleteRFQResponse) {}
+  rpc CreateRfq (CreateRFQRequest) returns (RFQResponse) {}
+  rpc FindAllRfqs (PaginationRequest) returns (PaginatedRfqsResponse) {}
+  rpc FindOneRfq (FindOneRFQRequest) returns (RFQResponse) {}
+  rpc UpdateRfq (UpdateRFQRequest) returns (RFQResponse) {}
+  rpc DeleteRfq (DeleteRFQRequest) returns (DeleteRFQResponse) {}
 }
 
 // Request Messages
@@ -89,7 +89,7 @@ message RFQResponse {
   string updatedAt = 18; // ISO date string
 }
 
-message PaginatedRFQsResponse {
+message PaginatedRfqsResponse {
   repeated RFQResponse data = 1;
   int32 total = 2;
   int32 page = 3;

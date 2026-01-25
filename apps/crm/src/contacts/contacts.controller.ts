@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
+import { GrpcErrorMapper } from '../common';
 import { ContactsService } from './contacts.service';
 import { Metadata } from '@grpc/grpc-js';
 import type {
@@ -50,10 +51,7 @@ export class ContactsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error('Error in CRM ContactsController.createContact:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -100,10 +98,7 @@ export class ContactsController {
       };
     } catch (error) {
       console.error('Error in findAllContacts:', error);
-      throw new RpcException({
-        code: 13, // INTERNAL
-        message: `Failed to fetch contacts: ${error.message}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -114,10 +109,7 @@ export class ContactsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error(`Error in CRM ContactsController.findOneContact for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || `An unknown error occurred during findOneContact for ID ${data.id}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -133,10 +125,7 @@ export class ContactsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error(`Error in CRM ContactsController.updateContact for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || `An unknown error occurred during updateContact for ID ${data.id}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -147,10 +136,7 @@ export class ContactsController {
       return { success: true };
     } catch (error) {
       console.error(`Error in CRM ContactsController.deleteContact for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || `An unknown error occurred during deleteContact for ID ${data.id}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -165,10 +151,7 @@ export class ContactsController {
       };
     } catch (error) {
       console.error('Error in CRM ContactsController.bulkDeleteContacts:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred during bulkDeleteContacts',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -190,10 +173,7 @@ export class ContactsController {
       };
     } catch (error) {
       console.error('Error in CRM ContactsController.bulkUpdateContacts:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred during bulkUpdateContacts',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 

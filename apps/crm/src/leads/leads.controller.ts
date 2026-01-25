@@ -2,6 +2,7 @@ import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
 import { LeadsService } from './leads.service';
 import { Metadata } from '@grpc/grpc-js';
+import { GrpcErrorMapper } from '../common';
 import type {
   CreateLeadRequest,
   UpdateLeadRequest,
@@ -51,10 +52,7 @@ export class LeadsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error('Error in CRM LeadsController.createLead:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -101,10 +99,7 @@ export class LeadsController {
       };
     } catch (error) {
       console.error('Error in findAllLeads:', error);
-      throw new RpcException({
-        code: 13, // INTERNAL
-        message: `Failed to fetch leads: ${error.message}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -115,10 +110,7 @@ export class LeadsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error(`Error in CRM LeadsController.findOneLead for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || `An unknown error occurred during findOneLead for ID ${data.id}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -134,10 +126,7 @@ export class LeadsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error(`Error in CRM LeadsController.updateLead for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || `An unknown error occurred during updateLead for ID ${data.id}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -148,10 +137,7 @@ export class LeadsController {
       return { success: true };
     } catch (error) {
       console.error(`Error in CRM LeadsController.deleteLead for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || `An unknown error occurred during deleteLead for ID ${data.id}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -166,10 +152,7 @@ export class LeadsController {
       };
     } catch (error) {
       console.error('Error in CRM LeadsController.bulkDeleteLeads:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred during bulkDeleteLeads',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -191,10 +174,7 @@ export class LeadsController {
       };
     } catch (error) {
       console.error('Error in CRM LeadsController.bulkUpdateLeads:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred during bulkUpdateLeads',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 

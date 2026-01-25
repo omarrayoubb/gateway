@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { ErrorMessages } from '@app/common/errors';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Contact } from './entities/contacts.entity';
@@ -38,7 +39,7 @@ export class ContactsService {
     });
 
     if (existingContact) {
-      throw new ConflictException(`Contact with email ${createContactDto.email} already exists`);
+      throw new ConflictException(ErrorMessages.alreadyExists('Contact', 'email', createContactDto.email));
     }
 
     const newContact = this.contactRepository.create({
@@ -111,7 +112,7 @@ export class ContactsService {
     });
 
     if (!contact) {
-      throw new NotFoundException(`Contact with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Contact', id));
     }
 
     await this.contactRepository.save(contact);
@@ -128,7 +129,7 @@ export class ContactsService {
     // 5. Update remove to use findOneBy to get the entity
     const contact = await this.contactRepository.findOneBy({ id });
     if (!contact) {
-      throw new NotFoundException(`Contact with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Contact', id));
     }
     
     await this.contactRepository.remove(contact);
@@ -152,7 +153,7 @@ export class ContactsService {
     // Track which IDs were not found
     for (const id of ids) {
       if (!foundIds.has(id)) {
-        failedIds.push({ id, error: 'Contact not found' });
+        failedIds.push({ id, error: ErrorMessages.notFound('Contact', id) });
       }
     }
 
@@ -203,7 +204,7 @@ export class ContactsService {
         });
 
         if (!updatedContact) {
-          failedItems.push({ id: contact.id, error: 'Contact not found' });
+          failedItems.push({ id: contact.id, error: ErrorMessages.notFound('Contact', contact.id) });
           continue;
         }
 
@@ -240,7 +241,7 @@ export class ContactsService {
     });
 
     if (!contact) {
-      throw new NotFoundException(`Contact with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Contact', id));
     }
     return contact;
   }

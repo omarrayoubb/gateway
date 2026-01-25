@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Metadata } from '@grpc/grpc-js';
 import type {
   CreateAccountRequest,
@@ -70,10 +70,6 @@ export class AccountsService implements OnModuleInit {
     const metadata = this.createUserMetadata(currentUser);
     return this.accountsGrpcService.createAccount(request, metadata).pipe(
       map(response => this.mapResponseToDto(response)),
-      catchError(error => {
-        console.error('Error in createAccount gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -119,10 +115,6 @@ export class AccountsService implements OnModuleInit {
           last_page: response.lastPage || 0,
         };
       }),
-      catchError(error => {
-        console.error('Error fetching accounts from CRM microservice:', error);
-        return throwError(() => error);
-      })
     );
   }
 

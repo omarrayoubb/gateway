@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
+import { GrpcErrorMapper } from '../common';
 import { DealsService } from './deals.service';
 import { Metadata } from '@grpc/grpc-js';
 import type {
@@ -50,10 +51,7 @@ export class DealsController {
       return this.mapResponseDtoToProto(result);
     } catch (error) {
       console.error('Error in CRM DealsController.createDeal:', error);
-      throw new RpcException({
-        code: error.code || 2, // UNKNOWN
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -100,10 +98,7 @@ export class DealsController {
       };
     } catch (error) {
       console.error('Error in findAllDeals:', error);
-      throw new RpcException({
-        code: 13, // INTERNAL
-        message: `Failed to fetch deals: ${error.message}`,
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
