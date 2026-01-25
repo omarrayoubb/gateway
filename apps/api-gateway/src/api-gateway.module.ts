@@ -24,6 +24,7 @@ import { AccountsModule as DeskAccountsModule } from './desk/accounts/accounts.m
 import { SupplyChainModule } from './supplychain/supplychain.module';
 import { RFQsModule } from './crm/rfqs/rfqs.module';
 import { FinanceModule } from './finance/finance.module';
+import { PeopleModule } from './people/people.module';
 @Module({
   imports: [
     // Load environment variables FIRST - must be before other modules
@@ -52,7 +53,8 @@ import { FinanceModule } from './finance/finance.module';
     DeskAccountsModule,
     SupplyChainModule,
     RFQsModule,
-    FinanceModule
+    FinanceModule,
+    PeopleModule
   ],
   controllers: [ApiGatewayController],
   providers: [ApiGatewayService],

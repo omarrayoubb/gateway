@@ -136,6 +136,25 @@ services:
       postgres:
         condition: service_healthy
 
+  people:
+    build:
+      context: .
+      args:
+        APP_NAME: people
+    ports:
+      - "50056:50056"
+    environment:
+      - PEOPLE_DB_HOST=postgres
+      - PEOPLE_DB_PORT=5432
+      - PEOPLE_DB_USERNAME=user
+      - PEOPLE_DB_PASSWORD=password
+      - PEOPLE_DB_DATABASE=people_db
+      - PEOPLE_DB_SYNCHRONIZE=true
+      - NODE_ENV=production
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api-gateway:
     build:
       context: .
@@ -152,6 +171,7 @@ services:
       - SUPPLYCHAIN_GRPC_URL=supplychain:50054
       - DESK_GRPC_URL=desk:50053
       - FINANCE_GRPC_URL=finance:50055
+      - PEOPLE_GRPC_URL=people:50056
     depends_on:
       accounts:
         condition: service_started
@@ -162,6 +182,8 @@ services:
       desk:
         condition: service_started
       finance:
+        condition: service_started
+      people:
         condition: service_started
 
 volumes:
