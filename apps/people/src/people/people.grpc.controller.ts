@@ -79,6 +79,7 @@ export class PeopleGrpcController {
         emergencyContactName: data.emergencyContactName || undefined,
         emergencyContactPhone: data.emergencyContactPhone || undefined,
         emergencyContactRelationship: data.emergencyContactRelationship || undefined,
+        baseSalary: data.baseSalary ? parseFloat(data.baseSalary) : undefined,
       };
       
       console.log('CreatePerson DTO:', JSON.stringify(createDto, null, 2));
@@ -125,6 +126,7 @@ export class PeopleGrpcController {
         emergencyContactName: data.emergencyContactName,
         emergencyContactPhone: data.emergencyContactPhone,
         emergencyContactRelationship: data.emergencyContactRelationship,
+        baseSalary: data.baseSalary ? parseFloat(data.baseSalary) : undefined,
       };
       const employee = await this.peopleService.update(data.id, updateDto);
       return this.mapEmployeeToProto(employee);
@@ -170,6 +172,7 @@ export class PeopleGrpcController {
       emergencyContactName: employee.emergencyContactName || '',
       emergencyContactPhone: employee.emergencyContactPhone || '',
       emergencyContactRelationship: employee.emergencyContactRelationship || '',
+      baseSalary: employee.baseSalary ? employee.baseSalary.toString() : '',
       createdAt: employee.createdAt?.toISOString() || '',
       updatedAt: employee.updatedAt?.toISOString() || '',
     };

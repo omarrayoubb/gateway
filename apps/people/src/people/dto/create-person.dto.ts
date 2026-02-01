@@ -1,4 +1,4 @@
-import { IsString, IsEmail, IsOptional, IsEnum, IsUUID } from 'class-validator';
+import { IsString, IsEmail, IsOptional, IsEnum, IsUUID, IsNumber } from 'class-validator';
 import { EmployeeStatus } from '../entities/person.entity';
 
 export class CreateEmployeeDto {
@@ -63,5 +63,9 @@ export class CreateEmployeeDto {
   @IsString()
   @IsOptional()
   emergencyContactRelationship?: string;
+
+  @IsNumber()
+  @IsOptional()
+  baseSalary?: number;
 }
 

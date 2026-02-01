@@ -51,6 +51,15 @@ export class Employee {
   @Column({ type: 'varchar', nullable: true, name: 'manager_email' })
   managerEmail: string | null;
 
+  @Column({ type: 'uuid', nullable: true, name: 'manager_id' })
+  managerId: string | null;
+
+  @Column({ type: 'uuid', nullable: true, name: 'user_id' })
+  userId: string | null;
+
+  @Column({ type: 'int', nullable: true, name: 'hierarchy_level' })
+  hierarchyLevel: number | null;
+
   @Column({ type: 'varchar', nullable: true })
   address: string | null;
 
@@ -68,6 +77,9 @@ export class Employee {
 
   @Column({ type: 'varchar', nullable: true, name: 'emergency_contact_relationship' })
   emergencyContactRelationship: string | null;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true, name: 'base_salary' })
+  baseSalary: number | null;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
