@@ -54,7 +54,8 @@ export class AttendanceSummaryGrpcController {
         status: data.status || SummaryStatus.PENDING,
       };
 
-      const summary = await this.summaryService.create(createDto);
+      // Use upsert to handle both create and update scenarios
+      const summary = await this.summaryService.upsert(createDto);
       return this.mapSummaryToProto(summary);
     } catch (error) {
       const code = error.status === 409 ? 6 : error.status === 400 ? 3 : 2;

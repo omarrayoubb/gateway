@@ -20,6 +20,7 @@ export class AnnouncementsService {
       const order = query.sort.startsWith('-') ? 'DESC' : 'ASC';
       const fieldMap: Record<string, string> = {
         'created_at': 'createdAt',
+        'created_date': 'createdAt',
       };
       const dbField = fieldMap[sortField] || sortField;
       queryBuilder.orderBy(`announcement.${dbField}`, order);

@@ -25,6 +25,9 @@ export class LeaveType {
   @Column({ type: 'boolean', default: true, name: 'requires_approval' })
   requiresApproval: boolean;
 
+  @Column({ type: 'boolean', default: false, name: 'track_in_hours' })
+  trackInHours: boolean;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 }

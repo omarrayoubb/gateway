@@ -19,5 +19,9 @@ export class CreateLeaveTypeDto {
   @IsBoolean()
   @IsOptional()
   requiresApproval?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  trackInHours?: boolean;
 }
 

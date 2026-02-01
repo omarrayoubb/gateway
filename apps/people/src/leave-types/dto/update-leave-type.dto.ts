@@ -20,5 +20,9 @@ export class UpdateLeaveTypeDto {
   @IsBoolean()
   @IsOptional()
   requiresApproval?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  trackInHours?: boolean;
 }
 

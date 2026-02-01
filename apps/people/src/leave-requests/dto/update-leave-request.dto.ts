@@ -1,4 +1,4 @@
-import { IsUUID, IsDateString, IsInt, IsString, IsOptional, IsEnum } from 'class-validator';
+import { IsUUID, IsDateString, IsInt, IsString, IsOptional, IsEnum, IsNumber } from 'class-validator';
 import { LeaveRequestStatus } from '../entities/leave-request.entity';
 
 export class UpdateLeaveRequestDto {
@@ -21,6 +21,18 @@ export class UpdateLeaveRequestDto {
   @IsInt()
   @IsOptional()
   numberOfDays?: number;
+
+  @IsNumber()
+  @IsOptional()
+  numberOfHours?: number;
+
+  @IsString()
+  @IsOptional()
+  hoursFrom?: string;
+
+  @IsString()
+  @IsOptional()
+  hoursTo?: string;
 
   @IsString()
   @IsOptional()

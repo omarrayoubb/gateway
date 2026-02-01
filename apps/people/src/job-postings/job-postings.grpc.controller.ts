@@ -10,9 +10,12 @@ export class JobPostingsGrpcController {
   constructor(private readonly jobPostingsService: JobPostingsService) {}
 
   @GrpcMethod('JobPostingService', 'GetJobPostings')
-  async getJobPostings(data: { sort?: string }) {
+  async getJobPostings(data: { sort?: string; status?: string }) {
     try {
-      const jobPostings = await this.jobPostingsService.findAll({ sort: data.sort });
+      const jobPostings = await this.jobPostingsService.findAll({
+        sort: data.sort,
+        status: data.status,
+      });
       return {
         jobPostings: jobPostings.map(jobPosting => this.mapJobPostingToProto(jobPosting)),
       };

@@ -98,6 +98,15 @@ export class PeopleController {
   }
 
   /**
+   * GET /entities/Employee/:id
+   * Get a single employee by ID
+   */
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<EmployeeResponse> {
+    return await this.peopleService.getEmployee(id);
+  }
+
+  /**
    * POST /entities/Employee
    * Create a new employee
    */
@@ -350,6 +359,18 @@ export class LeaveTypesController {
   async create(@Body() createLeaveTypeDto: any): Promise<LeaveTypeResponse> {
     return await this.peopleService.createLeaveType(createLeaveTypeDto);
   }
+
+  /**
+   * PUT /entities/LeaveType/:id
+   * Update a leave type
+   */
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateLeaveTypeDto: any,
+  ): Promise<LeaveTypeResponse> {
+    return await this.peopleService.updateLeaveType(id, updateLeaveTypeDto);
+  }
 }
 
 @Controller('entities/LeaveRequest')
@@ -362,6 +383,15 @@ export class LeaveRequestsController {
    */
   @Get()
   async findAll(@Query() query: any): Promise<LeaveRequestResponse[]> {
+    return await this.peopleService.getLeaveRequests(query);
+  }
+
+  /**
+   * GET /entities/LeaveRequest/filter?employee_id=...&status=...
+   * Filter leave requests by employee_id, status, etc.
+   */
+  @Get('filter')
+  async filter(@Query() query: any): Promise<LeaveRequestResponse[]> {
     return await this.peopleService.getLeaveRequests(query);
   }
 
@@ -408,6 +438,38 @@ export class LeaveBalancesController {
   @Get('filter')
   async filter(@Query() query: any): Promise<LeaveBalanceResponse[]> {
     return await this.peopleService.getLeaveBalances(query);
+  }
+
+  /**
+   * POST /entities/LeaveBalance/adjust
+   * Add or subtract days/hours from an employee's leave balance.
+   * Body: { employee_id, leave_type, year? (default current), balance_delta } — positive = add, negative = subtract
+   */
+  @Post('adjust')
+  async adjust(@Body() body: any): Promise<LeaveBalanceResponse> {
+    return await this.peopleService.adjustLeaveBalance(body);
+  }
+
+  /**
+   * POST /entities/LeaveBalance
+   * Create a new leave balance record
+   */
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() createLeaveBalanceDto: any): Promise<LeaveBalanceResponse> {
+    return await this.peopleService.createLeaveBalance(createLeaveBalanceDto);
+  }
+
+  /**
+   * PUT /entities/LeaveBalance/:id
+   * Update a leave balance record
+   */
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateLeaveBalanceDto: any,
+  ): Promise<LeaveBalanceResponse> {
+    return await this.peopleService.updateLeaveBalance(id, updateLeaveBalanceDto);
   }
 }
 
@@ -1192,6 +1254,15 @@ export class MessagesController {
   }
 
   /**
+   * GET /entities/Message/filter?recipient_id=...&sender_id=...
+   * Filter messages by recipient or sender
+   */
+  @Get('filter')
+  async filter(@Query() query: any): Promise<MessageResponse[]> {
+    return await this.peopleService.getMessages(query);
+  }
+
+  /**
    * POST /entities/Message
    * Create a new message
    */
@@ -1224,6 +1295,15 @@ export class JobPostingsController {
    */
   @Get()
   async findAll(@Query() query: any): Promise<JobPostingResponse[]> {
+    return await this.peopleService.getJobPostings(query);
+  }
+
+  /**
+   * GET /entities/JobPosting/filter?status=open
+   * Filter job postings by status, etc.
+   */
+  @Get('filter')
+  async filter(@Query() query: any): Promise<JobPostingResponse[]> {
     return await this.peopleService.getJobPostings(query);
   }
 

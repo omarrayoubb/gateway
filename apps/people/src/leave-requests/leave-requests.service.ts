@@ -1,27 +1,55 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LeaveRequest, LeaveRequestStatus } from './entities/leave-request.entity';
 import { CreateLeaveRequestDto } from './dto/create-leave-request.dto';
 import { UpdateLeaveRequestDto } from './dto/update-leave-request.dto';
+import { ApprovalsService } from '../approvals/approvals.service';
+import { RequestType } from '../approvals/entities/approval.entity';
 
 @Injectable()
 export class LeaveRequestsService {
   constructor(
     @InjectRepository(LeaveRequest)
     private readonly leaveRequestRepository: Repository<LeaveRequest>,
+    private readonly approvalsService: ApprovalsService,
   ) {}
 
   async create(createLeaveRequestDto: CreateLeaveRequestDto): Promise<LeaveRequest> {
+    // Validate that employeeId is provided
+    if (!createLeaveRequestDto.employeeId) {
+      throw new BadRequestException('employee_id is required to create a leave request with approval');
+    }
+
     const leaveRequest = this.leaveRequestRepository.create({
       ...createLeaveRequestDto,
-      employeeId: createLeaveRequestDto.employeeId || null,
+      employeeId: createLeaveRequestDto.employeeId,
       startDate: new Date(createLeaveRequestDto.startDate),
       endDate: new Date(createLeaveRequestDto.endDate),
       status: createLeaveRequestDto.status || LeaveRequestStatus.PENDING,
     });
 
-    return await this.leaveRequestRepository.save(leaveRequest);
+    const savedLeaveRequest = await this.leaveRequestRepository.save(leaveRequest);
+
+    // Automatically create an approval with the manager chain
+    // The ApprovalsService will:
+    // 1. Look up the employee's manager (via managerId)
+    // 2. Build the approval chain (manager -> manager's manager -> ...)
+    // 3. Set the first manager as currentApproverId
+    try {
+      await this.approvalsService.create({
+        requestType: RequestType.LEAVE,
+        requestId: savedLeaveRequest.id,
+        requesterId: savedLeaveRequest.employeeId!, // Non-null assertion safe because we validated above
+        approvalChain: [], // Empty array means auto-generate from manager hierarchy
+      });
+    } catch (error) {
+      // If approval creation fails (e.g., no manager found), log but don't fail the leave request
+      // The leave request will exist but with no approval (can be handled manually)
+      console.warn(`Failed to create approval for leave request ${savedLeaveRequest.id}:`, error.message);
+    }
+
+    return savedLeaveRequest;
   }
 
   async findAll(query: { sort?: string; employee_id?: string; employeeId?: string; status?: string }): Promise<LeaveRequest[]> {

@@ -73,6 +73,7 @@ export class PeopleGrpcController {
         hireDate: data.hireDate || undefined,
         status: data.status || EmployeeStatus.ACTIVE,
         managerEmail: data.managerEmail || undefined,
+        managerId: data.managerId || data.manager_id || undefined,
         address: data.address || undefined,
         city: data.city || undefined,
         country: data.country || undefined,
@@ -120,6 +121,7 @@ export class PeopleGrpcController {
         hireDate: data.hireDate,
         status: data.status,
         managerEmail: data.managerEmail,
+        managerId: data.managerId || data.manager_id || undefined,
         address: data.address,
         city: data.city,
         country: data.country,
@@ -163,9 +165,12 @@ export class PeopleGrpcController {
       department: employee.department || '',
       departmentId: employee.departmentId || '',
       jobTitle: employee.jobTitle || '',
-      hireDate: employee.hireDate ? employee.hireDate.toISOString().split('T')[0] : '',
+      hireDate: employee.hireDate
+        ? (employee.hireDate instanceof Date ? employee.hireDate.toISOString() : String(employee.hireDate)).split('T')[0]
+        : '',
       status: employee.status,
       managerEmail: employee.managerEmail || '',
+      managerId: employee.managerId || '',
       address: employee.address || '',
       city: employee.city || '',
       country: employee.country || '',
@@ -173,8 +178,12 @@ export class PeopleGrpcController {
       emergencyContactPhone: employee.emergencyContactPhone || '',
       emergencyContactRelationship: employee.emergencyContactRelationship || '',
       baseSalary: employee.baseSalary ? employee.baseSalary.toString() : '',
-      createdAt: employee.createdAt?.toISOString() || '',
-      updatedAt: employee.updatedAt?.toISOString() || '',
+      createdAt: employee.createdAt
+        ? (employee.createdAt instanceof Date ? employee.createdAt.toISOString() : String(employee.createdAt))
+        : '',
+      updatedAt: employee.updatedAt
+        ? (employee.updatedAt instanceof Date ? employee.updatedAt.toISOString() : String(employee.updatedAt))
+        : '',
     };
   }
 }

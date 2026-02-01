@@ -45,6 +45,7 @@ export class LeaveTypesGrpcController {
         quota: data.quota ? parseInt(data.quota) : undefined,
         carryForward: data.carryForward || false,
         requiresApproval: data.requiresApproval !== undefined ? data.requiresApproval : true,
+        trackInHours: data.trackInHours || false,
       };
 
       const leaveType = await this.leaveTypesService.create(createDto);
@@ -67,6 +68,7 @@ export class LeaveTypesGrpcController {
         quota: data.quota ? parseInt(data.quota) : undefined,
         carryForward: data.carryForward !== undefined ? data.carryForward : undefined,
         requiresApproval: data.requiresApproval !== undefined ? data.requiresApproval : undefined,
+        trackInHours: data.trackInHours !== undefined ? data.trackInHours : undefined,
       };
       const leaveType = await this.leaveTypesService.update(data.id, updateDto);
       return this.mapLeaveTypeToProto(leaveType);
@@ -108,6 +110,7 @@ export class LeaveTypesGrpcController {
       quota: leaveType.quota || 0,
       carryForward: leaveType.carryForward || false,
       requiresApproval: leaveType.requiresApproval !== undefined ? leaveType.requiresApproval : true,
+      trackInHours: leaveType.trackInHours || false,
       createdAt: formatDateTime(leaveType.createdAt),
     };
   }

@@ -97,6 +97,32 @@ export class LeaveBalancesGrpcController {
     }
   }
 
+  @GrpcMethod('LeaveBalanceService', 'AdjustLeaveBalance')
+  async adjustLeaveBalance(data: {
+    employeeId: string;
+    leaveType: string;
+    year?: number;
+    balanceDelta?: string;
+  }) {
+    try {
+      const year = data.year ?? new Date().getFullYear();
+      const balanceDelta = data.balanceDelta ? parseFloat(data.balanceDelta) : 0;
+      const leaveBalance = await this.leaveBalancesService.adjustBalance(
+        data.employeeId,
+        data.leaveType,
+        year,
+        balanceDelta,
+      );
+      return this.mapLeaveBalanceToProto(leaveBalance);
+    } catch (error) {
+      const code = error.status === 404 ? 5 : error.status === 400 ? 3 : 2;
+      throw new RpcException({
+        code,
+        message: error.message || 'Failed to adjust leave balance',
+      });
+    }
+  }
+
   private mapLeaveBalanceToProto(leaveBalance: any) {
     const formatDateTime = (date: any): string => {
       if (!date) return '';

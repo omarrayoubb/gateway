@@ -66,5 +66,52 @@ export class LeaveBalancesService {
     const leaveBalance = await this.findOne(id);
     await this.leaveBalanceRepository.remove(leaveBalance);
   }
+
+  /**
+   * Find balance by employee, leave type and year. Returns null if not found.
+   */
+  async findByEmployeeLeaveTypeYear(
+    employeeId: string,
+    leaveType: string,
+    year: number,
+  ): Promise<LeaveBalance | null> {
+    return await this.leaveBalanceRepository.findOne({
+      where: {
+        employeeId,
+        leaveType,
+        year,
+      },
+    });
+  }
+
+  /**
+   * Add or subtract days/hours from an employee's leave balance.
+   * Positive balanceDelta = add days, negative = subtract.
+   * Creates the balance record if it does not exist.
+   */
+  async adjustBalance(
+    employeeId: string,
+    leaveType: string,
+    year: number,
+    balanceDelta: number,
+  ): Promise<LeaveBalance> {
+    let leaveBalance = await this.findByEmployeeLeaveTypeYear(employeeId, leaveType, year);
+
+    if (!leaveBalance) {
+      leaveBalance = await this.create({
+        employeeId,
+        leaveType,
+        year,
+        balance: 0,
+        used: 0,
+        accrued: 0,
+        carriedForward: 0,
+      });
+    }
+
+    const currentBalance = Number(leaveBalance.balance);
+    leaveBalance.balance = currentBalance + balanceDelta;
+    return await this.leaveBalanceRepository.save(leaveBalance);
+  }
 }
 

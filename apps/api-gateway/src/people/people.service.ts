@@ -79,6 +79,7 @@ interface LeaveBalanceGrpcService {
   CreateLeaveBalance(data: any, metadata?: Metadata): Observable<any>;
   UpdateLeaveBalance(data: any, metadata?: Metadata): Observable<any>;
   DeleteLeaveBalance(data: { id: string }, metadata?: Metadata): Observable<any>;
+  AdjustLeaveBalance(data: { employeeId: string; leaveType: string; year?: number; balanceDelta?: string }, metadata?: Metadata): Observable<any>;
 }
 
 interface LeaveApprovalGrpcService {
@@ -243,7 +244,7 @@ interface MessageGrpcService {
 }
 
 interface JobPostingGrpcService {
-  GetJobPostings(data: { sort?: string }, metadata?: Metadata): Observable<any>;
+  GetJobPostings(data: { sort?: string; status?: string }, metadata?: Metadata): Observable<any>;
   CreateJobPosting(data: any, metadata?: Metadata): Observable<any>;
   UpdateJobPosting(data: any, metadata?: Metadata): Observable<any>;
   DeleteJobPosting(data: { id: string }, metadata?: Metadata): Observable<any>;
@@ -323,6 +324,7 @@ export interface EmployeeResponse {
   hire_date: string;
   status: string;
   manager_email: string;
+  manager_id: string;
   address: string;
   city: string;
   country: string;
@@ -409,6 +411,7 @@ export interface LeaveTypeResponse {
   quota: number;
   carry_forward: boolean;
   requires_approval: boolean;
+  track_in_hours: boolean;
   created_at: string;
 }
 
@@ -419,6 +422,9 @@ export interface LeaveRequestResponse {
   start_date: string;
   end_date: string;
   number_of_days: number;
+  number_of_hours: number | null;
+  hours_from: string | null;
+  hours_to: string | null;
   reason: string;
   status: string;
   created_at: string;
@@ -959,6 +965,7 @@ export class PeopleService implements OnModuleInit {
         hireDate: data.hire_date || data.hireDate,
         status: data.status || 'active',
         managerEmail: data.manager_email || data.managerEmail,
+        managerId: data.manager_id || data.managerId,
         address: data.address,
         city: data.city,
         country: data.country,
@@ -985,6 +992,7 @@ export class PeopleService implements OnModuleInit {
         hireDate: data.hire_date || data.hireDate,
         status: data.status,
         managerEmail: data.manager_email || data.managerEmail,
+        managerId: data.manager_id || data.managerId,
         address: data.address,
         city: data.city,
         country: data.country,
@@ -1018,6 +1026,7 @@ export class PeopleService implements OnModuleInit {
       hire_date: data.hireDate || data.hire_date || '',
       status: data.status || 'active',
       manager_email: data.managerEmail || data.manager_email || '',
+      manager_id: data.managerId || data.manager_id || '',
       address: data.address || '',
       city: data.city || '',
       country: data.country || '',
@@ -1323,6 +1332,22 @@ export class PeopleService implements OnModuleInit {
         quota: data.quota?.toString() || '0',
         carryForward: data.carry_forward ?? data.carryForward ?? false,
         requiresApproval: data.requires_approval ?? data.requiresApproval ?? true,
+        trackInHours: data.track_in_hours ?? data.trackInHours ?? false,
+      })
+    );
+    return this.mapToLeaveTypeResponse(result);
+  }
+
+  async updateLeaveType(id: string, data: any): Promise<LeaveTypeResponse> {
+    const result = await firstValueFrom(
+      this.leaveTypeGrpcService.UpdateLeaveType({
+        id,
+        name: data.name,
+        description: data.description,
+        quota: data.quota?.toString(),
+        carryForward: data.carry_forward ?? data.carryForward,
+        requiresApproval: data.requires_approval ?? data.requiresApproval,
+        trackInHours: data.track_in_hours ?? data.trackInHours,
       })
     );
     return this.mapToLeaveTypeResponse(result);
@@ -1336,6 +1361,7 @@ export class PeopleService implements OnModuleInit {
       quota: data.quota || 0,
       carry_forward: data.carryForward ?? data.carry_forward ?? false,
       requires_approval: data.requiresApproval ?? data.requires_approval ?? true,
+      track_in_hours: data.trackInHours ?? data.track_in_hours ?? false,
       created_at: data.createdAt || data.created_at || '',
     };
   }
@@ -1376,6 +1402,9 @@ export class PeopleService implements OnModuleInit {
         startDate,
         endDate,
         numberOfDays: data.number_of_days || data.numberOfDays || 0,
+        numberOfHours: data.number_of_hours ?? data.numberOfHours,
+        hoursFrom: data.hours_from ?? data.hoursFrom,
+        hoursTo: data.hours_to ?? data.hoursTo,
         reason: data.reason || '',
         status: data.status || 'pending',
       })
@@ -1392,6 +1421,9 @@ export class PeopleService implements OnModuleInit {
         startDate: data.start_date || data.startDate,
         endDate: data.end_date || data.endDate,
         numberOfDays: data.number_of_days || data.numberOfDays,
+        numberOfHours: data.number_of_hours ?? data.numberOfHours,
+        hoursFrom: data.hours_from ?? data.hoursFrom,
+        hoursTo: data.hours_to ?? data.hoursTo,
         reason: data.reason,
         status: data.status,
       })
@@ -1400,13 +1432,21 @@ export class PeopleService implements OnModuleInit {
   }
 
   private mapToLeaveRequestResponse(data: any): LeaveRequestResponse {
+    const parseNum = (v: any): number | null => {
+      if (v == null || v === undefined || v === '') return null;
+      const n = parseFloat(v);
+      return Number.isNaN(n) ? null : n;
+    };
     return {
       id: data.id,
       employee_id: data.employeeId || data.employee_id || null,
       leave_type: data.leaveType || data.leave_type || '',
       start_date: data.startDate || data.start_date || '',
       end_date: data.endDate || data.end_date || '',
-      number_of_days: data.numberOfDays || data.number_of_days || 0,
+      number_of_days: data.numberOfDays ?? data.number_of_days ?? 0,
+      number_of_hours: parseNum(data.numberOfHours ?? data.number_of_hours),
+      hours_from: data.hoursFrom || data.hours_from || null,
+      hours_to: data.hoursTo || data.hours_to || null,
       reason: data.reason || '',
       status: data.status || 'pending',
       created_at: data.createdAt || data.created_at || '',
@@ -1423,6 +1463,64 @@ export class PeopleService implements OnModuleInit {
       })
     );
     return (result.leaveBalances || []).map((lb: any) => this.mapToLeaveBalanceResponse(lb));
+  }
+
+  async createLeaveBalance(data: any): Promise<LeaveBalanceResponse> {
+    const result = await firstValueFrom(
+      this.leaveBalanceGrpcService.CreateLeaveBalance({
+        employeeId: data.employee_id || data.employeeId,
+        leaveType: data.leave_type || data.leaveType,
+        balance: data.balance?.toString(),
+        used: data.used?.toString(),
+        accrued: data.accrued?.toString(),
+        carriedForward: data.carried_forward?.toString() || data.carriedForward?.toString(),
+        year: data.year ?? new Date().getFullYear(),
+      })
+    );
+    return this.mapToLeaveBalanceResponse(result);
+  }
+
+  async updateLeaveBalance(id: string, data: any): Promise<LeaveBalanceResponse> {
+    const result = await firstValueFrom(
+      this.leaveBalanceGrpcService.UpdateLeaveBalance({
+        id,
+        employeeId: data.employee_id || data.employeeId,
+        leaveType: data.leave_type || data.leaveType,
+        balance: data.balance?.toString(),
+        used: data.used?.toString(),
+        accrued: data.accrued?.toString(),
+        carriedForward: data.carried_forward?.toString() || data.carriedForward?.toString(),
+        year: data.year,
+      })
+    );
+    return this.mapToLeaveBalanceResponse(result);
+  }
+
+  async adjustLeaveBalance(data: {
+    employee_id?: string;
+    employeeId?: string;
+    leave_type?: string;
+    leaveType?: string;
+    year?: number;
+    balance_delta?: number;
+    balanceDelta?: number;
+  }): Promise<LeaveBalanceResponse> {
+    const employeeId = data.employee_id || data.employeeId;
+    const leaveType = data.leave_type || data.leaveType;
+    const year = data.year ?? new Date().getFullYear();
+    const balanceDelta = data.balance_delta ?? data.balanceDelta ?? 0;
+    if (!employeeId || !leaveType) {
+      throw new BadRequestException('employee_id and leave_type are required');
+    }
+    const result = await firstValueFrom(
+      this.leaveBalanceGrpcService.AdjustLeaveBalance({
+        employeeId,
+        leaveType,
+        year,
+        balanceDelta: String(balanceDelta),
+      })
+    );
+    return this.mapToLeaveBalanceResponse(result);
   }
 
   private mapToLeaveBalanceResponse(data: any): LeaveBalanceResponse {
@@ -2706,10 +2804,11 @@ export class PeopleService implements OnModuleInit {
   }
 
   // Job Posting Methods
-  async getJobPostings(query: { sort?: string }): Promise<JobPostingResponse[]> {
+  async getJobPostings(query: { sort?: string; status?: string }): Promise<JobPostingResponse[]> {
     const result = await firstValueFrom(
       this.jobPostingGrpcService.GetJobPostings({
         sort: query.sort,
+        status: query.status,
       })
     ) as any;
     return (result.jobPostings || []).map((jobPosting: any) => this.mapToJobPostingResponse(jobPosting));

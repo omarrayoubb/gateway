@@ -26,8 +26,13 @@ export class JobPostingsService {
     return await this.jobPostingRepository.save(jobPosting);
   }
 
-  async findAll(query: { sort?: string }): Promise<JobPosting[]> {
+  async findAll(query: { sort?: string; status?: string }): Promise<JobPosting[]> {
     const queryBuilder = this.jobPostingRepository.createQueryBuilder('job_posting');
+
+    // Handle status filter
+    if (query.status) {
+      queryBuilder.andWhere('job_posting.status = :status', { status: query.status });
+    }
 
     // Handle sorting
     if (query.sort) {

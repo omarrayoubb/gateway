@@ -138,7 +138,11 @@ export class PeopleService {
       (updateEmployeeDto as any).hireDate = new Date(updateEmployeeDto.hireDate);
     }
 
-    Object.assign(employee, updateEmployeeDto);
+    // Only apply defined fields so partial updates (e.g. only manager_id) don't overwrite others with undefined
+    const definedUpdates = Object.fromEntries(
+      Object.entries(updateEmployeeDto).filter(([, v]) => v !== undefined)
+    ) as Partial<UpdateEmployeeDto>;
+    Object.assign(employee, definedUpdates);
     return await this.employeeRepository.save(employee);
   }
 

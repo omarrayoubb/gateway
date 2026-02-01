@@ -37,6 +37,7 @@ message CreatePersonRequest {
   string hireDate = 8;
   string status = 9;
   string managerEmail = 10;
+  string managerId = 18;
   string address = 11;
   string city = 12;
   string country = 13;
@@ -58,6 +59,7 @@ message UpdatePersonRequest {
   string hireDate = 9;
   string status = 10;
   string managerEmail = 11;
+  string managerId = 19;
   string address = 12;
   string city = 13;
   string country = 14;
@@ -83,6 +85,7 @@ message PersonResponse {
   string hireDate = 9;
   string status = 10;
   string managerEmail = 11;
+  string managerId = 21;
   string address = 12;
   string city = 13;
   string country = 14;
@@ -399,6 +402,7 @@ message CreateLeaveTypeRequest {
   int32 quota = 3;
   bool carryForward = 4;
   bool requiresApproval = 5;
+  bool trackInHours = 6;
 }
 
 message UpdateLeaveTypeRequest {
@@ -408,6 +412,7 @@ message UpdateLeaveTypeRequest {
   int32 quota = 4;
   bool carryForward = 5;
   bool requiresApproval = 6;
+  bool trackInHours = 7;
 }
 
 message DeleteLeaveTypeRequest {
@@ -422,6 +427,7 @@ message LeaveTypeResponse {
   bool carryForward = 5;
   bool requiresApproval = 6;
   string createdAt = 7;
+  bool trackInHours = 8;
 }
 
 message LeaveTypesResponse {
@@ -462,6 +468,9 @@ message CreateLeaveRequestRequest {
   int32 numberOfDays = 5;
   string reason = 6;
   string status = 7;
+  string numberOfHours = 8;
+  string hoursFrom = 9;
+  string hoursTo = 10;
 }
 
 message UpdateLeaveRequestRequest {
@@ -473,6 +482,9 @@ message UpdateLeaveRequestRequest {
   int32 numberOfDays = 6;
   string reason = 7;
   string status = 8;
+  string numberOfHours = 9;
+  string hoursFrom = 10;
+  string hoursTo = 11;
 }
 
 message DeleteLeaveRequestRequest {
@@ -489,6 +501,9 @@ message LeaveRequestResponse {
   string reason = 7;
   string status = 8;
   string createdAt = 9;
+  string numberOfHours = 10;
+  string hoursFrom = 11;
+  string hoursTo = 12;
 }
 
 message LeaveRequestsResponse {
@@ -509,6 +524,14 @@ service LeaveBalanceService {
   rpc CreateLeaveBalance (CreateLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
   rpc UpdateLeaveBalance (UpdateLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
   rpc DeleteLeaveBalance (DeleteLeaveBalanceRequest) returns (DeleteLeaveBalanceResponse) {}
+  rpc AdjustLeaveBalance (AdjustLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
+}
+
+message AdjustLeaveBalanceRequest {
+  string employeeId = 1;
+  string leaveType = 2;
+  int32 year = 3;
+  string balanceDelta = 4;
 }
 
 message GetLeaveBalanceRequest {

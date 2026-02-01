@@ -32,6 +32,15 @@ export class LeaveRequest {
   @Column({ type: 'int', name: 'number_of_days' })
   numberOfDays: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true, name: 'number_of_hours' })
+  numberOfHours: number | null;
+
+  @Column({ type: 'varchar', length: 10, nullable: true, name: 'hours_from' })
+  hoursFrom: string | null;
+
+  @Column({ type: 'varchar', length: 10, nullable: true, name: 'hours_to' })
+  hoursTo: string | null;
+
   @Column({ type: 'text', nullable: true })
   reason: string | null;
 

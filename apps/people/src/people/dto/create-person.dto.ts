@@ -40,6 +40,10 @@ export class CreateEmployeeDto {
   @IsOptional()
   managerEmail?: string;
 
+  @IsUUID()
+  @IsOptional()
+  managerId?: string;
+
   @IsString()
   @IsOptional()
   address?: string;

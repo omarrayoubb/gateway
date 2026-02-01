@@ -71,6 +71,9 @@ export class LeaveRequestsGrpcController {
         startDate: data.startDate,
         endDate: data.endDate,
         numberOfDays: data.numberOfDays ? parseInt(data.numberOfDays) : 0,
+        numberOfHours: data.numberOfHours ? parseFloat(data.numberOfHours) : undefined,
+        hoursFrom: data.hoursFrom || data.hours_from || undefined,
+        hoursTo: data.hoursTo || data.hours_to || undefined,
         reason: data.reason || undefined,
         status: data.status || undefined,
       };
@@ -99,6 +102,9 @@ export class LeaveRequestsGrpcController {
         startDate: data.startDate || undefined,
         endDate: data.endDate || undefined,
         numberOfDays: data.numberOfDays ? parseInt(data.numberOfDays) : undefined,
+        numberOfHours: data.numberOfHours ? parseFloat(data.numberOfHours) : undefined,
+        hoursFrom: data.hoursFrom || data.hours_from || undefined,
+        hoursTo: data.hoursTo || data.hours_to || undefined,
         reason: data.reason || undefined,
         status: data.status || undefined,
       };
@@ -142,6 +148,12 @@ export class LeaveRequestsGrpcController {
       return '';
     };
 
+    const formatDecimal = (v: any): string => {
+      if (v == null || v === undefined) return '';
+      if (typeof v === 'number') return String(v);
+      return String(v);
+    };
+
     return {
       id: leaveRequest.id,
       employeeId: leaveRequest.employeeId ?? '',
@@ -149,6 +161,9 @@ export class LeaveRequestsGrpcController {
       startDate: formatDate(leaveRequest.startDate),
       endDate: formatDate(leaveRequest.endDate),
       numberOfDays: leaveRequest.numberOfDays || 0,
+      numberOfHours: leaveRequest.numberOfHours != null ? formatDecimal(leaveRequest.numberOfHours) : '',
+      hoursFrom: leaveRequest.hoursFrom ?? '',
+      hoursTo: leaveRequest.hoursTo ?? '',
       reason: leaveRequest.reason || '',
       status: leaveRequest.status,
       createdAt: formatDateTime(leaveRequest.createdAt),

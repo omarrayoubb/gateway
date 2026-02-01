@@ -33,6 +33,31 @@ export class AttendanceSummaryService {
     }
   }
 
+  async upsert(createSummaryDto: CreateAttendanceSummaryDto): Promise<AttendanceSummary> {
+    try {
+      // Check if summary already exists for this employee and month
+      const existingSummary = await this.summaryRepository.findOne({
+        where: {
+          employeeId: createSummaryDto.employeeId,
+          month: createSummaryDto.month,
+        },
+      });
+
+      if (existingSummary) {
+        // Update existing summary
+        Object.assign(existingSummary, createSummaryDto);
+        return await this.summaryRepository.save(existingSummary);
+      }
+
+      // Create new summary
+      const summary = this.summaryRepository.create(createSummaryDto);
+      return await this.summaryRepository.save(summary);
+    } catch (error) {
+      console.error('Error in AttendanceSummaryService.upsert:', error);
+      throw error;
+    }
+  }
+
   async findAll(query: { employeeId?: string; month?: string }): Promise<AttendanceSummary[]> {
     const queryBuilder = this.summaryRepository.createQueryBuilder('summary');
 
