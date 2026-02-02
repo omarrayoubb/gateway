@@ -96,6 +96,19 @@
         ],
         "watchAssets": true
       }
+    },
+    "people": {
+      "type": "application",
+      "root": "apps/people",
+      "entryFile": "main",
+      "sourceRoot": "apps/people/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/people/tsconfig.app.json",
+        "assets": [
+          "**/*.proto"
+        ],
+        "watchAssets": true
+      }
     }
   }
 }

@@ -1,0 +1,2449 @@
+syntax = "proto3";
+
+package people;
+
+// ============================================
+// PEOPLE SERVICE
+// ============================================
+service PeopleService {
+  rpc GetPerson (GetPersonRequest) returns (PersonResponse) {}
+  rpc GetPeople (GetPeopleRequest) returns (PeopleResponse) {}
+  rpc CreatePerson (CreatePersonRequest) returns (PersonResponse) {}
+  rpc UpdatePerson (UpdatePersonRequest) returns (PersonResponse) {}
+  rpc DeletePerson (DeletePersonRequest) returns (DeletePersonResponse) {}
+}
+
+message GetPersonRequest {
+  string id = 1;
+}
+
+message GetPeopleRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+  string sort = 4;
+  string status = 5;
+  string department = 6;
+}
+
+message CreatePersonRequest {
+  string name = 1;
+  string email = 2;
+  string phone = 3;
+  string position = 4;
+  string department = 5;
+  string departmentId = 6;
+  string jobTitle = 7;
+  string hireDate = 8;
+  string status = 9;
+  string managerEmail = 10;
+  string managerId = 18;
+  string address = 11;
+  string city = 12;
+  string country = 13;
+  string emergencyContactName = 14;
+  string emergencyContactPhone = 15;
+  string emergencyContactRelationship = 16;
+  string baseSalary = 17;
+}
+
+message UpdatePersonRequest {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string position = 5;
+  string department = 6;
+  string departmentId = 7;
+  string jobTitle = 8;
+  string hireDate = 9;
+  string status = 10;
+  string managerEmail = 11;
+  string managerId = 19;
+  string address = 12;
+  string city = 13;
+  string country = 14;
+  string emergencyContactName = 15;
+  string emergencyContactPhone = 16;
+  string emergencyContactRelationship = 17;
+  string baseSalary = 18;
+}
+
+message DeletePersonRequest {
+  string id = 1;
+}
+
+message PersonResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string position = 5;
+  string department = 6;
+  string departmentId = 7;
+  string jobTitle = 8;
+  string hireDate = 9;
+  string status = 10;
+  string managerEmail = 11;
+  string managerId = 21;
+  string address = 12;
+  string city = 13;
+  string country = 14;
+  string emergencyContactName = 15;
+  string emergencyContactPhone = 16;
+  string emergencyContactRelationship = 17;
+  string baseSalary = 18;
+  string createdAt = 19;
+  string updatedAt = 20;
+}
+
+message PeopleResponse {
+  repeated PersonResponse people = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message DeletePersonResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// DEPARTMENTS SERVICE
+// ============================================
+service DepartmentsService {
+  rpc GetDepartment (GetDepartmentRequest) returns (DepartmentResponse) {}
+  rpc GetDepartments (GetDepartmentsRequest) returns (DepartmentsResponse) {}
+  rpc CreateDepartment (CreateDepartmentRequest) returns (DepartmentResponse) {}
+  rpc UpdateDepartment (UpdateDepartmentRequest) returns (DepartmentResponse) {}
+  rpc DeleteDepartment (DeleteDepartmentRequest) returns (DeleteDepartmentResponse) {}
+}
+
+message GetDepartmentRequest {
+  string id = 1;
+}
+
+message GetDepartmentsRequest {
+}
+
+message CreateDepartmentRequest {
+  string name = 1;
+  string code = 2;
+  string description = 3;
+  string managerEmail = 4;
+  string parentDepartmentId = 5;
+  string status = 6;
+}
+
+message UpdateDepartmentRequest {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  string managerEmail = 5;
+  string parentDepartmentId = 6;
+  string status = 7;
+}
+
+message DeleteDepartmentRequest {
+  string id = 1;
+}
+
+message DepartmentResponse {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  string managerEmail = 5;
+  string parentDepartmentId = 6;
+  string status = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message DepartmentsResponse {
+  repeated DepartmentResponse departments = 1;
+}
+
+message DeleteDepartmentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// ATTENDANCE SERVICE
+// ============================================
+service AttendanceService {
+  rpc GetAttendance (GetAttendanceRequest) returns (AttendanceResponse) {}
+  rpc GetAttendances (GetAttendancesRequest) returns (AttendancesResponse) {}
+  rpc CreateAttendance (CreateAttendanceRequest) returns (AttendanceResponse) {}
+  rpc UpdateAttendance (UpdateAttendanceRequest) returns (AttendanceResponse) {}
+  rpc DeleteAttendance (DeleteAttendanceRequest) returns (DeleteAttendanceResponse) {}
+}
+
+message GetAttendanceRequest {
+  string id = 1;
+}
+
+message GetAttendancesRequest {
+  string sort = 1;
+  string employeeId = 2;
+  string employeeEmail = 3;
+  string date = 4;
+  string status = 5;
+}
+
+message CreateAttendanceRequest {
+  string employeeId = 1;
+  string employeeEmail = 2;
+  string date = 3;
+  string checkInTime = 4;
+  string checkOutTime = 5;
+  string checkInLocation = 6;
+  string checkOutLocation = 7;
+  string totalHours = 8;
+  string overtimeHours = 9;
+  bool isLate = 10;
+  int32 lateArrivalMinutes = 11;
+  int32 earlyDepartureMinutes = 12;
+  string deductionAmount = 13;
+  string status = 14;
+}
+
+message UpdateAttendanceRequest {
+  string id = 1;
+  string checkOutTime = 2;
+  string checkOutLocation = 3;
+  string totalHours = 4;
+  string overtimeHours = 5;
+}
+
+message DeleteAttendanceRequest {
+  string id = 1;
+}
+
+message AttendanceResponse {
+  string id = 1;
+  string employeeId = 2;
+  string employeeEmail = 3;
+  string date = 4;
+  string checkInTime = 5;
+  string checkOutTime = 6;
+  string checkInLocation = 7;
+  string checkOutLocation = 8;
+  string totalHours = 9;
+  string overtimeHours = 10;
+  bool isLate = 11;
+  int32 lateArrivalMinutes = 12;
+  int32 earlyDepartureMinutes = 13;
+  string deductionAmount = 14;
+  string status = 15;
+  string createdAt = 16;
+}
+
+message AttendancesResponse {
+  repeated AttendanceResponse attendances = 1;
+}
+
+message DeleteAttendanceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// ATTENDANCE SUMMARY SERVICE
+// ============================================
+service AttendanceSummaryService {
+  rpc GetAttendanceSummary (GetAttendanceSummaryRequest) returns (AttendanceSummaryResponse) {}
+  rpc GetAttendanceSummaries (GetAttendanceSummariesRequest) returns (AttendanceSummariesResponse) {}
+  rpc CreateAttendanceSummary (CreateAttendanceSummaryRequest) returns (AttendanceSummaryResponse) {}
+}
+
+message GetAttendanceSummaryRequest {
+  string id = 1;
+}
+
+message GetAttendanceSummariesRequest {
+  string employeeId = 1;
+  string month = 2;
+}
+
+message CreateAttendanceSummaryRequest {
+  string employeeId = 1;
+  string month = 2;
+  int32 daysPresent = 3;
+  int32 daysAbsent = 4;
+  string totalHours = 5;
+  int32 lateArrivalsCount = 6;
+  string overtimeHours = 7;
+  string totalDeductions = 8;
+  string status = 9;
+}
+
+message AttendanceSummaryResponse {
+  string id = 1;
+  string employeeId = 2;
+  string month = 3;
+  int32 daysPresent = 4;
+  int32 daysAbsent = 5;
+  string totalHours = 6;
+  int32 lateArrivalsCount = 7;
+  string overtimeHours = 8;
+  string totalDeductions = 9;
+  string status = 10;
+  string createdAt = 11;
+}
+
+message AttendanceSummariesResponse {
+  repeated AttendanceSummaryResponse summaries = 1;
+}
+
+// ============================================
+// ATTENDANCE POLICY SERVICE
+// ============================================
+service AttendancePolicyService {
+  rpc GetAttendancePolicy (GetAttendancePolicyRequest) returns (AttendancePolicyResponse) {}
+  rpc GetAttendancePolicies (GetAttendancePoliciesRequest) returns (AttendancePoliciesResponse) {}
+  rpc CreateAttendancePolicy (CreateAttendancePolicyRequest) returns (AttendancePolicyResponse) {}
+  rpc UpdateAttendancePolicy (UpdateAttendancePolicyRequest) returns (AttendancePolicyResponse) {}
+  rpc DeleteAttendancePolicy (DeleteAttendancePolicyRequest) returns (DeleteAttendancePolicyResponse) {}
+}
+
+message GetAttendancePolicyRequest {
+  string id = 1;
+}
+
+message GetAttendancePoliciesRequest {
+}
+
+message CreateAttendancePolicyRequest {
+  string name = 1;
+  string expectedStartTime = 2;
+  string expectedEndTime = 3;
+  int32 gracePeriodMinutes = 4;
+  string minimumHoursForFullDay = 5;
+  string standardWorkHours = 6;
+  int32 standardWorkDays = 7;
+  string lateArrivalDeductionPerHour = 8;
+  string earlyDepartureDeductionPerHour = 9;
+  string absentDayDeduction = 10;
+  string halfDayDeduction = 11;
+  string overtimeMultiplier = 12;
+}
+
+message UpdateAttendancePolicyRequest {
+  string id = 1;
+  string name = 2;
+  string expectedStartTime = 3;
+  string expectedEndTime = 4;
+  int32 gracePeriodMinutes = 5;
+  string minimumHoursForFullDay = 6;
+  string standardWorkHours = 7;
+  int32 standardWorkDays = 8;
+  string lateArrivalDeductionPerHour = 9;
+  string earlyDepartureDeductionPerHour = 10;
+  string absentDayDeduction = 11;
+  string halfDayDeduction = 12;
+  string overtimeMultiplier = 13;
+}
+
+message DeleteAttendancePolicyRequest {
+  string id = 1;
+}
+
+message AttendancePolicyResponse {
+  string id = 1;
+  string name = 2;
+  string expectedStartTime = 3;
+  string expectedEndTime = 4;
+  int32 gracePeriodMinutes = 5;
+  string minimumHoursForFullDay = 6;
+  string standardWorkHours = 7;
+  int32 standardWorkDays = 8;
+  string lateArrivalDeductionPerHour = 9;
+  string earlyDepartureDeductionPerHour = 10;
+  string absentDayDeduction = 11;
+  string halfDayDeduction = 12;
+  string overtimeMultiplier = 13;
+  string createdAt = 14;
+}
+
+message AttendancePoliciesResponse {
+  repeated AttendancePolicyResponse policies = 1;
+}
+
+message DeleteAttendancePolicyResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEAVE TYPE SERVICE
+// ============================================
+service LeaveTypeService {
+  rpc GetLeaveType (GetLeaveTypeRequest) returns (LeaveTypeResponse) {}
+  rpc GetLeaveTypes (GetLeaveTypesRequest) returns (LeaveTypesResponse) {}
+  rpc CreateLeaveType (CreateLeaveTypeRequest) returns (LeaveTypeResponse) {}
+  rpc UpdateLeaveType (UpdateLeaveTypeRequest) returns (LeaveTypeResponse) {}
+  rpc DeleteLeaveType (DeleteLeaveTypeRequest) returns (DeleteLeaveTypeResponse) {}
+}
+
+message GetLeaveTypeRequest {
+  string id = 1;
+}
+
+message GetLeaveTypesRequest {
+}
+
+message CreateLeaveTypeRequest {
+  string name = 1;
+  string description = 2;
+  int32 quota = 3;
+  bool carryForward = 4;
+  bool requiresApproval = 5;
+  bool trackInHours = 6;
+}
+
+message UpdateLeaveTypeRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 quota = 4;
+  bool carryForward = 5;
+  bool requiresApproval = 6;
+  bool trackInHours = 7;
+}
+
+message DeleteLeaveTypeRequest {
+  string id = 1;
+}
+
+message LeaveTypeResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 quota = 4;
+  bool carryForward = 5;
+  bool requiresApproval = 6;
+  string createdAt = 7;
+  bool trackInHours = 8;
+}
+
+message LeaveTypesResponse {
+  repeated LeaveTypeResponse leaveTypes = 1;
+}
+
+message DeleteLeaveTypeResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEAVE REQUEST SERVICE
+// ============================================
+service LeaveRequestService {
+  rpc GetLeaveRequest (GetLeaveRequestRequest) returns (LeaveRequestResponse) {}
+  rpc GetLeaveRequests (GetLeaveRequestsRequest) returns (LeaveRequestsResponse) {}
+  rpc CreateLeaveRequest (CreateLeaveRequestRequest) returns (LeaveRequestResponse) {}
+  rpc UpdateLeaveRequest (UpdateLeaveRequestRequest) returns (LeaveRequestResponse) {}
+  rpc DeleteLeaveRequest (DeleteLeaveRequestRequest) returns (DeleteLeaveRequestResponse) {}
+}
+
+message GetLeaveRequestRequest {
+  string id = 1;
+}
+
+message GetLeaveRequestsRequest {
+  string sort = 1;
+  string employeeId = 2;
+  string status = 3;
+}
+
+message CreateLeaveRequestRequest {
+  string employeeId = 1;
+  string leaveType = 2;
+  string startDate = 3;
+  string endDate = 4;
+  int32 numberOfDays = 5;
+  string reason = 6;
+  string status = 7;
+  string numberOfHours = 8;
+  string hoursFrom = 9;
+  string hoursTo = 10;
+}
+
+message UpdateLeaveRequestRequest {
+  string id = 1;
+  string employeeId = 2;
+  string leaveType = 3;
+  string startDate = 4;
+  string endDate = 5;
+  int32 numberOfDays = 6;
+  string reason = 7;
+  string status = 8;
+  string numberOfHours = 9;
+  string hoursFrom = 10;
+  string hoursTo = 11;
+}
+
+message DeleteLeaveRequestRequest {
+  string id = 1;
+}
+
+message LeaveRequestResponse {
+  string id = 1;
+  string employeeId = 2;
+  string leaveType = 3;
+  string startDate = 4;
+  string endDate = 5;
+  int32 numberOfDays = 6;
+  string reason = 7;
+  string status = 8;
+  string createdAt = 9;
+  string numberOfHours = 10;
+  string hoursFrom = 11;
+  string hoursTo = 12;
+}
+
+message LeaveRequestsResponse {
+  repeated LeaveRequestResponse leaveRequests = 1;
+}
+
+message DeleteLeaveRequestResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEAVE BALANCE SERVICE
+// ============================================
+service LeaveBalanceService {
+  rpc GetLeaveBalance (GetLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
+  rpc GetLeaveBalances (GetLeaveBalancesRequest) returns (LeaveBalancesResponse) {}
+  rpc CreateLeaveBalance (CreateLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
+  rpc UpdateLeaveBalance (UpdateLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
+  rpc DeleteLeaveBalance (DeleteLeaveBalanceRequest) returns (DeleteLeaveBalanceResponse) {}
+  rpc AdjustLeaveBalance (AdjustLeaveBalanceRequest) returns (LeaveBalanceResponse) {}
+}
+
+message AdjustLeaveBalanceRequest {
+  string employeeId = 1;
+  string leaveType = 2;
+  int32 year = 3;
+  string balanceDelta = 4;
+}
+
+message GetLeaveBalanceRequest {
+  string id = 1;
+}
+
+message GetLeaveBalancesRequest {
+  string employeeId = 1;
+  string leaveType = 2;
+  string year = 3;
+}
+
+message CreateLeaveBalanceRequest {
+  string employeeId = 1;
+  string leaveType = 2;
+  string balance = 3;
+  string used = 4;
+  string accrued = 5;
+  string carriedForward = 6;
+  int32 year = 7;
+}
+
+message UpdateLeaveBalanceRequest {
+  string id = 1;
+  string employeeId = 2;
+  string leaveType = 3;
+  string balance = 4;
+  string used = 5;
+  string accrued = 6;
+  string carriedForward = 7;
+  int32 year = 8;
+}
+
+message DeleteLeaveBalanceRequest {
+  string id = 1;
+}
+
+message LeaveBalanceResponse {
+  string id = 1;
+  string employeeId = 2;
+  string leaveType = 3;
+  string balance = 4;
+  string used = 5;
+  string accrued = 6;
+  string carriedForward = 7;
+  int32 year = 8;
+  string updatedAt = 9;
+}
+
+message LeaveBalancesResponse {
+  repeated LeaveBalanceResponse leaveBalances = 1;
+}
+
+message DeleteLeaveBalanceResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEAVE APPROVAL SERVICE
+// ============================================
+service LeaveApprovalService {
+  rpc GetLeaveApproval (GetLeaveApprovalRequest) returns (LeaveApprovalResponse) {}
+  rpc GetLeaveApprovals (GetLeaveApprovalsRequest) returns (LeaveApprovalsResponse) {}
+  rpc CreateLeaveApproval (CreateLeaveApprovalRequest) returns (LeaveApprovalResponse) {}
+  rpc UpdateLeaveApproval (UpdateLeaveApprovalRequest) returns (LeaveApprovalResponse) {}
+  rpc DeleteLeaveApproval (DeleteLeaveApprovalRequest) returns (DeleteLeaveApprovalResponse) {}
+}
+
+message GetLeaveApprovalRequest {
+  string id = 1;
+}
+
+message GetLeaveApprovalsRequest {
+  string sort = 1;
+}
+
+message CreateLeaveApprovalRequest {
+  string leaveRequestId = 1;
+  string approverId = 2;
+  string status = 3;
+  int32 approvalLevel = 4;
+  string approvedDate = 5;
+  string rejectedDate = 6;
+  string rejectionReason = 7;
+}
+
+message UpdateLeaveApprovalRequest {
+  string id = 1;
+  string leaveRequestId = 2;
+  string approverId = 3;
+  string status = 4;
+  int32 approvalLevel = 5;
+  string approvedDate = 6;
+  string rejectedDate = 7;
+  string rejectionReason = 8;
+}
+
+message DeleteLeaveApprovalRequest {
+  string id = 1;
+}
+
+message LeaveApprovalResponse {
+  string id = 1;
+  string leaveRequestId = 2;
+  string approverId = 3;
+  string status = 4;
+  int32 approvalLevel = 5;
+  string approvedDate = 6;
+  string rejectedDate = 7;
+  string rejectionReason = 8;
+  string createdAt = 9;
+}
+
+message LeaveApprovalsResponse {
+  repeated LeaveApprovalResponse leaveApprovals = 1;
+}
+
+message DeleteLeaveApprovalResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEAVE POLICY SERVICE
+// ============================================
+service LeavePolicyService {
+  rpc GetLeavePolicy (GetLeavePolicyRequest) returns (LeavePolicyResponse) {}
+  rpc GetLeavePolicies (GetLeavePoliciesRequest) returns (LeavePoliciesResponse) {}
+  rpc CreateLeavePolicy (CreateLeavePolicyRequest) returns (LeavePolicyResponse) {}
+  rpc UpdateLeavePolicy (UpdateLeavePolicyRequest) returns (LeavePolicyResponse) {}
+  rpc DeleteLeavePolicy (DeleteLeavePolicyRequest) returns (DeleteLeavePolicyResponse) {}
+}
+
+message GetLeavePolicyRequest {
+  string id = 1;
+}
+
+message GetLeavePoliciesRequest {
+}
+
+message CreateLeavePolicyRequest {
+  string name = 1;
+  string description = 2;
+  int32 maxCarryForwardDays = 3;
+  string accrualRate = 4;
+}
+
+message UpdateLeavePolicyRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 maxCarryForwardDays = 4;
+  string accrualRate = 5;
+}
+
+message DeleteLeavePolicyRequest {
+  string id = 1;
+}
+
+message LeavePolicyResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  int32 maxCarryForwardDays = 4;
+  string accrualRate = 5;
+  string createdAt = 6;
+}
+
+message LeavePoliciesResponse {
+  repeated LeavePolicyResponse leavePolicies = 1;
+}
+
+message DeleteLeavePolicyResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// HOLIDAY SERVICE
+// ============================================
+service HolidayService {
+  rpc GetHoliday (GetHolidayRequest) returns (HolidayResponse) {}
+  rpc GetHolidays (GetHolidaysRequest) returns (HolidaysResponse) {}
+  rpc CreateHoliday (CreateHolidayRequest) returns (HolidayResponse) {}
+  rpc UpdateHoliday (UpdateHolidayRequest) returns (HolidayResponse) {}
+  rpc DeleteHoliday (DeleteHolidayRequest) returns (DeleteHolidayResponse) {}
+}
+
+message GetHolidayRequest {
+  string id = 1;
+}
+
+message GetHolidaysRequest {
+}
+
+message CreateHolidayRequest {
+  string name = 1;
+  string date = 2;
+  bool isOptional = 3;
+}
+
+message UpdateHolidayRequest {
+  string id = 1;
+  string name = 2;
+  string date = 3;
+  bool isOptional = 4;
+}
+
+message DeleteHolidayRequest {
+  string id = 1;
+}
+
+message HolidayResponse {
+  string id = 1;
+  string name = 2;
+  string date = 3;
+  bool isOptional = 4;
+  string createdAt = 5;
+}
+
+message HolidaysResponse {
+  repeated HolidayResponse holidays = 1;
+}
+
+message DeleteHolidayResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEAVE ACCRUAL SERVICE
+// ============================================
+service LeaveAccrualService {
+  rpc GetLeaveAccrual (GetLeaveAccrualRequest) returns (LeaveAccrualResponse) {}
+  rpc GetLeaveAccruals (GetLeaveAccrualsRequest) returns (LeaveAccrualsResponse) {}
+  rpc CreateLeaveAccrual (CreateLeaveAccrualRequest) returns (LeaveAccrualResponse) {}
+  rpc UpdateLeaveAccrual (UpdateLeaveAccrualRequest) returns (LeaveAccrualResponse) {}
+  rpc DeleteLeaveAccrual (DeleteLeaveAccrualRequest) returns (DeleteLeaveAccrualResponse) {}
+}
+
+message GetLeaveAccrualRequest {
+  string id = 1;
+}
+
+message GetLeaveAccrualsRequest {
+}
+
+message CreateLeaveAccrualRequest {
+  string employeeId = 1;
+  string leaveType = 2;
+  string accrualDate = 3;
+  string daysAccrued = 4;
+  string description = 5;
+}
+
+message UpdateLeaveAccrualRequest {
+  string id = 1;
+  string employeeId = 2;
+  string leaveType = 3;
+  string accrualDate = 4;
+  string daysAccrued = 5;
+  string description = 6;
+}
+
+message DeleteLeaveAccrualRequest {
+  string id = 1;
+}
+
+message LeaveAccrualResponse {
+  string id = 1;
+  string employeeId = 2;
+  string leaveType = 3;
+  string accrualDate = 4;
+  string daysAccrued = 5;
+  string description = 6;
+  string createdAt = 7;
+}
+
+message LeaveAccrualsResponse {
+  repeated LeaveAccrualResponse leaveAccruals = 1;
+}
+
+message DeleteLeaveAccrualResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PAYROLL RECORD SERVICE
+// ============================================
+service PayrollRecordService {
+  rpc GetPayrollRecord (GetPayrollRecordRequest) returns (PayrollRecordResponse) {}
+  rpc GetPayrollRecords (GetPayrollRecordsRequest) returns (PayrollRecordsResponse) {}
+  rpc CreatePayrollRecord (CreatePayrollRecordRequest) returns (PayrollRecordResponse) {}
+  rpc UpdatePayrollRecord (UpdatePayrollRecordRequest) returns (PayrollRecordResponse) {}
+  rpc DeletePayrollRecord (DeletePayrollRecordRequest) returns (DeletePayrollRecordResponse) {}
+}
+
+message GetPayrollRecordRequest {
+  string id = 1;
+}
+
+message GetPayrollRecordsRequest {
+  string sort = 1;
+  string employeeId = 2;
+  string payPeriod = 3;
+  string status = 4;
+}
+
+message CreatePayrollRecordRequest {
+  string employeeId = 1;
+  string payPeriod = 2;
+  string grossPay = 3;
+  string deductions = 4;
+  string netPay = 5;
+  string status = 6;
+  string paymentDate = 7;
+}
+
+message UpdatePayrollRecordRequest {
+  string id = 1;
+  string employeeId = 2;
+  string payPeriod = 3;
+  string grossPay = 4;
+  string deductions = 5;
+  string netPay = 6;
+  string status = 7;
+  string paymentDate = 8;
+}
+
+message DeletePayrollRecordRequest {
+  string id = 1;
+}
+
+message PayrollRecordResponse {
+  string id = 1;
+  string employeeId = 2;
+  string payPeriod = 3;
+  string grossPay = 4;
+  string deductions = 5;
+  string netPay = 6;
+  string status = 7;
+  string paymentDate = 8;
+  string createdAt = 9;
+}
+
+message PayrollRecordsResponse {
+  repeated PayrollRecordResponse payrollRecords = 1;
+}
+
+message DeletePayrollRecordResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PAYROLL CONFIGURATION SERVICE
+// ============================================
+service PayrollConfigurationService {
+  rpc GetPayrollConfigurations (GetPayrollConfigurationsRequest) returns (PayrollConfigurationsResponse) {}
+  rpc CreatePayrollConfiguration (CreatePayrollConfigurationRequest) returns (PayrollConfigurationResponse) {}
+}
+
+message GetPayrollConfigurationsRequest {
+}
+
+message CreatePayrollConfigurationRequest {
+  string name = 1;
+  string payFrequency = 2;
+  int32 payDay = 3;
+  string taxRate = 4;
+  string deductionRules = 5;
+}
+
+message PayrollConfigurationResponse {
+  string id = 1;
+  string name = 2;
+  string payFrequency = 3;
+  int32 payDay = 4;
+  string taxRate = 5;
+  string deductionRules = 6;
+  string createdAt = 7;
+}
+
+message PayrollConfigurationsResponse {
+  repeated PayrollConfigurationResponse payrollConfigurations = 1;
+}
+
+// ============================================
+// PAYROLL EXCEPTION SERVICE
+// ============================================
+service PayrollExceptionService {
+  rpc GetPayrollExceptions (GetPayrollExceptionsRequest) returns (PayrollExceptionsResponse) {}
+  rpc CreatePayrollException (CreatePayrollExceptionRequest) returns (PayrollExceptionResponse) {}
+}
+
+message GetPayrollExceptionsRequest {
+}
+
+message CreatePayrollExceptionRequest {
+  string employeeId = 1;
+  string payPeriod = 2;
+  string exceptionType = 3;
+  string description = 4;
+  string amount = 5;
+  string status = 6;
+}
+
+message PayrollExceptionResponse {
+  string id = 1;
+  string employeeId = 2;
+  string payPeriod = 3;
+  string exceptionType = 4;
+  string description = 5;
+  string amount = 6;
+  string status = 7;
+  string createdAt = 8;
+}
+
+message PayrollExceptionsResponse {
+  repeated PayrollExceptionResponse payrollExceptions = 1;
+}
+
+// ============================================
+// CUSTOM PAYROLL COMPONENT SERVICE
+// ============================================
+service CustomPayrollComponentService {
+  rpc GetCustomPayrollComponents (GetCustomPayrollComponentsRequest) returns (CustomPayrollComponentsResponse) {}
+  rpc CreateCustomPayrollComponent (CreateCustomPayrollComponentRequest) returns (CustomPayrollComponentResponse) {}
+}
+
+message GetCustomPayrollComponentsRequest {
+}
+
+message CreateCustomPayrollComponentRequest {
+  string name = 1;
+  string type = 2;
+  string amount = 3;
+  string appliesTo = 4;
+}
+
+message CustomPayrollComponentResponse {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  string amount = 4;
+  string appliesTo = 5;
+  string createdAt = 6;
+}
+
+message CustomPayrollComponentsResponse {
+  repeated CustomPayrollComponentResponse customPayrollComponents = 1;
+}
+
+// ============================================
+// PERFORMANCE REVIEW SERVICE
+// ============================================
+service PerformanceReviewService {
+  rpc GetPerformanceReview (GetPerformanceReviewRequest) returns (PerformanceReviewResponse) {}
+  rpc GetPerformanceReviews (GetPerformanceReviewsRequest) returns (PerformanceReviewsResponse) {}
+  rpc CreatePerformanceReview (CreatePerformanceReviewRequest) returns (PerformanceReviewResponse) {}
+  rpc UpdatePerformanceReview (UpdatePerformanceReviewRequest) returns (PerformanceReviewResponse) {}
+  rpc DeletePerformanceReview (DeletePerformanceReviewRequest) returns (DeletePerformanceReviewResponse) {}
+}
+
+message GetPerformanceReviewRequest {
+  string id = 1;
+}
+
+message GetPerformanceReviewsRequest {
+  string sort = 1;
+}
+
+message CreatePerformanceReviewRequest {
+  string employeeId = 1;
+  string reviewerId = 2;
+  string reviewCycleId = 3;
+  string reviewDate = 4;
+  string rating = 5;
+  string comments = 6;
+  string status = 7;
+}
+
+message UpdatePerformanceReviewRequest {
+  string id = 1;
+  string rating = 2;
+  string comments = 3;
+  string status = 4;
+  string reviewDate = 5;
+}
+
+message DeletePerformanceReviewRequest {
+  string id = 1;
+}
+
+message PerformanceReviewResponse {
+  string id = 1;
+  string employeeId = 2;
+  string reviewerId = 3;
+  string reviewCycleId = 4;
+  string reviewDate = 5;
+  string rating = 6;
+  string comments = 7;
+  string status = 8;
+  string createdAt = 9;
+}
+
+message PerformanceReviewsResponse {
+  repeated PerformanceReviewResponse performanceReviews = 1;
+}
+
+message DeletePerformanceReviewResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// PERFORMANCE GOAL SERVICE
+// ============================================
+service PerformanceGoalService {
+  rpc GetPerformanceGoals (GetPerformanceGoalsRequest) returns (PerformanceGoalsResponse) {}
+  rpc CreatePerformanceGoal (CreatePerformanceGoalRequest) returns (PerformanceGoalResponse) {}
+}
+
+message GetPerformanceGoalsRequest {
+}
+
+message CreatePerformanceGoalRequest {
+  string employeeId = 1;
+  string title = 2;
+  string description = 3;
+  string targetDate = 4;
+  string status = 5;
+  int32 progress = 6;
+}
+
+message PerformanceGoalResponse {
+  string id = 1;
+  string employeeId = 2;
+  string title = 3;
+  string description = 4;
+  string targetDate = 5;
+  string status = 6;
+  int32 progress = 7;
+  string createdAt = 8;
+}
+
+message PerformanceGoalsResponse {
+  repeated PerformanceGoalResponse performanceGoals = 1;
+}
+
+// ============================================
+// REVIEW CYCLE SERVICE
+// ============================================
+service ReviewCycleService {
+  rpc GetReviewCycles (GetReviewCyclesRequest) returns (ReviewCyclesResponse) {}
+  rpc CreateReviewCycle (CreateReviewCycleRequest) returns (ReviewCycleResponse) {}
+}
+
+message GetReviewCyclesRequest {
+}
+
+message CreateReviewCycleRequest {
+  string name = 1;
+  string startDate = 2;
+  string endDate = 3;
+  string status = 4;
+}
+
+message ReviewCycleResponse {
+  string id = 1;
+  string name = 2;
+  string startDate = 3;
+  string endDate = 4;
+  string status = 5;
+  string createdAt = 6;
+}
+
+message ReviewCyclesResponse {
+  repeated ReviewCycleResponse reviewCycles = 1;
+}
+
+// ============================================
+// REVIEW TEMPLATE SERVICE
+// ============================================
+service ReviewTemplateService {
+  rpc GetReviewTemplates (GetReviewTemplatesRequest) returns (ReviewTemplatesResponse) {}
+  rpc CreateReviewTemplate (CreateReviewTemplateRequest) returns (ReviewTemplateResponse) {}
+}
+
+message GetReviewTemplatesRequest {
+}
+
+message CreateReviewTemplateRequest {
+  string name = 1;
+  string description = 2;
+  string sections = 3;
+}
+
+message ReviewTemplateResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string sections = 4;
+  string createdAt = 5;
+}
+
+message ReviewTemplatesResponse {
+  repeated ReviewTemplateResponse reviewTemplates = 1;
+}
+
+// ============================================
+// GOAL SERVICE
+// ============================================
+service GoalService {
+  rpc GetGoal (GetGoalRequest) returns (GoalResponse) {}
+  rpc GetGoals (GetGoalsRequest) returns (GoalsResponse) {}
+  rpc CreateGoal (CreateGoalRequest) returns (GoalResponse) {}
+  rpc UpdateGoal (UpdateGoalRequest) returns (GoalResponse) {}
+  rpc DeleteGoal (DeleteGoalRequest) returns (DeleteGoalResponse) {}
+}
+
+message GetGoalRequest {
+  string id = 1;
+}
+
+message GetGoalsRequest {
+  string sort = 1;
+  string employeeId = 2;
+  string status = 3;
+  string category = 4;
+  string parentGoalId = 5;
+}
+
+message CreateGoalRequest {
+  string employeeId = 1;
+  string title = 2;
+  string description = 3;
+  string category = 4;
+  string targetDate = 5;
+  string status = 6;
+  int32 progress = 7;
+  string parentGoalId = 8;
+  string alignmentLevel = 9;
+}
+
+message UpdateGoalRequest {
+  string id = 1;
+  string employeeId = 2;
+  string title = 3;
+  string description = 4;
+  string category = 5;
+  string targetDate = 6;
+  string status = 7;
+  int32 progress = 8;
+  string parentGoalId = 9;
+  string alignmentLevel = 10;
+}
+
+message DeleteGoalRequest {
+  string id = 1;
+}
+
+message GoalResponse {
+  string id = 1;
+  string employeeId = 2;
+  string title = 3;
+  string description = 4;
+  string category = 5;
+  string targetDate = 6;
+  string status = 7;
+  int32 progress = 8;
+  string parentGoalId = 9;
+  string alignmentLevel = 10;
+  string createdAt = 11;
+}
+
+message GoalsResponse {
+  repeated GoalResponse goals = 1;
+}
+
+message DeleteGoalResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// SKILL SERVICE
+// ============================================
+service SkillService {
+  rpc GetSkills (GetSkillsRequest) returns (SkillsResponse) {}
+  rpc CreateSkill (CreateSkillRequest) returns (SkillResponse) {}
+}
+
+message GetSkillsRequest {
+}
+
+message CreateSkillRequest {
+  string name = 1;
+  string category = 2;
+  string description = 3;
+}
+
+message SkillResponse {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string description = 4;
+  string createdAt = 5;
+}
+
+message SkillsResponse {
+  repeated SkillResponse skills = 1;
+}
+
+// ============================================
+// EMPLOYEE SKILL SERVICE
+// ============================================
+service EmployeeSkillService {
+  rpc GetEmployeeSkills (GetEmployeeSkillsRequest) returns (EmployeeSkillsResponse) {}
+  rpc CreateEmployeeSkill (CreateEmployeeSkillRequest) returns (EmployeeSkillResponse) {}
+  rpc UpdateEmployeeSkill (UpdateEmployeeSkillRequest) returns (EmployeeSkillResponse) {}
+  rpc DeleteEmployeeSkill (DeleteEmployeeSkillRequest) returns (DeleteEmployeeSkillResponse) {}
+}
+
+message GetEmployeeSkillsRequest {
+  string employeeId = 1;
+  string skillId = 2;
+  string proficiencyLevel = 3;
+}
+
+message CreateEmployeeSkillRequest {
+  string employeeId = 1;
+  string skillId = 2;
+  string proficiencyLevel = 3;
+  bool verified = 4;
+  string verifiedBy = 5;
+  string verifiedDate = 6;
+}
+
+message UpdateEmployeeSkillRequest {
+  string id = 1;
+  string proficiencyLevel = 2;
+  bool verified = 3;
+  string verifiedBy = 4;
+  string verifiedDate = 5;
+}
+
+message DeleteEmployeeSkillRequest {
+  string id = 1;
+}
+
+message EmployeeSkillResponse {
+  string id = 1;
+  string employeeId = 2;
+  string skillId = 3;
+  string proficiencyLevel = 4;
+  bool verified = 5;
+  string verifiedBy = 6;
+  string verifiedDate = 7;
+  string createdAt = 8;
+}
+
+message EmployeeSkillsResponse {
+  repeated EmployeeSkillResponse employeeSkills = 1;
+}
+
+message DeleteEmployeeSkillResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// COMPETENCY SERVICE
+// ============================================
+service CompetencyService {
+  rpc GetCompetencies (GetCompetenciesRequest) returns (CompetenciesResponse) {}
+  rpc CreateCompetency (CreateCompetencyRequest) returns (CompetencyResponse) {}
+}
+
+message GetCompetenciesRequest {
+}
+
+message CreateCompetencyRequest {
+  string name = 1;
+  string category = 2;
+  string description = 3;
+  string levels = 4;
+}
+
+message CompetencyResponse {
+  string id = 1;
+  string name = 2;
+  string category = 3;
+  string description = 4;
+  string levels = 5;
+  string createdAt = 6;
+}
+
+message CompetenciesResponse {
+  repeated CompetencyResponse competencies = 1;
+}
+
+// ============================================
+// COMPETENCY ASSESSMENT SERVICE
+// ============================================
+service CompetencyAssessmentService {
+  rpc GetCompetencyAssessments (GetCompetencyAssessmentsRequest) returns (CompetencyAssessmentsResponse) {}
+  rpc CreateCompetencyAssessment (CreateCompetencyAssessmentRequest) returns (CompetencyAssessmentResponse) {}
+}
+
+message GetCompetencyAssessmentsRequest {
+  string employeeId = 1;
+  string competencyId = 2;
+  int32 level = 3;
+}
+
+message CreateCompetencyAssessmentRequest {
+  string employeeId = 1;
+  string competencyId = 2;
+  string assessedBy = 3;
+  int32 level = 4;
+  string assessmentDate = 5;
+  string notes = 6;
+}
+
+message CompetencyAssessmentResponse {
+  string id = 1;
+  string employeeId = 2;
+  string competencyId = 3;
+  string assessedBy = 4;
+  int32 level = 5;
+  string assessmentDate = 6;
+  string notes = 7;
+  string createdAt = 8;
+}
+
+message CompetencyAssessmentsResponse {
+  repeated CompetencyAssessmentResponse competencyAssessments = 1;
+}
+
+// ============================================
+// COURSE SERVICE
+// ============================================
+service CourseService {
+  rpc GetCourses (GetCoursesRequest) returns (CoursesResponse) {}
+  rpc CreateCourse (CreateCourseRequest) returns (CourseResponse) {}
+  rpc UpdateCourse (UpdateCourseRequest) returns (CourseResponse) {}
+  rpc DeleteCourse (DeleteCourseRequest) returns (DeleteCourseResponse) {}
+}
+
+message GetCoursesRequest {
+  string sort = 1;
+}
+
+message CreateCourseRequest {
+  string name = 1;
+  string code = 2;
+  string description = 3;
+  string category = 4;
+  string instructor = 5;
+  int32 durationHours = 6;
+  string deliveryMode = 7;
+  int32 maxParticipants = 8;
+  string costPerParticipant = 9;
+  string startDate = 10;
+  string endDate = 11;
+  string status = 12;
+}
+
+message UpdateCourseRequest {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  string category = 5;
+  string instructor = 6;
+  int32 durationHours = 7;
+  string deliveryMode = 8;
+  int32 maxParticipants = 9;
+  string costPerParticipant = 10;
+  string startDate = 11;
+  string endDate = 12;
+  string status = 13;
+}
+
+message DeleteCourseRequest {
+  string id = 1;
+}
+
+message CourseResponse {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  string description = 4;
+  string category = 5;
+  string instructor = 6;
+  int32 durationHours = 7;
+  string deliveryMode = 8;
+  int32 maxParticipants = 9;
+  string costPerParticipant = 10;
+  string startDate = 11;
+  string endDate = 12;
+  string status = 13;
+  string createdAt = 14;
+}
+
+message CoursesResponse {
+  repeated CourseResponse courses = 1;
+}
+
+message DeleteCourseResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// COURSE ENROLLMENT SERVICE
+// ============================================
+service CourseEnrollmentService {
+  rpc GetCourseEnrollments (GetCourseEnrollmentsRequest) returns (CourseEnrollmentsResponse) {}
+  rpc CreateCourseEnrollment (CreateCourseEnrollmentRequest) returns (CourseEnrollmentResponse) {}
+  rpc UpdateCourseEnrollment (UpdateCourseEnrollmentRequest) returns (CourseEnrollmentResponse) {}
+  rpc DeleteCourseEnrollment (DeleteCourseEnrollmentRequest) returns (DeleteCourseEnrollmentResponse) {}
+}
+
+message GetCourseEnrollmentsRequest {
+  string employeeId = 1;
+  string courseId = 2;
+  string status = 3;
+}
+
+message CreateCourseEnrollmentRequest {
+  string employeeId = 1;
+  string courseId = 2;
+  string enrollmentDate = 3;
+  string completionDate = 4;
+  string status = 5;
+  int32 progress = 6;
+}
+
+message UpdateCourseEnrollmentRequest {
+  string id = 1;
+  string completionDate = 2;
+  string status = 3;
+  int32 progress = 4;
+}
+
+message DeleteCourseEnrollmentRequest {
+  string id = 1;
+}
+
+message CourseEnrollmentResponse {
+  string id = 1;
+  string employeeId = 2;
+  string courseId = 3;
+  string enrollmentDate = 4;
+  string completionDate = 5;
+  string status = 6;
+  int32 progress = 7;
+  string createdAt = 8;
+}
+
+message CourseEnrollmentsResponse {
+  repeated CourseEnrollmentResponse courseEnrollments = 1;
+}
+
+message DeleteCourseEnrollmentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// LEARNING PATH SERVICE
+// ============================================
+service LearningPathService {
+  rpc GetLearningPaths (GetLearningPathsRequest) returns (LearningPathsResponse) {}
+  rpc CreateLearningPath (CreateLearningPathRequest) returns (LearningPathResponse) {}
+}
+
+message GetLearningPathsRequest {
+}
+
+message CreateLearningPathRequest {
+  string name = 1;
+  string description = 2;
+  string category = 3;
+  string difficultyLevel = 4;
+  string courses = 5;
+  bool mandatory = 6;
+}
+
+message LearningPathResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string category = 4;
+  string difficultyLevel = 5;
+  string courses = 6;
+  bool mandatory = 7;
+  string createdAt = 8;
+}
+
+message LearningPathsResponse {
+  repeated LearningPathResponse learningPaths = 1;
+}
+
+// ============================================
+// CERTIFICATION SERVICE
+// ============================================
+service CertificationService {
+  rpc GetCertifications (GetCertificationsRequest) returns (CertificationsResponse) {}
+  rpc CreateCertification (CreateCertificationRequest) returns (CertificationResponse) {}
+}
+
+message GetCertificationsRequest {
+}
+
+message CreateCertificationRequest {
+  string name = 1;
+  string issuingOrganization = 2;
+  string description = 3;
+  string category = 4;
+  int32 validityPeriodMonths = 5;
+  string cost = 6;
+  bool mandatory = 7;
+}
+
+message CertificationResponse {
+  string id = 1;
+  string name = 2;
+  string issuingOrganization = 3;
+  string description = 4;
+  string category = 5;
+  int32 validityPeriodMonths = 6;
+  string cost = 7;
+  bool mandatory = 8;
+  string createdAt = 9;
+}
+
+message CertificationsResponse {
+  repeated CertificationResponse certifications = 1;
+}
+
+// ============================================
+// EMPLOYEE CERTIFICATION SERVICE
+// ============================================
+service EmployeeCertificationService {
+  rpc GetEmployeeCertifications (GetEmployeeCertificationsRequest) returns (EmployeeCertificationsResponse) {}
+  rpc CreateEmployeeCertification (CreateEmployeeCertificationRequest) returns (EmployeeCertificationResponse) {}
+}
+
+message GetEmployeeCertificationsRequest {
+  string employeeId = 1;
+  string certificationId = 2;
+  string status = 3;
+}
+
+message CreateEmployeeCertificationRequest {
+  string employeeId = 1;
+  string certificationId = 2;
+  string issueDate = 3;
+  string expiryDate = 4;
+  string certificateNumber = 5;
+  string status = 6;
+}
+
+message EmployeeCertificationResponse {
+  string id = 1;
+  string employeeId = 2;
+  string certificationId = 3;
+  string issueDate = 4;
+  string expiryDate = 5;
+  string certificateNumber = 6;
+  string status = 7;
+  string createdAt = 8;
+}
+
+message EmployeeCertificationsResponse {
+  repeated EmployeeCertificationResponse employeeCertifications = 1;
+}
+
+// ============================================
+// CAREER PATH SERVICE
+// ============================================
+service CareerPathService {
+  rpc GetCareerPaths (GetCareerPathsRequest) returns (CareerPathsResponse) {}
+  rpc CreateCareerPath (CreateCareerPathRequest) returns (CareerPathResponse) {}
+}
+
+message GetCareerPathsRequest {
+}
+
+message CreateCareerPathRequest {
+  string name = 1;
+  string description = 2;
+  string startingRole = 3;
+  string targetRole = 4;
+  string department = 5;
+  int32 estimatedDurationYears = 6;
+  string difficultyLevel = 7;
+  string requiredSkills = 8;
+  string requiredCompetencies = 9;
+  string milestones = 10;
+}
+
+message CareerPathResponse {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string startingRole = 4;
+  string targetRole = 5;
+  string department = 6;
+  int32 estimatedDurationYears = 7;
+  string difficultyLevel = 8;
+  string requiredSkills = 9;
+  string requiredCompetencies = 10;
+  string milestones = 11;
+  string createdAt = 12;
+}
+
+message CareerPathsResponse {
+  repeated CareerPathResponse careerPaths = 1;
+}
+
+// ============================================
+// CAREER PATH ENROLLMENT SERVICE
+// ============================================
+service CareerPathEnrollmentService {
+  rpc GetCareerPathEnrollments (GetCareerPathEnrollmentsRequest) returns (CareerPathEnrollmentsResponse) {}
+  rpc CreateCareerPathEnrollment (CreateCareerPathEnrollmentRequest) returns (CareerPathEnrollmentResponse) {}
+  rpc UpdateCareerPathEnrollment (UpdateCareerPathEnrollmentRequest) returns (CareerPathEnrollmentResponse) {}
+  rpc DeleteCareerPathEnrollment (DeleteCareerPathEnrollmentRequest) returns (DeleteCareerPathEnrollmentResponse) {}
+}
+
+message GetCareerPathEnrollmentsRequest {
+  string employeeId = 1;
+  string careerPathId = 2;
+  string status = 3;
+}
+
+message CreateCareerPathEnrollmentRequest {
+  string employeeId = 1;
+  string careerPathId = 2;
+  string enrollmentDate = 3;
+  int32 currentMilestone = 4;
+  int32 progress = 5;
+  string status = 6;
+}
+
+message UpdateCareerPathEnrollmentRequest {
+  string id = 1;
+  int32 currentMilestone = 2;
+  int32 progress = 3;
+  string status = 4;
+}
+
+message DeleteCareerPathEnrollmentRequest {
+  string id = 1;
+}
+
+message CareerPathEnrollmentResponse {
+  string id = 1;
+  string employeeId = 2;
+  string careerPathId = 3;
+  string enrollmentDate = 4;
+  int32 currentMilestone = 5;
+  int32 progress = 6;
+  string status = 7;
+  string createdAt = 8;
+}
+
+message CareerPathEnrollmentsResponse {
+  repeated CareerPathEnrollmentResponse careerPathEnrollments = 1;
+}
+
+message DeleteCareerPathEnrollmentResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// ANNOUNCEMENT SERVICE
+// ============================================
+service AnnouncementService {
+  rpc GetAnnouncements (GetAnnouncementsRequest) returns (AnnouncementsResponse) {}
+  rpc CreateAnnouncement (CreateAnnouncementRequest) returns (AnnouncementResponse) {}
+}
+
+message GetAnnouncementsRequest {
+  string sort = 1;
+}
+
+message CreateAnnouncementRequest {
+  string title = 1;
+  string content = 2;
+  string authorId = 3;
+  string targetAudience = 4;
+  string targetDepartments = 5;
+  string priority = 6;
+  string status = 7;
+}
+
+message AnnouncementResponse {
+  string id = 1;
+  string title = 2;
+  string content = 3;
+  string authorId = 4;
+  string targetAudience = 5;
+  string targetDepartments = 6;
+  string priority = 7;
+  string status = 8;
+  string createdAt = 9;
+}
+
+message AnnouncementsResponse {
+  repeated AnnouncementResponse announcements = 1;
+}
+
+// ============================================
+// MESSAGE SERVICE
+// ============================================
+service MessageService {
+  rpc GetMessages (GetMessagesRequest) returns (MessagesResponse) {}
+  rpc CreateMessage (CreateMessageRequest) returns (MessageResponse) {}
+  rpc UpdateMessage (UpdateMessageRequest) returns (MessageResponse) {}
+  rpc DeleteMessage (DeleteMessageRequest) returns (DeleteMessageResponse) {}
+}
+
+message GetMessagesRequest {
+  string sort = 1;
+  string recipientId = 2;
+  string senderId = 3;
+}
+
+message CreateMessageRequest {
+  string senderId = 1;
+  string recipientId = 2;
+  string subject = 3;
+  string content = 4;
+  bool read = 5;
+  string attachments = 6;
+}
+
+message UpdateMessageRequest {
+  string id = 1;
+  bool read = 2;
+  string readAt = 3;
+}
+
+message DeleteMessageRequest {
+  string id = 1;
+}
+
+message MessageResponse {
+  string id = 1;
+  string senderId = 2;
+  string recipientId = 3;
+  string subject = 4;
+  string content = 5;
+  bool read = 6;
+  string readAt = 7;
+  string attachments = 8;
+  string createdAt = 9;
+}
+
+message MessagesResponse {
+  repeated MessageResponse messages = 1;
+}
+
+message DeleteMessageResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// JOB POSTING SERVICE
+// ============================================
+service JobPostingService {
+  rpc GetJobPostings (GetJobPostingsRequest) returns (JobPostingsResponse) {}
+  rpc CreateJobPosting (CreateJobPostingRequest) returns (JobPostingResponse) {}
+  rpc UpdateJobPosting (UpdateJobPostingRequest) returns (JobPostingResponse) {}
+  rpc DeleteJobPosting (DeleteJobPostingRequest) returns (DeleteJobPostingResponse) {}
+}
+
+message GetJobPostingsRequest {
+  string sort = 1;
+}
+
+message CreateJobPostingRequest {
+  string title = 1;
+  string department = 2;
+  string departmentId = 3;
+  string description = 4;
+  string requirements = 5;
+  string status = 6;
+  string postedDate = 7;
+  string closingDate = 8;
+}
+
+message UpdateJobPostingRequest {
+  string id = 1;
+  string title = 2;
+  string department = 3;
+  string departmentId = 4;
+  string description = 5;
+  string requirements = 6;
+  string status = 7;
+  string postedDate = 8;
+  string closingDate = 9;
+}
+
+message DeleteJobPostingRequest {
+  string id = 1;
+}
+
+message JobPostingResponse {
+  string id = 1;
+  string title = 2;
+  string department = 3;
+  string departmentId = 4;
+  string description = 5;
+  string requirements = 6;
+  string status = 7;
+  string postedDate = 8;
+  string closingDate = 9;
+  string createdAt = 10;
+}
+
+message JobPostingsResponse {
+  repeated JobPostingResponse jobPostings = 1;
+}
+
+message DeleteJobPostingResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// APPLICANT SERVICE
+// ============================================
+service ApplicantService {
+  rpc GetApplicants (GetApplicantsRequest) returns (ApplicantsResponse) {}
+  rpc CreateApplicant (CreateApplicantRequest) returns (ApplicantResponse) {}
+  rpc UpdateApplicant (UpdateApplicantRequest) returns (ApplicantResponse) {}
+  rpc DeleteApplicant (DeleteApplicantRequest) returns (DeleteApplicantResponse) {}
+}
+
+message GetApplicantsRequest {
+  string sort = 1;
+  string jobPostingId = 2;
+  string status = 3;
+}
+
+message CreateApplicantRequest {
+  string jobPostingId = 1;
+  string name = 2;
+  string email = 3;
+  string phone = 4;
+  string resumeUrl = 5;
+  string coverLetter = 6;
+  string status = 7;
+  string appliedDate = 8;
+}
+
+message UpdateApplicantRequest {
+  string id = 1;
+  string status = 2;
+  string interviewDate = 3;
+  string interviewNotes = 4;
+}
+
+message DeleteApplicantRequest {
+  string id = 1;
+}
+
+message ApplicantResponse {
+  string id = 1;
+  string jobPostingId = 2;
+  string name = 3;
+  string email = 4;
+  string phone = 5;
+  string resumeUrl = 6;
+  string coverLetter = 7;
+  string status = 8;
+  string appliedDate = 9;
+  string interviewDate = 10;
+  string interviewNotes = 11;
+  string createdAt = 12;
+}
+
+message ApplicantsResponse {
+  repeated ApplicantResponse applicants = 1;
+}
+
+message DeleteApplicantResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// ONBOARDING PLAN SERVICE
+// ============================================
+service OnboardingPlanService {
+  rpc GetOnboardingPlans (GetOnboardingPlansRequest) returns (OnboardingPlansResponse) {}
+  rpc CreateOnboardingPlan (CreateOnboardingPlanRequest) returns (OnboardingPlanResponse) {}
+  rpc UpdateOnboardingPlan (UpdateOnboardingPlanRequest) returns (OnboardingPlanResponse) {}
+  rpc DeleteOnboardingPlan (DeleteOnboardingPlanRequest) returns (DeleteOnboardingPlanResponse) {}
+}
+
+message GetOnboardingPlansRequest {
+  string sort = 1;
+}
+
+message CreateOnboardingPlanRequest {
+  string name = 1;
+  string employeeId = 2;
+  string startDate = 3;
+  int32 durationDays = 4;
+  string description = 5;
+  string welcomeMessage = 6;
+  bool assignBuddy = 7;
+  string buddyId = 8;
+  bool requireInitialGoals = 9;
+  string phases = 10;
+  string checklistTemplate = 11;
+  string requiredDocuments = 12;
+  string status = 13;
+}
+
+message UpdateOnboardingPlanRequest {
+  string id = 1;
+  string name = 2;
+  string employeeId = 3;
+  string startDate = 4;
+  int32 durationDays = 5;
+  string description = 6;
+  string welcomeMessage = 7;
+  bool assignBuddy = 8;
+  string buddyId = 9;
+  bool requireInitialGoals = 10;
+  string phases = 11;
+  string checklistTemplate = 12;
+  string requiredDocuments = 13;
+  string status = 14;
+}
+
+message DeleteOnboardingPlanRequest {
+  string id = 1;
+}
+
+message OnboardingPlanResponse {
+  string id = 1;
+  string name = 2;
+  string employeeId = 3;
+  string startDate = 4;
+  int32 durationDays = 5;
+  string description = 6;
+  string welcomeMessage = 7;
+  bool assignBuddy = 8;
+  string buddyId = 9;
+  bool requireInitialGoals = 10;
+  string phases = 11;
+  string checklistTemplate = 12;
+  string requiredDocuments = 13;
+  string status = 14;
+  string createdAt = 15;
+}
+
+message OnboardingPlansResponse {
+  repeated OnboardingPlanResponse onboardingPlans = 1;
+}
+
+message DeleteOnboardingPlanResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// ONBOARDING TASK SERVICE
+// ============================================
+service OnboardingTaskService {
+  rpc GetOnboardingTasks (GetOnboardingTasksRequest) returns (OnboardingTasksResponse) {}
+  rpc CreateOnboardingTask (CreateOnboardingTaskRequest) returns (OnboardingTaskResponse) {}
+  rpc UpdateOnboardingTask (UpdateOnboardingTaskRequest) returns (OnboardingTaskResponse) {}
+  rpc DeleteOnboardingTask (DeleteOnboardingTaskRequest) returns (DeleteOnboardingTaskResponse) {}
+}
+
+message GetOnboardingTasksRequest {
+  string onboardingPlanId = 1;
+  string assignedTo = 2;
+  string status = 3;
+}
+
+message CreateOnboardingTaskRequest {
+  string onboardingPlanId = 1;
+  string title = 2;
+  string description = 3;
+  string assignedTo = 4;
+  string dueDate = 5;
+  string status = 6;
+}
+
+message UpdateOnboardingTaskRequest {
+  string id = 1;
+  string status = 2;
+  string completedDate = 3;
+}
+
+message DeleteOnboardingTaskRequest {
+  string id = 1;
+}
+
+message OnboardingTaskResponse {
+  string id = 1;
+  string onboardingPlanId = 2;
+  string title = 3;
+  string description = 4;
+  string assignedTo = 5;
+  string dueDate = 6;
+  string status = 7;
+  string completedDate = 8;
+  string createdAt = 9;
+}
+
+message OnboardingTasksResponse {
+  repeated OnboardingTaskResponse onboardingTasks = 1;
+}
+
+message DeleteOnboardingTaskResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// ============================================
+// USER SERVICE (Authentication & User Management)
+// ============================================
+service UserService {
+  rpc BootstrapAdmin (BootstrapAdminRequest) returns (BootstrapAdminResponse) {}
+  rpc Register (RegisterRequest) returns (RegisterResponse) {}
+  rpc Activate (ActivateRequest) returns (ActivateResponse) {}
+  rpc Login (LoginRequest) returns (LoginResponse) {}
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse) {}
+  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse) {}
+  rpc GetMe (GetMeRequest) returns (UserResponse) {}
+  rpc GetUsers (GetUsersRequest) returns (UsersResponse) {}
+  rpc GetUser (GetUserRequest) returns (UserResponse) {}
+  rpc UpdateUser (UpdateUserRequest) returns (UserResponse) {}
+}
+
+message BootstrapAdminRequest {
+  string email = 1;
+  string password = 2;
+  string name = 3;
+}
+
+message BootstrapAdminResponse {
+  string userId = 1;
+  string email = 2;
+  string role = 3;
+  string accessToken = 4;
+  string refreshToken = 5;
+  int32 expiresIn = 6;
+  UserData user = 7;
+  string message = 8;
+}
+
+message RegisterRequest {
+  string email = 1;
+  string employeeId = 2;
+  string role = 3;
+  string createdBy = 4;
+}
+
+message RegisterResponse {
+  string userId = 1;
+  string activationToken = 2;
+  string email = 3;
+}
+
+message ActivateRequest {
+  string activationToken = 1;
+  string password = 2;
+}
+
+message ActivateResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+  UserData user = 3;
+}
+
+message LoginRequest {
+  string email = 1;
+  string password = 2;
+  string ipAddress = 3;
+  string userAgent = 4;
+}
+
+message LoginResponse {
+  string accessToken = 1;
+  string refreshToken = 2;
+  int32 expiresIn = 3;
+  UserData user = 4;
+}
+
+message RefreshTokenRequest {
+  string refreshToken = 1;
+}
+
+message RefreshTokenResponse {
+  string accessToken = 1;
+  int32 expiresIn = 2;
+}
+
+message ForgotPasswordRequest {
+  string email = 1;
+}
+
+message ForgotPasswordResponse {
+  string message = 1;
+}
+
+message ResetPasswordRequest {
+  string resetToken = 1;
+  string newPassword = 2;
+}
+
+message ResetPasswordResponse {
+  string message = 1;
+}
+
+message GetMeRequest {
+  string userId = 1;
+}
+
+message GetUsersRequest {
+  string role = 1;
+  string status = 2;
+  string departmentId = 3;
+}
+
+message GetUserRequest {
+  string id = 1;
+}
+
+message UpdateUserRequest {
+  string id = 1;
+  string role = 2;
+  string status = 3;
+  string updatedBy = 4;
+}
+
+message UserData {
+  string id = 1;
+  string email = 2;
+  string role = 3;
+  string status = 4;
+  string employeeId = 5;
+  EmployeeData employee = 6;
+  string lastLogin = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message EmployeeData {
+  string id = 1;
+  string name = 2;
+  string departmentId = 3;
+  string managerId = 4;
+}
+
+message HierarchyEmployeeData {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string position = 4;
+  string department = 5;
+  string managerId = 6;
+  int32 hierarchyLevel = 7;
+}
+
+message UserResponse {
+  string id = 1;
+  string email = 2;
+  string role = 3;
+  string status = 4;
+  string employeeId = 5;
+  EmployeeData employee = 6;
+  string lastLogin = 7;
+  string createdAt = 8;
+  string updatedAt = 9;
+}
+
+message UsersResponse {
+  repeated UserResponse users = 1;
+}
+
+// ============================================
+// HIERARCHY SERVICE
+// ============================================
+service HierarchyService {
+  rpc GetSubordinates (GetSubordinatesRequest) returns (EmployeesResponse) {}
+  rpc GetSubordinatesTree (GetSubordinatesTreeRequest) returns (EmployeeTreeResponse) {}
+  rpc GetAncestors (GetAncestorsRequest) returns (EmployeesResponse) {}
+  rpc GetOrganizationTree (GetOrganizationTreeRequest) returns (OrganizationTreeResponse) {}
+}
+
+message GetSubordinatesRequest {
+  string employeeId = 1;
+}
+
+message GetSubordinatesTreeRequest {
+  string employeeId = 1;
+}
+
+message GetAncestorsRequest {
+  string employeeId = 1;
+}
+
+message GetOrganizationTreeRequest {
+}
+
+message EmployeesResponse {
+  repeated HierarchyEmployeeData employees = 1;
+}
+
+message EmployeeTreeResponse {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+  string position = 4;
+  string department = 5;
+  string managerId = 6;
+  int32 hierarchyLevel = 7;
+  repeated EmployeeTreeResponse subordinates = 8;
+}
+
+message OrganizationTreeResponse {
+  repeated EmployeeTreeResponse trees = 1;
+}
+
+// ============================================
+// APPROVAL SERVICE
+// ============================================
+service ApprovalService {
+  rpc CreateApproval (CreateApprovalRequest) returns (ApprovalResponse) {}
+  rpc GetApprovals (GetApprovalsRequest) returns (ApprovalsResponse) {}
+  rpc GetApproval (GetApprovalRequest) returns (ApprovalResponse) {}
+  rpc Approve (ApproveRequest) returns (ApprovalResponse) {}
+  rpc Reject (RejectRequest) returns (ApprovalResponse) {}
+  rpc GetHistory (GetApprovalHistoryRequest) returns (ApprovalHistoryResponse) {}
+}
+
+message CreateApprovalRequest {
+  string requestType = 1;
+  string requestId = 2;
+  string requesterId = 3;
+  repeated string approvalChain = 4;
+}
+
+message GetApprovalsRequest {
+  string status = 1;
+  string requesterId = 2;
+  string approverId = 3;
+  string requestType = 4;
+}
+
+message GetApprovalRequest {
+  string id = 1;
+}
+
+message ApproveRequest {
+  string id = 1;
+  string approverId = 2;
+  string comments = 3;
+}
+
+message RejectRequest {
+  string id = 1;
+  string approverId = 2;
+  string rejectionReason = 3;
+}
+
+message GetApprovalHistoryRequest {
+  string approvalId = 1;
+}
+
+message ApprovalResponse {
+  string id = 1;
+  string requestType = 2;
+  string requestId = 3;
+  string requesterId = 4;
+  string currentApproverId = 5;
+  repeated string approvalChain = 6;
+  int32 currentLevel = 7;
+  int32 totalLevels = 8;
+  string status = 9;
+  string comments = 10;
+  string rejectionReason = 11;
+  string escalatedTo = 12;
+  string createdAt = 13;
+  string updatedAt = 14;
+  string approvedAt = 15;
+  string rejectedAt = 16;
+}
+
+message ApprovalsResponse {
+  repeated ApprovalResponse approvals = 1;
+}
+
+message ApprovalHistoryEntry {
+  string id = 1;
+  string approvalId = 2;
+  string approverId = 3;
+  string action = 4;
+  string comments = 5;
+  string createdAt = 6;
+}
+
+message ApprovalHistoryResponse {
+  repeated ApprovalHistoryEntry history = 1;
+}
+
+// ============================================
+// NOTIFICATION SERVICE
+// ============================================
+service NotificationService {
+  rpc GetNotifications (GetNotificationsRequest) returns (NotificationsResponse) {}
+  rpc MarkAsRead (MarkAsReadRequest) returns (NotificationResponse) {}
+  rpc MarkAllAsRead (MarkAllAsReadRequest) returns (MarkAllAsReadResponse) {}
+  rpc GetUnreadCount (GetUnreadCountRequest) returns (UnreadCountResponse) {}
+}
+
+message GetNotificationsRequest {
+  string userId = 1;
+  string read = 2;
+  string type = 3;
+}
+
+message MarkAsReadRequest {
+  string id = 1;
+  string userId = 2;
+}
+
+message MarkAllAsReadRequest {
+  string userId = 1;
+}
+
+message GetUnreadCountRequest {
+  string userId = 1;
+}
+
+message NotificationResponse {
+  string id = 1;
+  string userId = 2;
+  string type = 3;
+  string title = 4;
+  string message = 5;
+  string relatedEntityType = 6;
+  string relatedEntityId = 7;
+  bool read = 8;
+  string readAt = 9;
+  string createdAt = 10;
+}
+
+message NotificationsResponse {
+  repeated NotificationResponse notifications = 1;
+}
+
+message MarkAllAsReadResponse {
+  int32 count = 1;
+}
+
+message UnreadCountResponse {
+  int32 count = 1;
+}
+
+// ============================================
+// AUDIT LOG SERVICE
+// ============================================
+service AuditLogService {
+  rpc GetAuditLogs (GetAuditLogsRequest) returns (AuditLogsResponse) {}
+}
+
+message GetAuditLogsRequest {
+  string userId = 1;
+  string action = 2;
+  string entityType = 3;
+  string dateFrom = 4;
+  string dateTo = 5;
+  int32 page = 6;
+  int32 limit = 7;
+}
+
+message AuditLogResponse {
+  string id = 1;
+  string userId = 2;
+  string action = 3;
+  string entityType = 4;
+  string entityId = 5;
+  string changes = 6;
+  string ipAddress = 7;
+  string userAgent = 8;
+  string createdAt = 9;
+}
+
+message AuditLogsResponse {
+  repeated AuditLogResponse auditLogs = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+

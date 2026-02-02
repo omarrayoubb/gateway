@@ -52,10 +52,21 @@ export class ShipmentTrackingService {
       queryBuilder.where('tracking.shipmentId = :shipmentId', { shipmentId });
     }
 
-    // Handle sorting
+    // Handle sorting - support both -field and field:DESC formats
     if (sort) {
-      const [field, order] = sort.split(':');
-      queryBuilder.orderBy(`tracking.${field}`, order?.toUpperCase() === 'DESC' ? 'DESC' : 'ASC');
+      const sortField = sort.startsWith('-') ? sort.substring(1) : sort;
+      const order = sort.startsWith('-') ? 'DESC' : 'ASC';
+      
+      // Map common field names
+      const fieldMap: Record<string, string> = {
+        'timestamp': 'timestamp',
+        'created_at': 'createdAt',
+        'updated_at': 'updatedAt',
+        'status': 'status',
+      };
+      
+      const dbField = fieldMap[sortField] || sortField;
+      queryBuilder.orderBy(`tracking.${dbField}`, order);
     } else {
       queryBuilder.orderBy('tracking.timestamp', 'DESC');
     }
