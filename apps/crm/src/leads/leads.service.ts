@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { ErrorMessages } from '@app/common/errors';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Lead } from './entities/lead.entity';
@@ -36,7 +37,7 @@ export class LeadsService {
     });
 
     if (existingLead) {
-      throw new ConflictException(`Lead with email ${createLeadDto.email} already exists`);
+      throw new ConflictException(ErrorMessages.alreadyExists('Lead', 'email', createLeadDto.email));
     }
 
     const newLead = this.leadRepository.create({
@@ -120,7 +121,7 @@ export class LeadsService {
     });
 
     if (!lead) {
-      throw new NotFoundException(`Lead with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Lead', id));
     }
 
     await this.leadRepository.save(lead);
@@ -137,7 +138,7 @@ export class LeadsService {
     // 5. Update remove to use findOneBy to get the entity
     const lead = await this.leadRepository.findOneBy({ id });
     if (!lead) {
-      throw new NotFoundException(`Lead with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Lead', id));
     }
     
     await this.leadRepository.remove(lead);
@@ -161,7 +162,7 @@ export class LeadsService {
     // Track which IDs were not found
     for (const id of ids) {
       if (!foundIds.has(id)) {
-        failedIds.push({ id, error: 'Lead not found' });
+        failedIds.push({ id, error: ErrorMessages.notFound('Lead', id) });
       }
     }
 
@@ -212,7 +213,7 @@ export class LeadsService {
         });
 
         if (!updatedLead) {
-          failedItems.push({ id: lead.id, error: 'Lead not found' });
+          failedItems.push({ id: lead.id, error: ErrorMessages.notFound('Lead', lead.id) });
           continue;
         }
 
@@ -249,7 +250,7 @@ export class LeadsService {
     });
 
     if (!lead) {
-      throw new NotFoundException(`Lead with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Lead', id));
     }
     return lead;
   }

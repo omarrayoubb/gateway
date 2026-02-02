@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
+import { GrpcErrorMapper } from '../common';
 import { OrchestratorService } from './orchestrator.service';
 import { Metadata } from '@grpc/grpc-js';
 import type {
@@ -12,6 +13,7 @@ import type {
   ActivityFormOptionsResponse,
   DeliveryNoteFormOptionsResponse,
   RfqFormOptionsResponse,
+  SalesOrderFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 
@@ -26,10 +28,7 @@ export class OrchestratorController {
       return this.mapAccountFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getAccountFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -40,10 +39,7 @@ export class OrchestratorController {
       return this.mapContactLeadFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getContactLeadFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -54,10 +50,7 @@ export class OrchestratorController {
       return this.mapRegisterFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getRegisterFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -68,10 +61,7 @@ export class OrchestratorController {
       return this.mapDealFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getDealFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -82,10 +72,7 @@ export class OrchestratorController {
       return this.mapActivityFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getActivityFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -96,10 +83,7 @@ export class OrchestratorController {
       return this.mapDeliveryNoteFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getDeliveryNoteFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -110,10 +94,18 @@ export class OrchestratorController {
       return this.mapRfqFormOptionsToProto(result);
     } catch (error) {
       console.error('Error in getRfqFormOptions:', error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
+    }
+  }
+
+  @GrpcMethod('OrchestratorService', 'GetSalesOrderFormOptions')
+  async getSalesOrderFormOptions(data: Empty): Promise<SalesOrderFormOptionsResponse> {
+    try {
+      const result = await this.orchestratorService.getSalesOrderFormOptions();
+      return this.mapSalesOrderFormOptionsToProto(result);
+    } catch (error) {
+      console.error('Error in getSalesOrderFormOptions:', error);
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -128,10 +120,7 @@ export class OrchestratorController {
       return this.mapContactResponseToProto(result);
     } catch (error) {
       console.error(`Error in convertLeadToContact for leadId ${data.leadId}:`, error);
-      throw new RpcException({
-        code: error.code || 2,
-        message: error.message || 'An unknown error occurred',
-      });
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
@@ -261,6 +250,20 @@ export class OrchestratorController {
       leads: dto.leads.map((lead: any) => ({
         id: lead.id,
         name: lead.name,
+      })),
+    };
+  }
+
+  private mapSalesOrderFormOptionsToProto(dto: any): SalesOrderFormOptionsResponse {
+    return {
+      products: dto.products.map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        sku: product.sku,
+      })),
+      vendors: dto.vendors.map((vendor: any) => ({
+        id: vendor.id,
+        name: vendor.name,
       })),
     };
   }

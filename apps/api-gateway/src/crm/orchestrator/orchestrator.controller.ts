@@ -11,6 +11,7 @@ import type {
   ActivityFormOptionsResponse,
   DeliveryNoteFormOptionsResponse,
   RfqFormOptionsResponse,
+  SalesOrderFormOptionsResponse,
   ContactResponse,
 } from '@app/common/types/orchestrator';
 import { ContactResponseDto } from '../contacts/dto/contact-response.dto';
@@ -53,6 +54,11 @@ export class OrchestratorController {
   @Get('rfq-creation-form')
   getRfqCreationForm(): Observable<RfqFormOptionsResponse> {
     return this.orchestratorService.getRfqFormOptions();
+  }
+
+  @Get('sales-order-form')
+  getSalesOrderForm(): Observable<SalesOrderFormOptionsResponse> {
+    return this.orchestratorService.getSalesOrderFormOptions();
   }
 
   @Patch('leads/:id/convert-to-contact')

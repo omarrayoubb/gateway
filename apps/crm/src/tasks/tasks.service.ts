@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { ErrorMessages } from '@app/common/errors';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In } from 'typeorm';
 import { Task } from './entities/task.entity';
@@ -143,7 +144,7 @@ export class TasksService {
     });
 
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Task', id));
     }
 
     // Check if owner exists in CRM database if provided
@@ -185,7 +186,7 @@ export class TasksService {
   async remove(id: string): Promise<void> {
     const task = await this.taskRepository.findOneBy({ id });
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Task', id));
     }
     await this.taskRepository.remove(task);
   }
@@ -208,7 +209,7 @@ export class TasksService {
     // Track which IDs were not found
     for (const id of ids) {
       if (!foundIds.has(id)) {
-        failedIds.push({ id, error: 'Task not found' });
+        failedIds.push({ id, error: ErrorMessages.notFound('Task', id) });
       }
     }
 
@@ -245,7 +246,7 @@ export class TasksService {
     // Track which IDs were not found
     for (const id of ids) {
       if (!foundIds.has(id)) {
-        failedItems.push({ id, error: 'Task not found' });
+        failedItems.push({ id, error: ErrorMessages.notFound('Task', id) });
       }
     }
 
@@ -310,7 +311,7 @@ export class TasksService {
     });
 
     if (!task) {
-      throw new NotFoundException(`Task with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Task', id));
     }
 
     return task;

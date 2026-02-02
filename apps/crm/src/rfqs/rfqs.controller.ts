@@ -1,5 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
+import { GrpcErrorMapper } from '../common';
 import { Metadata } from '@grpc/grpc-js';
 import { RFQsService } from './rfqs.service';
 import type {
@@ -9,7 +10,7 @@ import type {
   FindOneRFQRequest,
   DeleteRFQRequest,
   RFQResponse,
-  PaginatedRFQsResponse,
+  PaginatedRfqsResponse,
   DeleteRFQResponse,
 } from '@app/common/types/rfqs';
 import { CreateRFQDto } from './dto/create-rfq.dto';
@@ -20,8 +21,8 @@ import { PaginationQueryDto } from './dto/pagination.dto';
 export class RFQsController {
   constructor(private readonly rfqsService: RFQsService) {}
 
-  @GrpcMethod('RFQService', 'CreateRFQ')
-  async createRFQ(
+  @GrpcMethod('RFQService', 'CreateRfq')
+  async createRfq(
     data: CreateRFQRequest,
     metadata: Metadata,
   ): Promise<RFQResponse> {
@@ -31,16 +32,13 @@ export class RFQsController {
       const result = await this.rfqsService.create(createRFQDto);
       return this.mapResponseDtoToProto(result);
     } catch (error) {
-      console.error('Error in CRM RFQsController.createRFQ:', error);
-      throw new RpcException({
-        code: error.status === 409 ? 6 : error.status === 404 ? 5 : 2, // ALREADY_EXISTS, NOT_FOUND, UNKNOWN
-        message: error.message || 'An unknown error occurred',
-      });
+      console.error('Error in CRM RFQsController.createRfq:', error);
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
-  @GrpcMethod('RFQService', 'FindAllRFQs')
-  async findAllRFQs(data: PaginationRequest): Promise<PaginatedRFQsResponse> {
+  @GrpcMethod('RFQService', 'FindAllRfqs')
+  async findAllRfqs(data: PaginationRequest): Promise<PaginatedRfqsResponse> {
     try {
       const page = data.page && typeof data.page === 'number' ? data.page : Number(data.page) || 1;
       const limit = data.limit && typeof data.limit === 'number' ? data.limit : Number(data.limit) || 10;
@@ -69,30 +67,24 @@ export class RFQsController {
         lastPage: result.lastPage || 0,
       };
     } catch (error) {
-      console.error('Error in findAllRFQs:', error);
-      throw new RpcException({
-        code: 13, // INTERNAL
-        message: `Failed to fetch RFQs: ${error.message}`,
-      });
+      console.error('Error in findAllRfqs:', error);
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
-  @GrpcMethod('RFQService', 'FindOneRFQ')
-  async findOneRFQ(data: FindOneRFQRequest): Promise<RFQResponse> {
+  @GrpcMethod('RFQService', 'FindOneRfq')
+  async findOneRfq(data: FindOneRFQRequest): Promise<RFQResponse> {
     try {
       const result = await this.rfqsService.findOne(data.id);
       return this.mapResponseDtoToProto(result);
     } catch (error) {
-      console.error(`Error in CRM RFQsController.findOneRFQ for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.status === 404 ? 5 : 2, // NOT_FOUND, UNKNOWN
-        message: error.message || `An unknown error occurred during findOneRFQ for ID ${data.id}`,
-      });
+      console.error(`Error in CRM RFQsController.findOneRfq for ID ${data.id}:`, error);
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
-  @GrpcMethod('RFQService', 'UpdateRFQ')
-  async updateRFQ(
+  @GrpcMethod('RFQService', 'UpdateRfq')
+  async updateRfq(
     data: UpdateRFQRequest,
     metadata: Metadata,
   ): Promise<RFQResponse> {
@@ -101,16 +93,13 @@ export class RFQsController {
       const result = await this.rfqsService.update(data.id, updateRFQDto);
       return this.mapResponseDtoToProto(result);
     } catch (error) {
-      console.error(`Error in CRM RFQsController.updateRFQ for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.status === 404 ? 5 : error.status === 409 ? 6 : 2, // NOT_FOUND, ALREADY_EXISTS, UNKNOWN
-        message: error.message || `An unknown error occurred during updateRFQ for ID ${data.id}`,
-      });
+      console.error(`Error in CRM RFQsController.updateRfq for ID ${data.id}:`, error);
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 
-  @GrpcMethod('RFQService', 'DeleteRFQ')
-  async deleteRFQ(data: DeleteRFQRequest): Promise<DeleteRFQResponse> {
+  @GrpcMethod('RFQService', 'DeleteRfq')
+  async deleteRfq(data: DeleteRFQRequest): Promise<DeleteRFQResponse> {
     try {
       await this.rfqsService.remove(data.id);
       return {
@@ -118,11 +107,8 @@ export class RFQsController {
         message: `RFQ with ID ${data.id} deleted successfully`,
       };
     } catch (error) {
-      console.error(`Error in CRM RFQsController.deleteRFQ for ID ${data.id}:`, error);
-      throw new RpcException({
-        code: error.status === 404 ? 5 : 2, // NOT_FOUND, UNKNOWN
-        message: error.message || `An unknown error occurred during deleteRFQ for ID ${data.id}`,
-      });
+      console.error(`Error in CRM RFQsController.deleteRfq for ID ${data.id}:`, error);
+      throw GrpcErrorMapper.fromHttpException(error);
     }
   }
 

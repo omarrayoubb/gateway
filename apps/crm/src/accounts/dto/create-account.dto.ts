@@ -24,11 +24,11 @@ export class CreateAccountDto {
   website?: string;
 
   @IsString()
-  @IsNotEmpty() // <-- No longer optional
+  @IsOptional()
   billing_street?: string;
 
   @IsString()
-  @IsNotEmpty() // <-- No longer optional
+  @IsOptional()
   billing_city?: string;
   
   @IsString()

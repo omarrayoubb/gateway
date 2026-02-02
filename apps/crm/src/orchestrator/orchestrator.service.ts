@@ -1,4 +1,5 @@
 import { Injectable, NotFoundException, OnModuleInit, Inject } from '@nestjs/common';
+import { ErrorMessages } from '@app/common/errors';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import type { ClientGrpc } from '@nestjs/microservices';
@@ -15,7 +16,8 @@ import {
   DealFormOrchestratorResponse,
   ActivityFormOrchestratorResponse,
   DeliveryNoteFormOrchestratorResponse,
-  RfqFormOrchestratorResponse
+  RfqFormOrchestratorResponse,
+  SalesOrderFormOrchestratorResponse
 } from './dto/orchestrator-response.dto';
 import { ContactResponseDto } from '../contacts/dto/contact-response.dto';
 import { CreateContactDto } from '../contacts/dto/create-contact.dto';
@@ -100,7 +102,7 @@ export class OrchestratorService implements OnModuleInit {
     });
 
     if (!lead) {
-      throw new NotFoundException(`Lead with ID ${leadId} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('Lead', leadId));
     }
 
     // Fetch the full user from database
@@ -109,7 +111,7 @@ export class OrchestratorService implements OnModuleInit {
     });
 
     if (!user) {
-      throw new NotFoundException(`User with ID ${currentUser.id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('User', currentUser.id));
     }
 
     // Map all lead fields to contact fields
@@ -354,6 +356,56 @@ export class OrchestratorService implements OnModuleInit {
         accounts: [],
         contacts: [],
         leads: [],
+      };
+    }
+  }
+
+  /**
+   * Returns options needed for the Sales Order Creation form.
+   * Needs: List of Products (id, name, sku) and Vendors (id, name) from Supplychain service.
+   * Unlike RFQ form, this does NOT include accounts, contacts, or leads.
+   */
+  async getSalesOrderFormOptions(): Promise<SalesOrderFormOrchestratorResponse> {
+    try {
+      // Fetch products and vendors from Supplychain service in parallel
+      const [productsResponse, vendorsResponse] = await Promise.all([
+        firstValueFrom(
+          this.productsService.GetProducts(
+            { page: 1, limit: 1000, status: 'active' },
+            new Metadata()
+          )
+        ),
+        firstValueFrom(
+          this.vendorsService.GetVendors(
+            { page: 1, limit: 1000, status: 'active' },
+            new Metadata()
+          )
+        ),
+      ]);
+
+      // Map products to SimpleProduct format
+      const products = (productsResponse?.products || []).map((product: any) => ({
+        id: product.id,
+        name: product.name,
+        sku: product.sku,
+      }));
+
+      // Map vendors to SimpleVendor format
+      const vendors = (vendorsResponse?.vendors || []).map((vendor: any) => ({
+        id: vendor.id,
+        name: vendor.name,
+      }));
+
+      return {
+        products,
+        vendors,
+      };
+    } catch (error) {
+      console.error('Error fetching Sales Order form options:', error);
+      // Return empty arrays on error to prevent form from breaking
+      return {
+        products: [],
+        vendors: [],
       };
     }
   }

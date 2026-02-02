@@ -8,6 +8,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, In, Like } from 'typeorm';
 import type { ClientGrpc } from '@nestjs/microservices';
+import { ErrorMessages } from '@app/common/errors';
 import { Observable, firstValueFrom } from 'rxjs';
 import { Metadata } from '@grpc/grpc-js';
 import { RFQ, RFQCurrency, RFQStatus } from './entities/rfq.entity';
@@ -59,10 +60,10 @@ export class RFQsService implements OnModuleInit {
   async create(createRFQDto: CreateRFQDto): Promise<RFQResponseDto> {
     // Validate that either contactId or leadId is provided, but not both
     if (!createRFQDto.contactId && !createRFQDto.leadId) {
-      throw new ConflictException('Either contactId or leadId must be provided');
+      throw new ConflictException(ErrorMessages.businessRuleViolation('Either contactId or leadId must be provided'));
     }
     if (createRFQDto.contactId && createRFQDto.leadId) {
-      throw new ConflictException('Cannot provide both contactId and leadId');
+      throw new ConflictException(ErrorMessages.businessRuleViolation('Cannot provide both contactId and leadId'));
     }
     
     // Check if RFQ number already exists if provided
@@ -71,7 +72,7 @@ export class RFQsService implements OnModuleInit {
         where: { rfqNumber: createRFQDto.rfqNumber },
       });
       if (existingRFQ) {
-        throw new ConflictException(`RFQ with number ${createRFQDto.rfqNumber} already exists`);
+        throw new ConflictException(ErrorMessages.alreadyExists('RFQ', 'rfqNumber', createRFQDto.rfqNumber));
       }
     }
 
@@ -148,7 +149,7 @@ export class RFQsService implements OnModuleInit {
     });
 
     if (!rfq) {
-      throw new NotFoundException(`RFQ with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('RFQ', id));
     }
 
     return this.transformToResponseDto(rfq);
@@ -161,7 +162,7 @@ export class RFQsService implements OnModuleInit {
     });
 
     if (!rfq) {
-      throw new NotFoundException(`RFQ with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('RFQ', id));
     }
 
     // Validate contact/lead if being updated
@@ -169,10 +170,10 @@ export class RFQsService implements OnModuleInit {
       const contactId = updateRFQDto.contactId ?? rfq.contactId;
       const leadId = updateRFQDto.leadId ?? rfq.leadId;
       if (!contactId && !leadId) {
-        throw new ConflictException('Either contactId or leadId must be provided');
+        throw new ConflictException(ErrorMessages.businessRuleViolation('Either contactId or leadId must be provided'));
       }
       if (contactId && leadId) {
-        throw new ConflictException('Cannot provide both contactId and leadId');
+        throw new ConflictException(ErrorMessages.businessRuleViolation('Cannot provide both contactId and leadId'));
       }
     }
 
@@ -182,7 +183,7 @@ export class RFQsService implements OnModuleInit {
         where: { rfqNumber: updateRFQDto.rfqNumber },
       });
       if (existingRFQ) {
-        throw new ConflictException(`RFQ with number ${updateRFQDto.rfqNumber} already exists`);
+        throw new ConflictException(ErrorMessages.alreadyExists('RFQ', 'rfqNumber', updateRFQDto.rfqNumber));
       }
     }
 
@@ -227,7 +228,7 @@ export class RFQsService implements OnModuleInit {
   async remove(id: string): Promise<void> {
     const rfq = await this.rfqRepository.findOneBy({ id });
     if (!rfq) {
-      throw new NotFoundException(`RFQ with ID ${id} not found`);
+      throw new NotFoundException(ErrorMessages.notFound('RFQ', id));
     }
     await this.rfqRepository.remove(rfq);
   }

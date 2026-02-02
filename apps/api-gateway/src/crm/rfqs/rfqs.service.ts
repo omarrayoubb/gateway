@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Metadata } from '@grpc/grpc-js';
 import type {
   CreateRFQRequest,
@@ -10,7 +10,7 @@ import type {
   FindOneRFQRequest,
   DeleteRFQRequest,
   RFQResponse,
-  PaginatedRFQsResponse,
+  PaginatedRfqsResponse,
   DeleteRFQResponse,
 } from '@app/common/types/rfqs';
 import { CreateRFQDto } from './dto/create-rfq.dto';
@@ -19,11 +19,11 @@ import { PaginationQueryDto } from './dto/pagination.dto';
 import { RFQResponseDto } from './dto/rfq-response.dto';
 
 interface RFQGrpcService {
-  createRFQ(data: CreateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
-  findAllRFQs(data: PaginationRequest): Observable<PaginatedRFQsResponse>;
-  findOneRFQ(data: FindOneRFQRequest): Observable<RFQResponse>;
-  updateRFQ(data: UpdateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
-  deleteRFQ(data: DeleteRFQRequest): Observable<DeleteRFQResponse>;
+  createRfq(data: CreateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
+  findAllRfqs(data: PaginationRequest): Observable<PaginatedRfqsResponse>;
+  findOneRfq(data: FindOneRFQRequest): Observable<RFQResponse>;
+  updateRfq(data: UpdateRFQRequest, metadata?: Metadata): Observable<RFQResponse>;
+  deleteRfq(data: DeleteRFQRequest): Observable<DeleteRFQResponse>;
 }
 
 export interface PaginatedRFQsResult {
@@ -39,26 +39,38 @@ export class RFQsService implements OnModuleInit {
 
   constructor(@Inject('CRM_PACKAGE') private readonly client: ClientGrpc) {}
 
-  async onModuleInit() {
-    this.rfqGrpcService = this.client.getService<RFQGrpcService>('RFQService');  
+  onModuleInit() {
+    this.rfqGrpcService = this.client.getService<RFQGrpcService>('RFQService');
+    
+    // Debug: Verify service initialization
+    if (!this.rfqGrpcService) {
+      console.error('❌ RFQService not found in gRPC client');
+    } else if (typeof this.rfqGrpcService.createRfq !== 'function') {
+      console.error('❌ RFQService found but createRfq method missing');
+      console.error('Available methods:', Object.keys(this.rfqGrpcService));
+    } else {
+      console.log('✅ RFQService initialized successfully');
+    }
   }
 
   createRFQ(createRFQDto: CreateRFQDto, currentUser: { id: string; name: string; email: string }): Observable<RFQResponseDto> {
     if (!this.rfqGrpcService) {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
+    
+    if (typeof this.rfqGrpcService.createRfq !== 'function') {
+      console.error('RFQService methods:', Object.keys(this.rfqGrpcService));
+      throw new Error(`createRfq method not found on RFQService. Available methods: ${Object.keys(this.rfqGrpcService).join(', ')}`);
+    }
+    
     const request: CreateRFQRequest = this.mapCreateDtoToRequest(createRFQDto);
     const metadata = this.createUserMetadata(currentUser);
-    return this.rfqGrpcService.createRFQ(request, metadata).pipe(
+    return this.rfqGrpcService.createRfq(request, metadata).pipe(
       map(response => this.mapResponseToDto(response)),
-      catchError(error => {
-        console.error('Error in createRFQ gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
-  findAllRFQs(paginationQuery: PaginationQueryDto): Observable<PaginatedRFQsResult> {
+  findAllRfqs(paginationQuery: PaginationQueryDto): Observable<PaginatedRFQsResult> {
     if (!this.rfqGrpcService) {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
@@ -69,7 +81,7 @@ export class RFQsService implements OnModuleInit {
       page: Math.max(1, Math.floor(page)),
       limit: Math.max(1, Math.min(100, Math.floor(limit))),
     };
-    return this.rfqGrpcService.findAllRFQs(request).pipe(
+    return this.rfqGrpcService.findAllRfqs(request).pipe(
       map(response => {
         if (!response) {
           throw new Error('Empty response from CRM microservice');
@@ -90,10 +102,6 @@ export class RFQsService implements OnModuleInit {
           last_page: response.lastPage || 0,
         };
       }),
-      catchError(error => {
-        console.error('Error in findAllRFQs gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -102,12 +110,8 @@ export class RFQsService implements OnModuleInit {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
     const request: FindOneRFQRequest = { id };
-    return this.rfqGrpcService.findOneRFQ(request).pipe(
+    return this.rfqGrpcService.findOneRfq(request).pipe(
       map(response => this.mapResponseToDto(response)),
-      catchError(error => {
-        console.error('Error in findOneRFQ gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -120,12 +124,8 @@ export class RFQsService implements OnModuleInit {
       ...this.mapUpdateDtoToRequest(updateRFQDto),
     };
     const metadata = this.createUserMetadata(currentUser);
-    return this.rfqGrpcService.updateRFQ(request, metadata).pipe(
+    return this.rfqGrpcService.updateRfq(request, metadata).pipe(
       map(response => this.mapResponseToDto(response)),
-      catchError(error => {
-        console.error('Error in updateRFQ gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -134,15 +134,11 @@ export class RFQsService implements OnModuleInit {
       throw new Error('RFQ gRPC service is not initialized. Check proto file and service name.');
     }
     const request: DeleteRFQRequest = { id };
-    return this.rfqGrpcService.deleteRFQ(request).pipe(
-      map(response => ({
+    return this.rfqGrpcService.deleteRfq(request).pipe(
+      map((response: DeleteRFQResponse) => ({
         success: response.success,
         message: response.message,
       })),
-      catchError(error => {
-        console.error('Error in deleteRFQ gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 

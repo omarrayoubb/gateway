@@ -32,10 +32,10 @@ import {Contact} from '../../contacts/entities/contacts.entity';
     website: string;
   
     // --- Address Fields ---
-    @Column() // <-- No longer nullable
+    @Column({ nullable: true })
     billing_street: string;
     
-    @Column() // <-- No longer nullable
+    @Column({ nullable: true })
     billing_city: string;
     
     @Column({ nullable: true })

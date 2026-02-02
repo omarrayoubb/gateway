@@ -1,8 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { ApiGatewayModule } from './api-gateway.module';
+import { GrpcErrorInterceptor } from './common/interceptors';
 
 async function bootstrap() {
   const app = await NestFactory.create(ApiGatewayModule);
+  
+  // Register global error interceptor to transform gRPC errors to HTTP
+  app.useGlobalInterceptors(new GrpcErrorInterceptor());
   
   app.enableCors({
     origin: true, // Allow all origins in development (set to specific URL in production)

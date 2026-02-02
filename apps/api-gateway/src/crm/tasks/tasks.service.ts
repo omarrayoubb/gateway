@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit, Inject } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
-import { Observable, throwError } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Metadata } from '@grpc/grpc-js';
 import type {
   CreateTaskRequest,
@@ -58,10 +58,6 @@ export class TasksService implements OnModuleInit {
     const metadata = this.createUserMetadata(currentUser);
     return this.taskGrpcService.createTask(request, metadata).pipe(
       map(response => this.mapResponseToDto(response)),
-      catchError(error => {
-        console.error('Error in createTask gRPC call:', error);
-        return throwError(() => error);
-      })
     );
   }
 
@@ -94,10 +90,6 @@ export class TasksService implements OnModuleInit {
           last_page: response.lastPage || 0,
         };
       }),
-      catchError(error => {
-        console.error('Error fetching tasks from CRM microservice:', error);
-        return throwError(() => error);
-      })
     );
   }
 

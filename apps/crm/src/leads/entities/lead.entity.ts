@@ -35,10 +35,10 @@ import {
     @Column({ unique: true })
     email: string;
   
-    @Column()
+    @Column({ nullable: true })
     shipping_street: string; // "shipping address one of them"
   
-    @Column()
+    @Column({ nullable: true })
     billing_city: string;
   
     // --- OTHER FIELDS (Optional) ---
