@@ -97,14 +97,14 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('PEOPLE_DB_HOST') || configService.get('DB_HOST') || 'localhost',
-        port: configService.get('PEOPLE_DB_PORT') || configService.get('DB_PORT') || 5432,
-        username: configService.get('PEOPLE_DB_USERNAME') || configService.get('DB_USERNAME') || 'postgres',
-        password: configService.get('PEOPLE_DB_PASSWORD') || configService.get('DB_PASSWORD') || 'postgres',
-        database: configService.get('PEOPLE_DB_DATABASE') || configService.get('DB_DATABASE') || 'people_db',
-        entities: [
+      useFactory: (configService: ConfigService) => {
+        const rawUrl =
+          configService.get('PEOPLE_DATABASE_URL') || configService.get('DATABASE_URL');
+        const databaseUrl = typeof rawUrl === 'string' ? rawUrl.trim() : rawUrl;
+        const synchronize =
+          configService.get('PEOPLE_DB_SYNCHRONIZE') === 'true' ||
+          configService.get('DB_SYNCHRONIZE') === 'true';
+        const entities = [
           Employee,
           Department,
           Attendance,
@@ -148,9 +148,26 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
           ApprovalHistory,
           Notification,
           AuditLog,
-        ],
-        synchronize: configService.get('PEOPLE_DB_SYNCHRONIZE') === 'true' || configService.get('DB_SYNCHRONIZE') === 'true',
-      }),
+        ];
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities,
+            synchronize,
+          };
+        }
+        return {
+          type: 'postgres',
+          host: configService.get('PEOPLE_DB_HOST') || configService.get('DB_HOST') || 'localhost',
+          port: configService.get('PEOPLE_DB_PORT') || configService.get('DB_PORT') || 5432,
+          username: configService.get('PEOPLE_DB_USERNAME') || configService.get('DB_USERNAME') || 'postgres',
+          password: configService.get('PEOPLE_DB_PASSWORD') || configService.get('DB_PASSWORD') || 'postgres',
+          database: configService.get('PEOPLE_DB_DATABASE') || configService.get('DB_DATABASE') || 'people_db',
+          entities,
+          synchronize,
+        };
+      },
     }),
     PeopleModule,
     DepartmentsModule,
