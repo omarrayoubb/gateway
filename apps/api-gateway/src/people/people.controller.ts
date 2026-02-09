@@ -60,6 +60,7 @@ import {
   OnboardingPlanResponse,
   OnboardingTaskResponse,
 } from './people.service';
+import { AccountsService } from '../accounts/accounts.service';
 
 @Controller('entities/Employee')
 export class PeopleController {
@@ -1457,58 +1458,31 @@ export class OnboardingTasksController {
 }
 
 // ============================================
-// AUTHENTICATION CONTROLLERS
+// AUTHENTICATION CONTROLLERS (delegate to Accounts only)
 // ============================================
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly peopleService: PeopleService) {}
-
-  @Post('bootstrap')
-  @HttpCode(HttpStatus.CREATED)
-  async bootstrapAdmin(@Body() body: any): Promise<any> {
-    return await this.peopleService.bootstrapAdmin(body);
-  }
+  constructor(
+    private readonly peopleService: PeopleService,
+    private readonly accountsService: AccountsService,
+  ) {}
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() body: any): Promise<any> {
-    return await this.peopleService.register(body);
-  }
-
-  @Post('activate')
-  async activate(@Body() body: any): Promise<any> {
-    return await this.peopleService.activate(body);
+  register(@Body() body: any) {
+    return this.accountsService.register(body);
   }
 
   @Post('login')
-  async login(@Body() body: any, @Headers('x-forwarded-for') ip?: string, @Headers('user-agent') userAgent?: string): Promise<any> {
-    return await this.peopleService.login(body, ip, userAgent);
-  }
-
-  @Post('refresh')
-  async refresh(@Body() body: any): Promise<any> {
-    return await this.peopleService.refreshToken(body.refresh_token || body.refreshToken);
-  }
-
-  @Post('forgot-password')
-  async forgotPassword(@Body() body: any): Promise<any> {
-    return await this.peopleService.forgotPassword(body);
-  }
-
-  @Post('reset-password')
-  async resetPassword(@Body() body: any): Promise<any> {
-    return await this.peopleService.resetPassword(body);
+  login(@Body() body: any) {
+    return this.accountsService.login(body);
   }
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  async getMe(@Request() req: any): Promise<any> {
-    // Extract userId from validated JWT token (set by JwtStrategy)
-    const userId = req.user?.id || req.user?.sub;
-    if (!userId) {
-      throw new UnauthorizedException('User ID not found in token');
-    }
-    return await this.peopleService.getMe(userId);
+  getMe(@Headers('authorization') authorization: string) {
+    const token = authorization?.replace?.('Bearer ', '') ?? '';
+    return this.accountsService.getProfile(token);
   }
 }
 

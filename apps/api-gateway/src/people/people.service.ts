@@ -272,13 +272,6 @@ interface OnboardingTaskGrpcService {
 }
 
 interface UserGrpcService {
-  BootstrapAdmin(data: any, metadata?: Metadata): Observable<any>;
-  Register(data: any, metadata?: Metadata): Observable<any>;
-  Activate(data: any, metadata?: Metadata): Observable<any>;
-  Login(data: any, metadata?: Metadata): Observable<any>;
-  RefreshToken(data: any, metadata?: Metadata): Observable<any>;
-  ForgotPassword(data: any, metadata?: Metadata): Observable<any>;
-  ResetPassword(data: any, metadata?: Metadata): Observable<any>;
   GetMe(data: any, metadata?: Metadata): Observable<any>;
   GetUsers(data: any, metadata?: Metadata): Observable<any>;
   GetUser(data: any, metadata?: Metadata): Observable<any>;
@@ -318,13 +311,11 @@ export interface EmployeeResponse {
   email: string;
   phone: string;
   position: string;
-  department: string;
-  department_id: string;
+  department: { id: string; name: string } | null;
   job_title: string;
   hire_date: string;
   status: string;
-  manager_email: string;
-  manager_id: string;
+  manager: { id: string; name: string; email: string } | null;
   address: string;
   city: string;
   country: string;
@@ -917,7 +908,10 @@ export class PeopleService implements OnModuleInit {
     
     // Apply additional filters
     if (department_id) {
-      employees = employees.filter((emp: any) => emp.department_id === department_id);
+      employees = employees.filter(
+        (emp: any) =>
+          (emp.departmentId || emp.department_id || emp.departmentRef?.id) === department_id,
+      );
     }
     
     // Filter by any other fields
@@ -953,19 +947,20 @@ export class PeopleService implements OnModuleInit {
   }
 
   async createEmployee(data: any): Promise<EmployeeResponse> {
+    const departmentName = typeof data.department === 'object' ? data.department?.name : data.department;
+    const departmentId = typeof data.department === 'object' ? data.department?.id : (data.department_id || data.departmentId);
     const result = await firstValueFrom(
       this.peopleGrpcService.CreatePerson({
         name: data.name,
         email: data.email,
         phone: data.phone,
         position: data.position,
-        department: data.department,
-        departmentId: data.department_id || data.departmentId,
+        department: departmentName,
+        departmentId,
         jobTitle: data.job_title || data.jobTitle,
         hireDate: data.hire_date || data.hireDate,
         status: data.status || 'active',
-        managerEmail: data.manager_email || data.managerEmail,
-        managerId: data.manager_id || data.managerId,
+        managerId: typeof data.manager === 'object' ? data.manager?.id : (data.manager_id || data.managerId),
         address: data.address,
         city: data.city,
         country: data.country,
@@ -979,6 +974,8 @@ export class PeopleService implements OnModuleInit {
   }
 
   async updateEmployee(id: string, data: any): Promise<EmployeeResponse> {
+    const departmentName = typeof data.department === 'object' ? data.department?.name : data.department;
+    const departmentId = typeof data.department === 'object' ? data.department?.id : (data.department_id || data.departmentId);
     const result = await firstValueFrom(
       this.peopleGrpcService.UpdatePerson({
         id,
@@ -986,13 +983,12 @@ export class PeopleService implements OnModuleInit {
         email: data.email,
         phone: data.phone,
         position: data.position,
-        department: data.department,
-        departmentId: data.department_id || data.departmentId,
+        department: departmentName,
+        departmentId,
         jobTitle: data.job_title || data.jobTitle,
         hireDate: data.hire_date || data.hireDate,
         status: data.status,
-        managerEmail: data.manager_email || data.managerEmail,
-        managerId: data.manager_id || data.managerId,
+        managerId: typeof data.manager === 'object' ? data.manager?.id : (data.manager_id || data.managerId),
         address: data.address,
         city: data.city,
         country: data.country,
@@ -1013,20 +1009,38 @@ export class PeopleService implements OnModuleInit {
   }
 
   private mapToEmployeeResponse(data: any): EmployeeResponse {
-    // Handle both camelCase (from proto) and snake_case (from API requests)
+    // Prefer departmentRef/managerRef from proto; fallback to flat fields for backward compat
+    const department =
+      data.departmentRef != null
+        ? { id: data.departmentRef.id ?? '', name: data.departmentRef.name ?? '' }
+        : data.departmentId != null || data.department_id != null
+          ? { id: data.departmentId || data.department_id || '', name: data.department || data.departmentName || '' }
+          : null;
+    const manager =
+      data.managerRef != null
+        ? {
+            id: data.managerRef.id ?? '',
+            name: data.managerRef.name ?? '',
+            email: data.managerRef.email ?? '',
+          }
+        : data.managerId != null || data.manager_id != null
+          ? {
+              id: data.managerId || data.manager_id || '',
+              name: data.managerName || '',
+              email: data.managerEmail || data.manager_email || '',
+            }
+          : null;
     return {
       id: data.id,
       name: data.name || (data.first_name && data.last_name ? `${data.first_name} ${data.last_name}` : ''),
       email: data.email || '',
       phone: data.phone || '',
       position: data.position || '',
-      department: data.department || '',
-      department_id: data.departmentId || data.department_id || '',
+      department,
       job_title: data.jobTitle || data.job_title || '',
       hire_date: data.hireDate || data.hire_date || '',
       status: data.status || 'active',
-      manager_email: data.managerEmail || data.manager_email || '',
-      manager_id: data.managerId || data.manager_id || '',
+      manager,
       address: data.address || '',
       city: data.city || '',
       country: data.country || '',
@@ -3133,84 +3147,8 @@ export class PeopleService implements OnModuleInit {
   }
 
   // ============================================
-  // USER/AUTHENTICATION METHODS
+  // USER METHODS (People profile/role by account id; auth is in Accounts)
   // ============================================
-  async register(data: any): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.Register({
-        email: data.email,
-        employeeId: data.employee_id || data.employeeId,
-        role: data.role,
-        createdBy: data.created_by || 'system',
-      })
-    ) as any;
-    return result;
-  }
-
-  async bootstrapAdmin(data: any): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.BootstrapAdmin({
-        email: data.email,
-        password: data.password,
-        name: data.name || 'System Administrator',
-      })
-    ) as any;
-    return result;
-  }
-
-  async activate(data: any): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.Activate({
-        activationToken: data.activation_token || data.activationToken,
-        password: data.password,
-      })
-    ) as any;
-    return result;
-  }
-
-  async login(data: any, ipAddress?: string, userAgent?: string): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.Login({
-        email: data.email,
-        password: data.password,
-        ipAddress,
-        userAgent,
-      })
-    ) as any;
-    return result;
-  }
-
-  async refreshToken(refreshToken: string): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.RefreshToken({ refreshToken })
-    ) as any;
-    return result;
-  }
-
-  async forgotPassword(data: any): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.ForgotPassword({ email: data.email })
-    ) as any;
-    return result;
-  }
-
-  async resetPassword(data: any): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.ResetPassword({
-        resetToken: data.reset_token || data.resetToken,
-        newPassword: data.new_password || data.newPassword,
-      })
-    ) as any;
-    return result;
-  }
-
-  async getMe(userId: string): Promise<any> {
-    const result = await firstValueFrom(
-      this.userGrpcService.GetMe({ userId })
-    ) as any;
-    return result;
-  }
-
   async getUsers(query: any): Promise<any[]> {
     const result = await firstValueFrom(
       this.userGrpcService.GetUsers({

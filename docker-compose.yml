@@ -147,9 +147,12 @@ services:
     environment:
       - PEOPLE_DATABASE_URL=postgresql://user:password@postgres:5432/people_db
       - PEOPLE_DB_SYNCHRONIZE=true
+      - RABBITMQ_URL=amqp://user:password@rabbitmq:5672
       - NODE_ENV=production
     depends_on:
       postgres:
+        condition: service_healthy
+      rabbitmq:
         condition: service_healthy
 
   api-gateway:

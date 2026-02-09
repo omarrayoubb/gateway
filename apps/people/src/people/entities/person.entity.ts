@@ -1,7 +1,7 @@
 import {
   Entity,
   Column,
-  PrimaryGeneratedColumn,
+  PrimaryColumn,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -14,7 +14,8 @@ export enum EmployeeStatus {
 
 @Entity('employees')
 export class Employee {
-  @PrimaryGeneratedColumn('uuid')
+  /** Primary key; same as Accounts user id (passed from account service as reference) */
+  @PrimaryColumn('uuid')
   id: string;
 
   @Column({ type: 'varchar' })
@@ -48,14 +49,9 @@ export class Employee {
   })
   status: EmployeeStatus;
 
-  @Column({ type: 'varchar', nullable: true, name: 'manager_email' })
-  managerEmail: string | null;
-
+  /** Manager: reference to another Employee in this table (self-reference by id) */
   @Column({ type: 'uuid', nullable: true, name: 'manager_id' })
   managerId: string | null;
-
-  @Column({ type: 'uuid', nullable: true, name: 'user_id' })
-  userId: string | null;
 
   @Column({ type: 'int', nullable: true, name: 'hierarchy_level' })
   hierarchyLevel: number | null;

@@ -39,7 +39,6 @@ import { JobPostingsModule } from './job-postings/job-postings.module';
 import { ApplicantsModule } from './applicants/applicants.module';
 import { OnboardingPlansModule } from './onboarding-plans/onboarding-plans.module';
 import { OnboardingTasksModule } from './onboarding-tasks/onboarding-tasks.module';
-import { UsersModule } from './users/users.module';
 import { HierarchyModule } from './hierarchy/hierarchy.module';
 import { ApprovalsModule } from './approvals/approvals.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -82,7 +81,7 @@ import { JobPosting } from './job-postings/entities/job-posting.entity';
 import { Applicant } from './applicants/entities/applicant.entity';
 import { OnboardingPlan } from './onboarding-plans/entities/onboarding-plan.entity';
 import { OnboardingTask } from './onboarding-tasks/entities/onboarding-task.entity';
-import { User } from './users/entities/user.entity';
+import { PeopleUser } from './people/entities/people-user.entity';
 import { Approval } from './approvals/entities/approval.entity';
 import { ApprovalHistory } from './approvals/entities/approval-history.entity';
 import { Notification } from './notifications/entities/notification.entity';
@@ -143,7 +142,7 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
           Applicant,
           OnboardingPlan,
           OnboardingTask,
-          User,
+          PeopleUser,
           Approval,
           ApprovalHistory,
           Notification,
@@ -207,7 +206,6 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
     ApplicantsModule,
     OnboardingPlansModule,
     OnboardingTasksModule,
-    UsersModule,
     HierarchyModule,
     ApprovalsModule,
     NotificationsModule,

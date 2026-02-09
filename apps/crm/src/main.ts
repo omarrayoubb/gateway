@@ -31,12 +31,12 @@ async function bootstrap() {
     },
   });
 
-  // Connect to RabbitMQ transport for event consumption
+  // Connect to RabbitMQ transport for event consumption (dedicated queue so People and CRM both receive)
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [configService.get('RABBITMQ_URL') || 'amqp://user:password@localhost:5672'],
-      queue: 'user_created_queue',
+      queue: 'user_created_crm',
       queueOptions: {
         durable: true,
       },

@@ -27,6 +27,7 @@ message GetPeopleRequest {
 }
 
 message CreatePersonRequest {
+  string id = 18;  // Accounts user id (primary key; pass from account service as reference)
   string name = 1;
   string email = 2;
   string phone = 3;
@@ -36,8 +37,7 @@ message CreatePersonRequest {
   string jobTitle = 7;
   string hireDate = 8;
   string status = 9;
-  string managerEmail = 10;
-  string managerId = 18;
+  string managerId = 10;
   string address = 11;
   string city = 12;
   string country = 13;
@@ -58,8 +58,7 @@ message UpdatePersonRequest {
   string jobTitle = 8;
   string hireDate = 9;
   string status = 10;
-  string managerEmail = 11;
-  string managerId = 19;
+  string managerId = 11;
   string address = 12;
   string city = 13;
   string country = 14;
@@ -73,6 +72,17 @@ message DeletePersonRequest {
   string id = 1;
 }
 
+message DepartmentRef {
+  string id = 1;
+  string name = 2;
+}
+
+message ManagerRef {
+  string id = 1;
+  string name = 2;
+  string email = 3;
+}
+
 message PersonResponse {
   string id = 1;
   string name = 2;
@@ -84,8 +94,7 @@ message PersonResponse {
   string jobTitle = 8;
   string hireDate = 9;
   string status = 10;
-  string managerEmail = 11;
-  string managerId = 21;
+  string managerId = 11;
   string address = 12;
   string city = 13;
   string country = 14;
@@ -95,6 +104,8 @@ message PersonResponse {
   string baseSalary = 18;
   string createdAt = 19;
   string updatedAt = 20;
+  DepartmentRef departmentRef = 21;
+  ManagerRef managerRef = 22;
 }
 
 message PeopleResponse {
@@ -2068,16 +2079,9 @@ message DeleteOnboardingTaskResponse {
 }
 
 // ============================================
-// USER SERVICE (Authentication & User Management)
+// USER SERVICE (People profile/role by account id; auth is in Accounts)
 // ============================================
 service UserService {
-  rpc BootstrapAdmin (BootstrapAdminRequest) returns (BootstrapAdminResponse) {}
-  rpc Register (RegisterRequest) returns (RegisterResponse) {}
-  rpc Activate (ActivateRequest) returns (ActivateResponse) {}
-  rpc Login (LoginRequest) returns (LoginResponse) {}
-  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {}
-  rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse) {}
-  rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse) {}
   rpc GetMe (GetMeRequest) returns (UserResponse) {}
   rpc GetUsers (GetUsersRequest) returns (UsersResponse) {}
   rpc GetUser (GetUserRequest) returns (UserResponse) {}
