@@ -211,12 +211,28 @@ export class AttendanceController {
   /**
    * POST /entities/Attendance
    * Create a new attendance record (Check In)
+   * employee_id and employee_email are taken from JWT when not provided in body.
    */
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() createAttendanceDto: any): Promise<AttendanceResponse> {
+  @UseGuards(JwtAuthGuard)
+  async create(
+    @Body() createAttendanceDto: any,
+    @Request() req: any,
+  ): Promise<AttendanceResponse> {
     try {
-      return await this.peopleService.createAttendance(createAttendanceDto);
+      const payload = {
+        ...createAttendanceDto,
+        employee_id:
+          createAttendanceDto.employee_id ??
+          createAttendanceDto.employeeId ??
+          req.user?.id,
+        employee_email:
+          createAttendanceDto.employee_email ??
+          createAttendanceDto.employeeEmail ??
+          req.user?.email,
+      };
+      return await this.peopleService.createAttendance(payload);
     } catch (error: any) {
       console.error('Error creating attendance:', error);
       // Map gRPC error codes to HTTP exceptions

@@ -92,6 +92,8 @@ export interface RfqFormOptionsResponse {
 export interface SalesOrderFormOptionsResponse {
   products: SimpleProduct[];
   vendors: SimpleVendor[];
+  accounts: SimpleAccount[];
+  contacts: SimpleContact[];
 }
 
 export interface SimpleDeal {

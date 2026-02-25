@@ -14,7 +14,19 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
-      package: ['leads', 'profiles', 'contacts', 'deals', 'accounts', 'activities', 'orchestrator', 'roles', 'tasks', 'rfqs'],
+      package: [
+        'leads',
+        'profiles',
+        'contacts',
+        'deals',
+        'accounts',
+        'activities',
+        'orchestrator',
+        'roles',
+        'tasks',
+        'rfqs',
+        'salesorders',
+      ],
       protoPath: [
         join(process.cwd(), 'proto/crm/leads.proto'),
         join(process.cwd(), 'proto/crm/profiles.proto'),
@@ -26,6 +38,7 @@ async function bootstrap() {
         join(process.cwd(), 'proto/crm/roles.proto'),
         join(process.cwd(), 'proto/crm/tasks.proto'),
         join(process.cwd(), 'proto/crm/rfqs.proto'),
+        join(process.cwd(), 'proto/crm/sales-orders.proto'),
       ],
       url: '0.0.0.0:50052',
     },

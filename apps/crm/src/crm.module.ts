@@ -14,6 +14,7 @@ import { ActivitiesModule } from './activities/activities.module';
 import { OrchestratorModule } from './orchestrator/orchestrator.module';
 import { TasksModule } from './tasks/tasks.module';
 import { RFQsModule } from './rfqs/rfqs.module';
+import { SalesOrdersModule } from './sales-orders/sales-orders.module';
 import { Lead } from './leads/entities/lead.entity';
 import { Profile } from './profiles/entities/profile.entity';
 import { User } from './users/entities/user.entity';
@@ -25,6 +26,8 @@ import { Role } from './roles/entities/role.entity';
 import { Task } from './tasks/entities/task.entity';
 import { RFQ } from './rfqs/entities/rfq.entity';
 import { RFQProduct } from './rfqs/entities/rfq-product.entity';
+import { SalesOrder } from './sales-orders/entities/sales-order.entity';
+import { SalesOrderProduct } from './sales-orders/entities/sales-order-product.entity';
 
 @Module({
   imports: [
@@ -44,7 +47,7 @@ import { RFQProduct } from './rfqs/entities/rfq-product.entity';
         username: configService.get('CRM_DB_USERNAME'),
         password: configService.get('CRM_DB_PASSWORD'),
         database: configService.get('CRM_DB_DATABASE'),
-        entities: [Lead, Profile, User, Contact, Deal, Account, Activity, Role, Task, RFQ, RFQProduct],
+        entities: [Lead, Profile, User, Contact, Deal, Account, Activity, Role, Task, RFQ, RFQProduct, SalesOrder, SalesOrderProduct],
         synchronize: configService.get('CRM_DB_SYNCHRONIZE') === 'true',
       }),
     }),
@@ -59,6 +62,7 @@ import { RFQProduct } from './rfqs/entities/rfq-product.entity';
     OrchestratorModule,
     TasksModule,
     RFQsModule,
+    SalesOrdersModule,
   ],
   controllers: [CrmController, UsersController],
   providers: [CrmService, UsersService],

@@ -362,13 +362,13 @@ export class OrchestratorService implements OnModuleInit {
 
   /**
    * Returns options needed for the Sales Order Creation form.
-   * Needs: List of Products (id, name, sku) and Vendors (id, name) from Supplychain service.
-   * Unlike RFQ form, this does NOT include accounts, contacts, or leads.
+   * Needs: List of Products (id, name, sku) and Vendors (id, name) from Supplychain service,
+   * and Accounts (id, name, accountNumber) and Contacts (id, name) from CRM.
    */
   async getSalesOrderFormOptions(): Promise<SalesOrderFormOrchestratorResponse> {
     try {
-      // Fetch products and vendors from Supplychain service in parallel
-      const [productsResponse, vendorsResponse] = await Promise.all([
+      // Fetch products and vendors from Supplychain service, and accounts, contacts from CRM in parallel
+      const [productsResponse, vendorsResponse, accounts, contacts] = await Promise.all([
         firstValueFrom(
           this.productsService.GetProducts(
             { page: 1, limit: 1000, status: 'active' },
@@ -381,6 +381,11 @@ export class OrchestratorService implements OnModuleInit {
             new Metadata()
           )
         ),
+        this.accountsService.findAllForDropdown(),
+        this.contactRepository.find({
+          select: ['id', 'first_name', 'last_name'],
+          order: { first_name: 'ASC', last_name: 'ASC' },
+        }),
       ]);
 
       // Map products to SimpleProduct format
@@ -396,17 +401,34 @@ export class OrchestratorService implements OnModuleInit {
         name: vendor.name,
       }));
 
+      // Map accounts to SimpleAccount format
+      const accountsList = accounts.map((account) => ({
+        id: account.id,
+        name: account.name,
+        accountNumber: account.accountNumber || '',
+      }));
+
+      // Map contacts to SimpleContact format
+      const contactsList = contacts.map((contact) => ({
+        id: contact.id,
+        name: `${contact.first_name} ${contact.last_name}`.trim(),
+      }));
+
       return {
         products,
         vendors,
-      };
+        accounts: accountsList,
+        contacts: contactsList,
+      } as SalesOrderFormOrchestratorResponse;
     } catch (error) {
       console.error('Error fetching Sales Order form options:', error);
       // Return empty arrays on error to prevent form from breaking
       return {
         products: [],
         vendors: [],
-      };
+        accounts: [],
+        contacts: [],
+      } as SalesOrderFormOrchestratorResponse;
     }
   }
 }
