@@ -14,6 +14,8 @@ import type {
   UpdateProfileResponse,
   GetUsersRequest,
   GetUsersResponse,
+  DeleteUserRequest,
+  DeleteUserResponse,
 } from '@app/common/types/auth';
 
 @Controller()
@@ -41,7 +43,64 @@ export class AccountsController {
   }
 
   @GrpcMethod('AuthService', 'UpdateProfile')
-  async updateProfile(data: UpdateProfileRequest): Promise<UpdateProfileResponse> {
-    return await this.accountsService.updateProfile(data);
+  async updateProfile(data: UpdateProfileRequest & { department_id?: string | null }): Promise<UpdateProfileResponse> {
+    // Normalize proto snake_case to camelCase so service receives consistent shape
+    const normalized: UpdateProfileRequest = {
+      userId: data.userId,
+      workId: data.workId,
+      name: data.name,
+      email: data.email,
+      workLocation: data.workLocation,
+      role: data.role,
+      timezone: data.timezone,
+      departmentId: data.departmentId ?? data.department_id ?? undefined,
+      birthday: data.birthday,
+      password: data.password,
+      status: data.status,
+      position: data.position,
+      hireDate: data.hireDate,
+      managerId: data.managerId,
+      hierarchyLevel: data.hierarchyLevel,
+      phone: data.phone,
+      address: data.address,
+      city: data.city,
+      country: data.country,
+      emergencyContactName: data.emergencyContactName,
+      emergencyContactPhone: data.emergencyContactPhone,
+      emergencyContactRelationship: data.emergencyContactRelationship,
+      baseSalary: data.baseSalary,
+    };
+    return await this.accountsService.updateProfile(normalized);
+  }
+
+  @GrpcMethod('AuthService', 'DeleteUser')
+  async deleteUser(data: DeleteUserRequest): Promise<DeleteUserResponse> {
+    const result = await this.accountsService.deleteUser(data.userId);
+    return { success: result.success, error: result.error };
+  }
+
+  @GrpcMethod('DepartmentService', 'GetDepartment')
+  async getDepartment(data: { id: string }) {
+    return await this.accountsService.getDepartment(data);
+  }
+
+  @GrpcMethod('DepartmentService', 'GetDepartments')
+  async getDepartments() {
+    return await this.accountsService.getDepartments();
+  }
+
+  @GrpcMethod('DepartmentService', 'CreateDepartment')
+  async createDepartment(data: { deptName?: string; deptManagerId?: string }) {
+    return await this.accountsService.createDepartment(data);
+  }
+
+  @GrpcMethod('DepartmentService', 'UpdateDepartment')
+  async updateDepartment(data: { id: string; deptName?: string; deptManagerId?: string }) {
+    return await this.accountsService.updateDepartment(data);
+  }
+
+  @GrpcMethod('DepartmentService', 'DeleteDepartment')
+  async deleteDepartment(data: { id: string }) {
+    return await this.accountsService.deleteDepartment(data);
   }
 }

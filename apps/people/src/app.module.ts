@@ -39,7 +39,6 @@ import { JobPostingsModule } from './job-postings/job-postings.module';
 import { ApplicantsModule } from './applicants/applicants.module';
 import { OnboardingPlansModule } from './onboarding-plans/onboarding-plans.module';
 import { OnboardingTasksModule } from './onboarding-tasks/onboarding-tasks.module';
-import { UsersModule } from './users/users.module';
 import { HierarchyModule } from './hierarchy/hierarchy.module';
 import { ApprovalsModule } from './approvals/approvals.module';
 import { NotificationsModule } from './notifications/notifications.module';
@@ -82,7 +81,7 @@ import { JobPosting } from './job-postings/entities/job-posting.entity';
 import { Applicant } from './applicants/entities/applicant.entity';
 import { OnboardingPlan } from './onboarding-plans/entities/onboarding-plan.entity';
 import { OnboardingTask } from './onboarding-tasks/entities/onboarding-task.entity';
-import { User } from './users/entities/user.entity';
+import { PeopleUser } from './people/entities/people-user.entity';
 import { Approval } from './approvals/entities/approval.entity';
 import { ApprovalHistory } from './approvals/entities/approval-history.entity';
 import { Notification } from './notifications/entities/notification.entity';
@@ -97,14 +96,14 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('PEOPLE_DB_HOST') || configService.get('DB_HOST') || 'localhost',
-        port: configService.get('PEOPLE_DB_PORT') || configService.get('DB_PORT') || 5432,
-        username: configService.get('PEOPLE_DB_USERNAME') || configService.get('DB_USERNAME') || 'postgres',
-        password: configService.get('PEOPLE_DB_PASSWORD') || configService.get('DB_PASSWORD') || 'postgres',
-        database: configService.get('PEOPLE_DB_DATABASE') || configService.get('DB_DATABASE') || 'people_db',
-        entities: [
+      useFactory: (configService: ConfigService) => {
+        const rawUrl =
+          configService.get('PEOPLE_DATABASE_URL') || configService.get('DATABASE_URL');
+        const databaseUrl = typeof rawUrl === 'string' ? rawUrl.trim() : rawUrl;
+        const synchronize =
+          configService.get('PEOPLE_DB_SYNCHRONIZE') === 'true' ||
+          configService.get('DB_SYNCHRONIZE') === 'true';
+        const entities = [
           Employee,
           Department,
           Attendance,
@@ -143,14 +142,31 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
           Applicant,
           OnboardingPlan,
           OnboardingTask,
-          User,
+          PeopleUser,
           Approval,
           ApprovalHistory,
           Notification,
           AuditLog,
-        ],
-        synchronize: configService.get('PEOPLE_DB_SYNCHRONIZE') === 'true' || configService.get('DB_SYNCHRONIZE') === 'true',
-      }),
+        ];
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities,
+            synchronize,
+          };
+        }
+        return {
+          type: 'postgres',
+          host: configService.get('PEOPLE_DB_HOST') || configService.get('DB_HOST') || 'localhost',
+          port: configService.get('PEOPLE_DB_PORT') || configService.get('DB_PORT') || 5432,
+          username: configService.get('PEOPLE_DB_USERNAME') || configService.get('DB_USERNAME') || 'postgres',
+          password: configService.get('PEOPLE_DB_PASSWORD') || configService.get('DB_PASSWORD') || 'postgres',
+          database: configService.get('PEOPLE_DB_DATABASE') || configService.get('DB_DATABASE') || 'people_db',
+          entities,
+          synchronize,
+        };
+      },
     }),
     PeopleModule,
     DepartmentsModule,
@@ -190,7 +206,6 @@ import { AuditLog } from './audit-logs/entities/audit-log.entity';
     ApplicantsModule,
     OnboardingPlansModule,
     OnboardingTasksModule,
-    UsersModule,
     HierarchyModule,
     ApprovalsModule,
     NotificationsModule,

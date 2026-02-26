@@ -6,6 +6,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AccountsController } from './accounts.controller';
 import { AccountsService } from './accounts.service';
 import { User } from './users.entity';
+import { Department } from './department.entity';
 
 @Module({
   imports: [
@@ -25,12 +26,12 @@ import { User } from './users.entity';
         username: configService.get('ACCOUNTS_DB_USERNAME'),
         password: configService.get('ACCOUNTS_DB_PASSWORD'),
         database: configService.get('ACCOUNTS_DB_DATABASE'),
-        entities: [User],
+        entities: [User, Department],
         synchronize: configService.get('ACCOUNTS_DB_SYNCHRONIZE') === 'true',
       }),
     }),
     // Register User entity for dependency injection
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, Department]),
     // Configure JWT Module
     JwtModule.registerAsync({
       imports: [ConfigModule],
@@ -42,21 +43,35 @@ import { User } from './users.entity';
         },
       }),
     }),
-    // Configure RabbitMQ client for publishing events
+    // Configure RabbitMQ clients: one queue per consumer so both People and CRM receive user.created
     ClientsModule.registerAsync([
       {
-        name: 'RABBITMQ_SERVICE',
+        name: 'RABBITMQ_PEOPLE_QUEUE',
         imports: [ConfigModule],
         inject: [ConfigService],
         useFactory: (configService: ConfigService) => ({
           transport: Transport.RMQ,
           options: {
             urls: [configService.get('RABBITMQ_URL') || 'amqp://user:password@localhost:5672'],
-            queue: 'user_created_queue',
-            queueOptions: {
-              durable: true,
+            queue: 'user_created_people',
+            queueOptions: { durable: true },
+            socketOptions: {
+              heartbeatIntervalInSeconds: 60,
+              reconnectTimeInSeconds: 5,
             },
-            // Ensure exchange is created and messages are routed correctly
+          },
+        }),
+      },
+      {
+        name: 'RABBITMQ_CRM_QUEUE',
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get('RABBITMQ_URL') || 'amqp://user:password@localhost:5672'],
+            queue: 'user_created_crm',
+            queueOptions: { durable: true },
             socketOptions: {
               heartbeatIntervalInSeconds: 60,
               reconnectTimeInSeconds: 5,

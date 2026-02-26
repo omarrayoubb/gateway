@@ -37,7 +37,7 @@ export class UsersService {
       const userData: DeepPartial<User> = {
         id: event.id,
         workId: event.workId,
-        email: event.email,
+        email: event.email ?? undefined,
         name: event.name,
         department: event.department,
         role: event.role,

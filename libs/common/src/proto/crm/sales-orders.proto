@@ -1,0 +1,175 @@
+syntax = "proto3";
+
+package salesorders;
+
+service SalesOrdersService {
+  rpc CreateSalesOrder (CreateSalesOrderRequest) returns (SalesOrderResponse) {}
+  rpc FindAllSalesOrders (PaginationRequest) returns (PaginatedSalesOrdersResponse) {}
+  rpc FindOneSalesOrder (FindOneSalesOrderRequest) returns (SalesOrderResponse) {}
+  rpc UpdateSalesOrder (UpdateSalesOrderRequest) returns (SalesOrderResponse) {}
+  rpc DeleteSalesOrder (DeleteSalesOrderRequest) returns (DeleteSalesOrderResponse) {}
+}
+
+// Request Messages
+message CreateSalesOrderRequest {
+  string ownerId = 1;
+  string subject = 2;
+  optional string customerNo = 3;
+  optional string pending = 4;
+  optional string carrier = 5;
+  optional double salesCommission = 6;
+  string accountId = 7;
+  optional string contactId = 8;
+  optional string dealId = 9;
+  optional string rfqId = 10;
+  optional string currency = 11;
+  optional double exchangeRate = 12;
+  optional string dueDate = 13; // ISO date string
+  optional double exciseDuty = 14;
+  optional string status = 15;
+  optional string billingStreet = 16;
+  optional string billingCity = 17;
+  optional string billingState = 18;
+  optional string billingCode = 19;
+  optional string billingCountry = 20;
+  optional string shippingStreet = 21;
+  optional string shippingCity = 22;
+  optional string shippingState = 23;
+  optional string shippingCode = 24;
+  optional string shippingCountry = 25;
+  optional double total = 26;
+  optional double subtotal = 27;
+  optional double discount = 28;
+  optional double adjustment = 29;
+  optional double grandtotal = 30;
+  optional string termsandcondition = 31;
+  optional string description = 32;
+  repeated SalesOrderProductMessage products = 33;
+}
+
+message UpdateSalesOrderRequest {
+  string id = 1;
+  optional string ownerId = 2;
+  optional string subject = 3;
+  optional string customerNo = 4;
+  optional string pending = 5;
+  optional string carrier = 6;
+  optional double salesCommission = 7;
+  optional string accountId = 8;
+  optional string contactId = 9;
+  optional string dealId = 10;
+  optional string rfqId = 11;
+  optional string currency = 12;
+  optional double exchangeRate = 13;
+  optional string dueDate = 14; // ISO date string
+  optional double exciseDuty = 15;
+  optional string status = 16;
+  optional string billingStreet = 17;
+  optional string billingCity = 18;
+  optional string billingState = 19;
+  optional string billingCode = 20;
+  optional string billingCountry = 21;
+  optional string shippingStreet = 22;
+  optional string shippingCity = 23;
+  optional string shippingState = 24;
+  optional string shippingCode = 25;
+  optional string shippingCountry = 26;
+  optional double total = 27;
+  optional double subtotal = 28;
+  optional double discount = 29;
+  optional double adjustment = 30;
+  optional double grandtotal = 31;
+  optional string termsandcondition = 32;
+  optional string description = 33;
+  repeated SalesOrderProductMessage products = 34;
+}
+
+message PaginationRequest {
+  int32 page = 1;
+  int32 limit = 2;
+}
+
+message FindOneSalesOrderRequest {
+  string id = 1;
+}
+
+message DeleteSalesOrderRequest {
+  string id = 1;
+}
+
+message SalesOrderProductMessage {
+  string productId = 1;
+  double listPrice = 2;
+  double quantity = 3;
+  double amount = 4;
+  optional double discount = 5;
+  optional double tax = 6;
+  double total = 7;
+}
+
+// Response Messages
+message SalesOrderProductResponse {
+  string id = 1;
+  string productId = 2;
+  double listPrice = 3;
+  double quantity = 4;
+  double amount = 5;
+  optional double discount = 6;
+  optional double tax = 7;
+  double total = 8;
+}
+
+message SalesOrderResponse {
+  string id = 1;
+  string subject = 2;
+  optional string customerNo = 3;
+  optional string pending = 4;
+  optional string carrier = 5;
+  optional double salesCommission = 6;
+  string accountId = 7;
+  string accountName = 8;
+  optional string contactId = 9;
+  optional string contactName = 10;
+  optional string dealId = 11;
+  optional string dealName = 12;
+  optional string rfqId = 13;
+  optional string rfqName = 14;
+  string currency = 15;
+  optional double exchangeRate = 16;
+  optional string dueDate = 17;
+  optional double exciseDuty = 18;
+  string status = 19;
+  optional string billingStreet = 20;
+  optional string billingCity = 21;
+  optional string billingState = 22;
+  optional string billingCode = 23;
+  optional string billingCountry = 24;
+  optional string shippingStreet = 25;
+  optional string shippingCity = 26;
+  optional string shippingState = 27;
+  optional string shippingCode = 28;
+  optional string shippingCountry = 29;
+  optional double total = 30;
+  optional double subtotal = 31;
+  optional double discount = 32;
+  optional double adjustment = 33;
+  optional double grandtotal = 34;
+  optional string termsandcondition = 35;
+  optional string description = 36;
+  repeated SalesOrderProductResponse products = 37;
+  string createdAt = 38; // ISO date string
+  string updatedAt = 39; // ISO date string
+}
+
+message PaginatedSalesOrdersResponse {
+  repeated SalesOrderResponse data = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 lastPage = 4;
+}
+
+message DeleteSalesOrderResponse {
+  bool success = 1;
+  string message = 2;
+}
+

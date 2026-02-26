@@ -23,6 +23,7 @@ import { ContactsModule as DeskContactsModule } from './desk/contacts/contacts.m
 import { AccountsModule as DeskAccountsModule } from './desk/accounts/accounts.module';
 import { SupplyChainModule } from './supplychain/supplychain.module';
 import { RFQsModule } from './crm/rfqs/rfqs.module';
+import { SalesOrdersModule } from './crm/sales-orders/sales-orders.module';
 import { FinanceModule } from './finance/finance.module';
 import { PeopleModule } from './people/people.module';
 @Module({
@@ -53,6 +54,7 @@ import { PeopleModule } from './people/people.module';
     DeskAccountsModule,
     SupplyChainModule,
     RFQsModule,
+    SalesOrdersModule,
     FinanceModule,
     PeopleModule
   ],

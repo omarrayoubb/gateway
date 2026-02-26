@@ -91,4 +91,6 @@ interface SimpleUser {
   export class SalesOrderFormOrchestratorResponse {
     products: SimpleProduct[];
     vendors: SimpleVendor[];
+    accounts: SimpleAccount[];
+    contacts: SimpleContact[];
   }

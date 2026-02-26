@@ -11,6 +11,8 @@ import type {
   UpdateProfileResponse,
   GetUsersRequest,
   GetUsersResponse,
+  DeleteUserRequest,
+  DeleteUserResponse,
 } from '@app/common/types/auth';
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import type { ClientGrpc } from '@nestjs/microservices';
@@ -22,19 +24,35 @@ interface AuthService {
   login(data: LoginRequest): Observable<LoginResponse>;
   validate(data: ValidateRequest): Observable<ValidateResponse>;
   getProfile(data: GetProfileRequest): Observable<GetProfileResponse>;
-
   updateProfile(data: UpdateProfileRequest): Observable<UpdateProfileResponse>;
   getUsers(data: GetUsersRequest): Observable<GetUsersResponse>;
+  deleteUser(data: DeleteUserRequest): Observable<DeleteUserResponse>;
+}
+
+export interface DepartmentResponse {
+  id: string;
+  deptName: string;
+  deptManagerId: string;
+}
+
+interface DepartmentService {
+  GetDepartment(data: { id: string }): Observable<DepartmentResponse | null>;
+  GetDepartments(data: Record<string, never>): Observable<{ departments: DepartmentResponse[] }>;
+  CreateDepartment(data: { deptName?: string; deptManagerId?: string }): Observable<DepartmentResponse>;
+  UpdateDepartment(data: { id: string; deptName?: string; deptManagerId?: string }): Observable<DepartmentResponse | null>;
+  DeleteDepartment(data: { id: string }): Observable<{ success: boolean; message: string }>;
 }
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
   private authService: AuthService;
+  private departmentService: DepartmentService;
 
-  constructor(@Inject('AUTH_PACKAGE') private readonly client: ClientGrpc) { }
+  constructor(@Inject('AUTH_PACKAGE') private readonly client: ClientGrpc) {}
 
   onModuleInit() {
     this.authService = this.client.getService<AuthService>('AuthService');
+    this.departmentService = this.client.getService<DepartmentService>('DepartmentService');
   }
 
   register(body: RegisterRequest): Observable<RegisterResponse> {
@@ -102,5 +120,29 @@ export class AccountsService implements OnModuleInit {
 
   getUsers(): Observable<GetUsersResponse> {
     return this.authService.getUsers({});
+  }
+
+  deleteUser(userId: string): Observable<DeleteUserResponse> {
+    return this.authService.deleteUser({ userId });
+  }
+
+  getDepartment(id: string): Observable<DepartmentResponse | null> {
+    return this.departmentService.GetDepartment({ id });
+  }
+
+  getDepartments(): Observable<{ departments: DepartmentResponse[] }> {
+    return this.departmentService.GetDepartments({});
+  }
+
+  createDepartment(data: { deptName?: string; deptManagerId?: string }): Observable<DepartmentResponse> {
+    return this.departmentService.CreateDepartment(data);
+  }
+
+  updateDepartment(id: string, data: { deptName?: string; deptManagerId?: string }): Observable<DepartmentResponse | null> {
+    return this.departmentService.UpdateDepartment({ id, ...data });
+  }
+
+  deleteDepartment(id: string): Observable<{ success: boolean; message: string }> {
+    return this.departmentService.DeleteDepartment({ id });
   }
 }

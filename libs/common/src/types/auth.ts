@@ -9,8 +9,9 @@ export interface RegisterRequest {
   role: string;
   password: string;
   timezone: string;
-  department: string;
-  deptManager: string;
+  departmentId?: string | null; // preferred: FK to departments.id
+  department?: string; // optional backward compat (department name)
+  deptManager?: string;
   birthday: string;
 }
 
@@ -69,24 +70,50 @@ export interface UserProfile {
   workLocation: string;
   role: string;
   timezone: string;
-  department: string;
-  deptManager: string;
+  departmentId: string | null;
+  department: string; // department name from join
   birthday: string;
   dateJoined: string;
+  status?: string;
+  position?: string;
+  hireDate?: string;
+  managerId?: string | null;
+  hierarchyLevel?: number | null;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  emergencyContactRelationship?: string;
+  baseSalary?: string | null;
 }
 
 // UpdateProfile Types
 export interface UpdateProfileRequest {
   userId: string;
+  workId?: string;
   name?: string;
   email?: string;
   workLocation?: string;
   role?: string;
   timezone?: string;
-  department?: string;
-  deptManager?: string;
+  departmentId?: string | null;
   birthday?: string;
   password?: string;
+  status?: string;
+  position?: string;
+  hireDate?: string;
+  managerId?: string | null;
+  hierarchyLevel?: number | null;
+  phone?: string;
+  address?: string;
+  city?: string;
+  country?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  emergencyContactRelationship?: string;
+  baseSalary?: string | null;
 }
 
 export interface UpdateProfileResponse {
@@ -100,4 +127,14 @@ export interface GetUsersRequest { }
 
 export interface GetUsersResponse {
   users: UserData[];
+}
+
+// DeleteUser Types
+export interface DeleteUserRequest {
+  userId: string;
+}
+
+export interface DeleteUserResponse {
+  success: boolean;
+  error?: string;
 }

@@ -49,10 +49,12 @@ import {
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AuthModule } from '../auth/auth.module';
+import { AccountsModule } from '../accounts/accounts.module';
 
 @Module({
   imports: [
     AuthModule, // Import AuthModule to use JwtAuthGuard
+    AccountsModule, // Auth routes delegate to Accounts
     ClientsModule.register([
       {
         name: 'PEOPLE_PACKAGE',

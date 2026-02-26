@@ -20,5 +20,6 @@ import { join } from 'path';
   ],
   controllers: [AccountsController],
   providers: [AccountsService],
+  exports: [AccountsService],
 })
-export class AccountsModule { }
+export class AccountsModule {}

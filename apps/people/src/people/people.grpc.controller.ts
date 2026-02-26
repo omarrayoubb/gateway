@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { GrpcMethod, RpcException } from '@nestjs/microservices';
-import { PeopleService } from './people.service';
+import { PeopleService, EmployeeWithDetails } from './people.service';
 import { CreateEmployeeDto } from './dto/create-person.dto';
 import { UpdateEmployeeDto } from './dto/update-person.dto';
 import { EmployeeStatus } from './entities/person.entity';
@@ -13,7 +13,8 @@ export class PeopleGrpcController {
   async getPerson(data: { id: string }) {
     try {
       const employee = await this.peopleService.findOne(data.id);
-      return this.mapEmployeeToProto(employee);
+      const withDetails = await this.peopleService.getEmployeeWithDetails(employee);
+      return this.mapEmployeeToProto(withDetails);
     } catch (error) {
       throw new RpcException({
         code: error.status === 404 ? 5 : 2, // NOT_FOUND : UNKNOWN
@@ -42,8 +43,13 @@ export class PeopleGrpcController {
         status: data.status,
         department: data.department,
       });
+      const people = await Promise.all(
+        result.data.map((employee) =>
+          this.peopleService.getEmployeeWithDetails(employee).then((withDetails) => this.mapEmployeeToProto(withDetails)),
+        ),
+      );
       return {
-        people: result.data.map(employee => this.mapEmployeeToProto(employee)),
+        people,
         total: result.total,
         page: result.page,
         limit: result.limit,
@@ -63,6 +69,7 @@ export class PeopleGrpcController {
       console.log('CreatePerson received data:', JSON.stringify(data, null, 2));
       
       const createDto: CreateEmployeeDto = {
+        id: data.id || undefined,
         name: data.name,
         email: data.email,
         phone: data.phone || undefined,
@@ -72,7 +79,6 @@ export class PeopleGrpcController {
         jobTitle: data.jobTitle || undefined,
         hireDate: data.hireDate || undefined,
         status: data.status || EmployeeStatus.ACTIVE,
-        managerEmail: data.managerEmail || undefined,
         managerId: data.managerId || data.manager_id || undefined,
         address: data.address || undefined,
         city: data.city || undefined,
@@ -86,7 +92,8 @@ export class PeopleGrpcController {
       console.log('CreatePerson DTO:', JSON.stringify(createDto, null, 2));
       
       const employee = await this.peopleService.create(createDto);
-      return this.mapEmployeeToProto(employee);
+      const withDetails = await this.peopleService.getEmployeeWithDetails(employee);
+      return this.mapEmployeeToProto(withDetails);
     } catch (error) {
       console.error('CreatePerson error details:', {
         message: error.message,
@@ -120,7 +127,6 @@ export class PeopleGrpcController {
         jobTitle: data.jobTitle,
         hireDate: data.hireDate,
         status: data.status,
-        managerEmail: data.managerEmail,
         managerId: data.managerId || data.manager_id || undefined,
         address: data.address,
         city: data.city,
@@ -131,7 +137,8 @@ export class PeopleGrpcController {
         baseSalary: data.baseSalary ? parseFloat(data.baseSalary) : undefined,
       };
       const employee = await this.peopleService.update(data.id, updateDto);
-      return this.mapEmployeeToProto(employee);
+      const withDetails = await this.peopleService.getEmployeeWithDetails(employee);
+      return this.mapEmployeeToProto(withDetails);
     } catch (error) {
       const code = error.status === 404 ? 5 : error.status === 409 ? 6 : error.status === 400 ? 3 : 2;
       throw new RpcException({
@@ -155,7 +162,13 @@ export class PeopleGrpcController {
     }
   }
 
-  private mapEmployeeToProto(employee: any) {
+  private mapEmployeeToProto(employee: EmployeeWithDetails | any) {
+    const departmentRef = employee.department
+      ? { id: employee.department.id, name: employee.department.name }
+      : undefined;
+    const managerRef = employee.manager
+      ? { id: employee.manager.id, name: employee.manager.name, email: employee.manager.email }
+      : undefined;
     return {
       id: employee.id,
       name: employee.name,
@@ -169,7 +182,6 @@ export class PeopleGrpcController {
         ? (employee.hireDate instanceof Date ? employee.hireDate.toISOString() : String(employee.hireDate)).split('T')[0]
         : '',
       status: employee.status,
-      managerEmail: employee.managerEmail || '',
       managerId: employee.managerId || '',
       address: employee.address || '',
       city: employee.city || '',
@@ -184,6 +196,8 @@ export class PeopleGrpcController {
       updatedAt: employee.updatedAt
         ? (employee.updatedAt instanceof Date ? employee.updatedAt.toISOString() : String(employee.updatedAt))
         : '',
+      departmentRef: departmentRef ?? null,
+      managerRef: managerRef ?? null,
     };
   }
 }

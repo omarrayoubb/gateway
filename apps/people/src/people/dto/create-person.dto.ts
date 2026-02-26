@@ -2,6 +2,11 @@ import { IsString, IsEmail, IsOptional, IsEnum, IsUUID, IsNumber } from 'class-v
 import { EmployeeStatus } from '../entities/person.entity';
 
 export class CreateEmployeeDto {
+  /** Primary key; when provided (e.g. from Accounts), use as Employee id (reference to account user) */
+  @IsUUID()
+  @IsOptional()
+  id?: string;
+
   @IsString()
   name: string;
 
@@ -36,10 +41,7 @@ export class CreateEmployeeDto {
   @IsOptional()
   status?: EmployeeStatus;
 
-  @IsEmail()
-  @IsOptional()
-  managerEmail?: string;
-
+  /** Manager: UUID of another Employee in the same table */
   @IsUUID()
   @IsOptional()
   managerId?: string;

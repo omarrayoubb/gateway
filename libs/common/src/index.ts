@@ -3,16 +3,23 @@ export * from './common.service';
 export * from './dto';
 export * from './errors';
 export * from './types/auth';
-export * from './types/leads';
-export * from './types/profiles';
-export * from './types/contacts';
-export * from './types/deals';
-export * from './types/accounts';
-export * from './types/activities';
- 
-export * from './types/orchestrator';
-export * from './types/roles';
-export * from './types/tasks';
-export * from './types/knowledge-base';
-export * from './types/rfqs';
-export * from './events/user-created.event';
+export type {
+  CreateProfileRequest,
+  UpdateProfileRequest as ProfilesUpdateProfileRequest,
+  PaginationRequest,
+  FindOneProfileRequest,
+  DeleteProfileRequest,
+  BulkDeleteRequest,
+  BulkUpdateRequest,
+  UpdateProfileFields,
+  ModulePermissions,
+  ProfilePermissions,
+  ProfileResponse,
+  PaginatedProfilesResponse,
+  DeleteProfileResponse,
+  FailedId,
+  BulkDeleteResponse,
+  FailedItem,
+  BulkUpdateResponse,
+} from './types/profiles';
+export * from './events';

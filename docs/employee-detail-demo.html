@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employees – click to load full data</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 0 auto; padding: 1rem; }
+    h1 { margin-top: 0; }
+    .api-base { margin-bottom: 1rem; }
+    .api-base label { margin-right: 0.5rem; }
+    .api-base input { width: 280px; padding: 0.35rem 0.5rem; }
+    .list { border: 1px solid #ccc; border-radius: 6px; overflow: hidden; margin-bottom: 1rem; }
+    .list table { width: 100%; border-collapse: collapse; }
+    .list th, .list td { padding: 0.6rem 0.75rem; text-align: left; border-bottom: 1px solid #eee; }
+    .list th { background: #f5f5f5; font-weight: 600; }
+    .list tr:last-child td { border-bottom: none; }
+    .list tr:hover { background: #f9f9f9; }
+    .list tr.clickable { cursor: pointer; }
+    .list tr.clickable:hover { background: #e8f4fc; }
+    .detail { border: 1px solid #2c5282; border-radius: 8px; background: #f0f7ff; padding: 1rem 1.25rem; }
+    .detail h2 { margin-top: 0; color: #2c5282; }
+    .detail dl { display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1.5rem; margin: 0; }
+    .detail dt { font-weight: 600; color: #333; }
+    .detail dd { margin: 0; }
+    .detail .nested { background: #fff; padding: 0.5rem 0.75rem; border-radius: 4px; margin-top: 0.25rem; }
+    .loading { color: #666; }
+    .error { color: #c53030; }
+    .empty { color: #718096; }
+  </style>
+</head>
+<body>
+  <h1>Employees</h1>
+  <div class="api-base">
+    <label for="baseUrl">API base URL:</label>
+    <input id="baseUrl" type="text" value="http://localhost:3000" placeholder="http://localhost:3000" />
+    <button type="button" id="loadList">Load list</button>
+  </div>
+
+  <div class="list">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="employeeList">
+        <tr><td colspan="3" class="empty">Click “Load list” to fetch employees.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="detailSection" class="detail" style="display: none;">
+    <h2>Employee details</h2>
+    <p id="detailLoading" class="loading" style="display: none;">Loading…</p>
+    <div id="detailContent" style="display: none;"></div>
+  </div>
+
+  <script>
+    (function () {
+      const baseInput = document.getElementById('baseUrl');
+      const loadListBtn = document.getElementById('loadList');
+      const listBody = document.getElementById('employeeList');
+      const detailSection = document.getElementById('detailSection');
+      const detailLoading = document.getElementById('detailLoading');
+      const detailContent = document.getElementById('detailContent');
+
+      function baseUrl() {
+        return (baseInput.value || '').replace(/\/$/, '');
+      }
+
+      function showError(el, message) {
+        el.innerHTML = '<tr><td colspan="3" class="error">' + escapeHtml(message) + '</td></tr>';
+      }
+
+      function escapeHtml(s) {
+        const div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function formatValue(val) {
+        if (val == null || val === '') return '—';
+        if (typeof val === 'object' && val !== null) {
+          if (val.id !== undefined && (val.name !== undefined || val.email !== undefined)) {
+            const parts = [val.name || '', val.email || ''].filter(Boolean);
+            return parts.length ? parts.join(' · ') : val.id || '—';
+          }
+          return JSON.stringify(val);
+        }
+        return String(val);
+      }
+
+      function renderDetail(data) {
+        const d = data || {};
+        const department = d.department;
+        const manager = d.manager;
+        const rows = [
+          ['ID', d.id],
+          ['Name', d.name],
+          ['Email', d.email],
+          ['Phone', d.phone],
+          ['Position', d.position],
+          ['Job title', d.job_title],
+          ['Department', department ? `${department.name || ''} (${department.id || ''})` : (d.department || '—')],
+          ['Department (object)', department ? `<span class="nested">id: ${department.id || '—'}, name: ${escapeHtml(department.name || '')}</span>` : '—'],
+          ['Hire date', d.hire_date],
+          ['Status', d.status],
+          ['Manager', manager ? `${manager.name || ''} · ${manager.email || ''} (${manager.id || ''})` : '—'],
+          ['Manager (object)', manager ? `<span class="nested">id: ${manager.id || '—'}, name: ${escapeHtml(manager.name || '')}, email: ${escapeHtml(manager.email || '')}</span>` : '—'],
+          ['Address', d.address],
+          ['City', d.city],
+          ['Country', d.country],
+          ['Emergency contact name', d.emergency_contact_name],
+          ['Emergency contact phone', d.emergency_contact_phone],
+          ['Emergency contact relationship', d.emergency_contact_relationship],
+          ['Base salary', d.base_salary != null ? d.base_salary : '—'],
+          ['Created at', d.created_at],
+        ];
+        const html = '<dl>' + rows.map(function (r) {
+          return '<dt>' + escapeHtml(r[0]) + '</dt><dd>' + (r[1] == null || r[1] === '' ? '—' : r[1]) + '</dd>';
+        }).join('') + '</dl>';
+        detailContent.innerHTML = html;
+      }
+
+      loadListBtn.addEventListener('click', async function () {
+        listBody.innerHTML = '<tr><td colspan="3" class="loading">Loading…</td></tr>';
+        detailSection.style.display = 'none';
+        const base = baseUrl();
+        try {
+          const res = await fetch(base + '/entities/Employee');
+          if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
+          const data = await res.json();
+          if (!Array.isArray(data)) throw new Error('Expected an array of employees');
+          if (data.length === 0) {
+            listBody.innerHTML = '<tr><td colspan="3" class="empty">No employees found.</td></tr>';
+            return;
+          }
+          listBody.innerHTML = data.map(function (emp) {
+            return (
+              '<tr class="clickable" data-id="' + escapeHtml(emp.id) + '">' +
+              '<td>' + escapeHtml(emp.name || '') + '</td>' +
+              '<td>' + escapeHtml(emp.email || '') + '</td>' +
+              '<td>' + escapeHtml(emp.status || '') + '</td>' +
+              '</tr>'
+            );
+          }).join('');
+          listBody.querySelectorAll('tr.clickable').forEach(function (row) {
+            row.addEventListener('click', function () {
+              const id = row.getAttribute('data-id');
+              if (!id) return;
+              detailSection.style.display = 'block';
+              detailLoading.style.display = 'block';
+              detailContent.style.display = 'none';
+              fetch(base + '/entities/Employee/' + encodeURIComponent(id))
+                .then(function (r) {
+                  if (!r.ok) throw new Error(r.status + ' ' + r.statusText);
+                  return r.json();
+                })
+                .then(function (full) {
+                  detailLoading.style.display = 'none';
+                  detailContent.style.display = 'block';
+                  renderDetail(full);
+                })
+                .catch(function (err) {
+                  detailLoading.style.display = 'none';
+                  detailContent.style.display = 'block';
+                  detailContent.innerHTML = '<p class="error">' + escapeHtml(err.message) + '</p>';
+                });
+            });
+          });
+        } catch (err) {
+          showError(listBody, err.message || 'Failed to load list');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
